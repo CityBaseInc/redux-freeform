@@ -1,1 +1,0 @@
-{"version":3,"sources":["index.js"],"names":["addTwo","x"],"mappings":";AAAO,aAAA,OAAA,eAAA,QAAA,aAAA,CAAA,OAAA,IAAA,QAAA,YAAA,EAAA,IAAMA,EAAS,SAAAC,GAAKA,OAAAA,EAAI,GAAxB,QAAA,OAAA","file":"index.js","sourceRoot":"../src","sourcesContent":["export const addTwo = x => x + 2;\n"]}
