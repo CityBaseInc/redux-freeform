@@ -1,1 +1,3 @@
-export const addTwo = x => x + 2;
+const createFormState = formConfig => {
+
+};

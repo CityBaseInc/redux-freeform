@@ -1,6 +1,6 @@
 {
   "name": "redux-formal",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "TBD",
   "main": "dist/redux-formal.cjs.js",
   "module": "dist/redux-formal.esm.js",
