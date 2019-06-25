@@ -6,9 +6,15 @@ import {
   minimumLength,
   matchesOtherField
 } from "redux-formal/validators";
+import {
+  phoneNumber
+} from "redux-formal/formatters";
 import { createFormState } from "redux-formal";
 
 const formConfig = {
+    phone: {
+      format: phoneNumber()
+    },
     age: {
       validators: [required(), onlyNumbers(), numberLessThan(99)]
     },

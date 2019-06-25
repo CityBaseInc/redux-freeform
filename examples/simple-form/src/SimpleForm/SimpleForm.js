@@ -3,9 +3,9 @@ import {
 } from "redux-formal/validators";
 import React from "react";
 
-const FieldError =  ({ errors }) => {
-  if (errors.length > 0) {
-    if (errors.includes(required.error)) {
+const FieldError =  ({ field }) => {
+  if (field.hasError) {
+    if (field.errors.includes(required.error)) {
       return "Field is required";
     } else {
       return "Please enter a valid value";
@@ -18,10 +18,10 @@ const FieldError =  ({ errors }) => {
 const SimpleForm = ({ actions, fields }) => (
   <form>
     <label>Age</label>
-    <FieldError errors={fields.age.errors} />
+    <FieldError field={fields.age} />
     <input
       name="age"
-      value={fields.age.value}
+      value={fields.age.rawValue}
       onChange={e => actions.age.set(e.target.value)} />
   </form>
 );

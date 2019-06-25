@@ -11,9 +11,18 @@
   "private": false,
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "test": "ava"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "ava": "^2.1.0",
+    "ava-check": "^1.0.0-rc.0",
+    "eslint": "^6.0.1",
+    "esm": "^3.2.25",
+    "prettier": "^1.18.2",
+    "prettier-eslint": "^9.0.0",
     "rollup": "^1.16.2",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.4"
@@ -21,5 +30,17 @@
   "files": [
     "dist"
   ],
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "source": [
+      "src/**/*.js",
+      "!dist/**/*"
+    ],
+    "require": [
+      "esm"
+    ]
+  },
   "dependencies": {}
 }
