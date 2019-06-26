@@ -1,0 +1,25 @@
+{
+  "name": "simple-form",
+  "version": "1.0.0",
+  "description": "Example of building a form using redux-formal",
+  "main": "index.js",
+  "author": "Citybase Inc",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-formal": "^0.0.2",
+    "validation": "^0.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/preset-env": "^7.4.5",
+    "babel": "^6.23.0",
+    "parcel-bundler": "^1.12.3"
+  }
+}
