@@ -66,16 +66,23 @@ const createFormReducer = formConfig => (
         }
       };
       const fieldsToValidate = [
-        ...new Set([...state.interdependentFields, changedFieldName])
+        ...state.interdependentFields,
+        ...(state.interdependentFields.includes(changedFieldName)
+          ? []
+          : [changedFieldName])
       ];
       const updatedFields = fieldsToValidate
         .map(fieldName => {
           const errors = computeErrors(fieldName, newFormState);
+          const dirty =
+            fieldName === changedFieldName
+              ? true
+              : newFormState[fieldName].dirty;
           return {
             [fieldName]: {
               ...newFormState[fieldName],
-              dirty: true,
               errors,
+              dirty,
               hasErrors: errors.length > 0
             }
           };
