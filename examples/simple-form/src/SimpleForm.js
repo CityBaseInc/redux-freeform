@@ -31,6 +31,9 @@ const InputField = ({
       value={field.rawValue}
       onChange={e => fieldActions.set(e.target.value)}
     />
+    {!field.dirty && " ✴️"}
+    {field.dirty && field.hasErrors && " ❌"}
+    {field.dirty && !field.hasErrors && " ✅"}
     <p />
   </div>
 );

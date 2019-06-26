@@ -1,4 +1,4 @@
-import { computeErrors } from "validation";
+import { computeErrors } from "./validation";
 
 const createInitialState = formConfig => {
   const unvalidatedForm = Object.entries(formConfig)
@@ -39,33 +39,47 @@ const set = fieldName => value => ({
 
 const createFormReducer = formConfig => (
   state = createInitialState(formConfig),
-  action
+  action = {}
 ) => {
   switch (action.type) {
     case SET:
-      const field = state[action.payload.fieldName];
-      return {
+      const fieldName = action.payload.fieldName;
+      const newRawValue = action.payload.value;
+      const field = state[fieldName];
+      const newFormState = {
         ...state,
-        [action.payload.fieldName]: {
+        [fieldName]: {
           ...field,
-          rawValue: action.payload.value,
-          dirty: true,
-          errors: computeErrors(field.validators, action.payload.value)
+          rawValue: newRawValue
         }
       };
+      const errors = computeErrors(fieldName, newFormState);
+      return {
+        ...newFormState,
+        [fieldName]: {
+          ...newFormState[fieldName],
+          dirty: true,
+          errors,
+          hasErrors: errors.length > 0
+        }
+      };
+    default:
+      return state;
   }
 };
 
-export const createMapDispatchToProps = formConfig => dispatch =>
-  Object.keys(formConfig)
+export const createMapDispatchToProps = formConfig => dispatch => ({
+  actions: Object.keys(formConfig)
     .map(fieldName => ({
       [fieldName]: {
         set: value => dispatch(set(fieldName)(value))
       }
     }))
-    .reducer((acc, curr) => ({ ...acc, ...curr }));
+    .reduce((acc, curr) => ({ ...acc, ...curr }))
+});
 
 export const createFormState = formConfig => ({
   reducer: createFormReducer(formConfig),
-  mapDispatchToProps: createMapDispatchToProps(formConfig)
+  mapDispatchToProps: createMapDispatchToProps(formConfig),
+  mapStateToProps: state => ({ fields: state })
 });
