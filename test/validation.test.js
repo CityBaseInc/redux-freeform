@@ -97,13 +97,28 @@ testProp(
   numberA => !validatorFns[NUMBER_LESS_THAN](String(numberA), [numberA], {})
 );
 
-// testProp(
-//   "matchesField accepts value equal to argument field rawValue",
-//   [fc.string(1, 15), fc.string()],
-//   (fieldName, fieldValue) =>
-//     !!validatorFns[NUMBER_LESS_THAN](fieldValue, [fieldName], {
-//       [fieldName]: {
-//         rawValue: fieldValue
-//       }
-//     })
-// );
+testProp(
+  "matchesField accepts value equal to argument field rawValue",
+  [fc.string(1, 15).filter(str => /^[A-z]$/.test(str)), fc.string()],
+  (fieldName, fieldValue) =>
+    !!validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
+      [fieldName]: {
+        rawValue: fieldValue
+      }
+    })
+);
+
+testProp(
+  "matchesField rejects value not equal to argument field rawValue",
+  [
+    fc.string(1, 15).filter(str => /^[A-z]$/.test(str)),
+    fc.string(),
+    fc.string(1, 15)
+  ],
+  (fieldName, fieldValue, fieldValueModifier) =>
+    !validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
+      [fieldName]: {
+        rawValue: `${fieldValue}${fieldValueModifier}`
+      }
+    })
+);

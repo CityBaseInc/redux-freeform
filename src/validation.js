@@ -40,7 +40,7 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
       } was passed to matchesField, but that field does not exist in the form`
     );
   }
-  value === form[args[0]].rawValue;
+  return value === form[args[0]].rawValue;
 };
 
 export const runValidator = (validator, value, form) => {
