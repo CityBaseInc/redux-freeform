@@ -1,5 +1,5 @@
 const createValidator = (type, error) => {
-  let validator = (...args) => ({ type, args });
+  let validator = (...args) => ({ type, args, error });
   validator.error = error;
   return validator;
 };
@@ -43,10 +43,17 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
   return value === form[args[0]].rawValue;
 };
 
+export const runValidatorErrorMessage = type =>
+  `${type} was passed to runValidator, but that validator type does not exist. 
+  Please check that you are only calling validator functions exported from 
+  redux-formal/validators in your form config.`;
+
 export const runValidator = (validator, value, form) => {
-  return validatorFns[validator.type](value, validator.args, form)
-    ? null
-    : validator.error;
+  const validatorFn = validatorFns[validator.type];
+  if (validatorFn === undefined) {
+    throw new Error(runValidatorErrorMessage(validator.type));
+  }
+  return validatorFn(value, validator.args, form) ? null : validator.error;
 };
 
 export const computeErrors = (fieldName, form) => {

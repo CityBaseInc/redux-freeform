@@ -14,27 +14,41 @@ import {
   matchesField,
   MATCHES_FIELD,
   MATCHES_FIELD_ERROR,
-  validatorFns
+  validatorFns,
+  runValidator,
+  runValidatorErrorMessage
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
   t.is(required.error, REQUIRED_ERROR);
-  t.deepEqual(required(), { type: REQUIRED, args: [] });
+  t.deepEqual(required(), { type: REQUIRED, args: [], error: REQUIRED_ERROR });
 });
 
 test("onlyIntegers validator produces correct validator object", t => {
   t.is(onlyIntegers.error, ONLY_INTEGERS_ERROR);
-  t.deepEqual(onlyIntegers(), { type: ONLY_INTEGERS, args: [] });
+  t.deepEqual(onlyIntegers(), {
+    type: ONLY_INTEGERS,
+    args: [],
+    error: ONLY_INTEGERS_ERROR
+  });
 });
 
 test("numberLessThan validator produces correct validator object", t => {
   t.is(numberLessThan.error, NUMBER_LESS_THAN_ERROR);
-  t.deepEqual(numberLessThan(3), { type: NUMBER_LESS_THAN, args: [3] });
+  t.deepEqual(numberLessThan(3), {
+    type: NUMBER_LESS_THAN,
+    args: [3],
+    error: NUMBER_LESS_THAN_ERROR
+  });
 });
 
 test("matchesField validator produces correct validator object", t => {
   t.is(matchesField.error, MATCHES_FIELD_ERROR);
-  t.deepEqual(matchesField("foo"), { type: MATCHES_FIELD, args: ["foo"] });
+  t.deepEqual(matchesField("foo"), {
+    type: MATCHES_FIELD,
+    args: ["foo"],
+    error: MATCHES_FIELD_ERROR
+  });
 });
 
 testProp(
@@ -122,3 +136,21 @@ testProp(
       }
     })
 );
+
+test("runValidator returns null when validator accepts", t => {
+  t.is(runValidator({ type: REQUIRED, args: [] }, "foo", {}), null);
+});
+
+test("runValidator returns validator error when validator rejects", t => {
+  t.is(
+    runValidator({ type: REQUIRED, args: [], error: REQUIRED_ERROR }, "", {}),
+    REQUIRED_ERROR
+  );
+});
+
+test("runValidator throws error when validatorFn does not exist", t => {
+  const validatorError = t.throws(() =>
+    runValidator({ type: "foo", args: [], error: "bar" }, "", {})
+  );
+  t.is(validatorError.message, runValidatorErrorMessage("foo"));
+});
