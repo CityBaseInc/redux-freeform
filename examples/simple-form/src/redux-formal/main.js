@@ -9,11 +9,7 @@ const createInitialState = formConfig => {
         [key]: {
           dirty: false,
           rawValue,
-          validators,
-          isInterdependent: validators.reduce(
-            (acc, v) => acc || v.isInterdependent,
-            false
-          )
+          validators
         }
       };
     })
@@ -21,7 +17,7 @@ const createInitialState = formConfig => {
   // Because validators require the entire form we have to do a
   // second pass to add errors once the initial form has been
   // constructed
-  const fields = Object.entries(unvalidatedForm)
+  return Object.entries(unvalidatedForm)
     .map(([key, value]) => {
       const errors = computeErrors(key, unvalidatedForm);
       return {
@@ -32,15 +28,7 @@ const createInitialState = formConfig => {
         }
       };
     })
-    .reduce((acc, next) => ({ ...acc, ...next }), {});
-  return {
-    ...fields,
-    interdependentFields: [
-      Object.entries(fields)
-        .filter(([fieldName, fieldObj]) => fieldObj.isInterdependent)
-        .map(([fieldName]) => fieldName)
-    ]
-  };
+    .reduce((acc, next) => ({ ...acc, ...next }));
 };
 
 const SET = "field/SET";
@@ -55,42 +43,25 @@ const createFormReducer = formConfig => (
 ) => {
   switch (action.type) {
     case SET:
-      const changedFieldName = action.payload.fieldName;
+      const fieldName = action.payload.fieldName;
       const newRawValue = action.payload.value;
-      const field = state[changedFieldName];
+      const field = state[fieldName];
       const newFormState = {
         ...state,
-        [changedFieldName]: {
+        [fieldName]: {
           ...field,
           rawValue: newRawValue
         }
       };
-      const fieldsToValidate = [
-        ...state.interdependentFields,
-        ...(state.interdependentFields.includes(changedFieldName)
-          ? []
-          : [changedFieldName])
-      ];
-      const updatedFields = fieldsToValidate
-        .map(fieldName => {
-          const errors = computeErrors(fieldName, newFormState);
-          const dirty =
-            fieldName === changedFieldName
-              ? true
-              : newFormState[fieldName].dirty;
-          return {
-            [fieldName]: {
-              ...newFormState[fieldName],
-              errors,
-              dirty,
-              hasErrors: errors.length > 0
-            }
-          };
-        })
-        .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+      const errors = computeErrors(fieldName, newFormState);
       return {
         ...newFormState,
-        ...updatedFields
+        [fieldName]: {
+          ...newFormState[fieldName],
+          dirty: true,
+          errors,
+          hasErrors: errors.length > 0
+        }
       };
     default:
       return state;

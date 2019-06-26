@@ -1,5 +1,5 @@
-const createValidator = (type, error, isInterdependent = false) => {
-  let validator = (...args) => ({ type, args, error, isInterdependent });
+const createValidator = (type, error) => {
+  let validator = (...args) => ({ type, args, error });
   validator.error = error;
   return validator;
 };
@@ -31,11 +31,7 @@ validatorFns[NUMBER_LESS_THAN] = (value, args, form) => {
 
 export const MATCHES_FIELD = "validator/MATCHES_FIELD";
 export const MATCHES_FIELD_ERROR = "error/MATCHES_FIELD";
-export const matchesField = createValidator(
-  MATCHES_FIELD,
-  MATCHES_FIELD_ERROR,
-  true
-);
+export const matchesField = createValidator(MATCHES_FIELD, MATCHES_FIELD_ERROR);
 validatorFns[MATCHES_FIELD] = (value, args, form) => {
   if (form[args[0]] === undefined) {
     throw new Error(
