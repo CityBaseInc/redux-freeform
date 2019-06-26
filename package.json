@@ -43,5 +43,7 @@
       "esm"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "redux-formal": "^0.0.2"
+  }
 }

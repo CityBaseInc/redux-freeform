@@ -22,7 +22,12 @@ import {
 
 test("required validator produces correct validator object", t => {
   t.is(required.error, REQUIRED_ERROR);
-  t.deepEqual(required(), { type: REQUIRED, args: [], error: REQUIRED_ERROR });
+  t.deepEqual(required(), {
+    type: REQUIRED,
+    args: [],
+    error: REQUIRED_ERROR,
+    isInterdependent: false
+  });
 });
 
 test("onlyIntegers validator produces correct validator object", t => {
@@ -30,7 +35,8 @@ test("onlyIntegers validator produces correct validator object", t => {
   t.deepEqual(onlyIntegers(), {
     type: ONLY_INTEGERS,
     args: [],
-    error: ONLY_INTEGERS_ERROR
+    error: ONLY_INTEGERS_ERROR,
+    isInterdependent: false
   });
 });
 
@@ -39,7 +45,8 @@ test("numberLessThan validator produces correct validator object", t => {
   t.deepEqual(numberLessThan(3), {
     type: NUMBER_LESS_THAN,
     args: [3],
-    error: NUMBER_LESS_THAN_ERROR
+    error: NUMBER_LESS_THAN_ERROR,
+    isInterdependent: false
   });
 });
 
@@ -48,7 +55,8 @@ test("matchesField validator produces correct validator object", t => {
   t.deepEqual(matchesField("foo"), {
     type: MATCHES_FIELD,
     args: ["foo"],
-    error: MATCHES_FIELD_ERROR
+    error: MATCHES_FIELD_ERROR,
+    isInterdependent: true
   });
 });
 
