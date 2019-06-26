@@ -11,10 +11,10 @@ export const REQUIRED_ERROR = "error/REQUIRED";
 export const required = createValidator(REQUIRED, REQUIRED_ERROR);
 validatorFns[REQUIRED] = (value, args, form) => value !== "";
 
-export const ONLY_NUMBERS = "validator/ONLY_NUMBERS";
-export const ONLY_NUMBERS_ERROR = "error/ONLY_NUMBERS";
-export const onlyNumbers = createValidator(ONLY_NUMBERS, ONLY_NUMBERS_ERROR);
-validatorFns[ONLY_NUMBERS] = (value, args, form) => /^\d*$/.test(value);
+export const ONLY_INTEGERS = "validator/ONLY_INTEGERS";
+export const ONLY_INTEGERS_ERROR = "error/ONLY_INTEGERS";
+export const onlyIntegers = createValidator(ONLY_INTEGERS, ONLY_INTEGERS_ERROR);
+validatorFns[ONLY_INTEGERS] = (value, args, form) => /^-?\d+$/.test(value);
 
 export const NUMBER_LESS_THAN = "validator/NUMBER_LESS_THAN";
 export const NUMBER_LESS_THAN_ERROR = "error/NUMBER_LESS_THAN";

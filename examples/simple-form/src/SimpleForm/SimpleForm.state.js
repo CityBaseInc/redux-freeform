@@ -1,6 +1,6 @@
 import {
   required,
-  onlyNumbers,
+  onlyIntegers,
   numberLessThan,
   onlyAlphabetical,
   minimumLength,
@@ -16,7 +16,7 @@ const formConfig = {
       format: phoneNumber()
     },
     age: {
-      validators: [required(), onlyNumbers(), numberLessThan(99)]
+      validators: [required(), onlyIntegers(), numberLessThan(99)]
     },
     name: {
       validators: [required(), onlyAlphabetical(), minimumLength(3)]
