@@ -56,6 +56,16 @@ const createFormReducer = formConfig => (
   }
 };
 
+export const createMapDispatchToProps = formConfig => dispatch =>
+  Object.keys(formConfig)
+    .map(fieldName => ({
+      [fieldName]: {
+        set: value => dispatch(set(fieldName)(value))
+      }
+    }))
+    .reducer((acc, curr) => ({ ...acc, ...curr }));
+
 export const createFormState = formConfig => ({
-  reducer: createFormReducer(formConfig)
+  reducer: createFormReducer(formConfig),
+  mapDispatchToProps: createMapDispatchToProps(formConfig)
 });
