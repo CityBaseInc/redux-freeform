@@ -16,7 +16,8 @@ import {
   MATCHES_FIELD_ERROR,
   validatorFns,
   runValidator,
-  runValidatorErrorMessage
+  runValidatorErrorMessage,
+  computeErrors
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -153,4 +154,40 @@ test("runValidator throws error when validatorFn does not exist", t => {
     runValidator({ type: "foo", args: [], error: "bar" }, "", {})
   );
   t.is(validatorError.message, runValidatorErrorMessage("foo"));
+});
+
+test("computeErrors returns an empty array when validators accept", t => {
+  const acceptingForm = {
+    foo: {
+      rawValue: "12",
+      validators: [
+        { type: REQUIRED, args: [], error: REQUIRED_ERROR },
+        { type: ONLY_INTEGERS, args: [], error: ONLY_INTEGERS_ERROR },
+        { type: NUMBER_LESS_THAN, args: [13], error: NUMBER_LESS_THAN_ERROR }
+      ]
+    }
+  };
+  t.deepEqual(computeErrors("foo", acceptingForm), []);
+});
+
+test("computeErrors returns an array of errors for each rejecting validator ordered by validator for each ", t => {
+  const rejectingForm = {
+    foo: {
+      rawValue: "11",
+      validators: [
+        { type: REQUIRED, args: [], error: REQUIRED_ERROR },
+        { type: MATCHES_FIELD, args: ["bar"], error: MATCHES_FIELD_ERROR },
+        { type: ONLY_INTEGERS, args: [], error: ONLY_INTEGERS_ERROR },
+        { type: NUMBER_LESS_THAN, args: [10], error: NUMBER_LESS_THAN_ERROR }
+      ]
+    },
+    bar: {
+      rawValue: "12",
+      validators: []
+    }
+  };
+  t.deepEqual(computeErrors("foo", rejectingForm), [
+    MATCHES_FIELD_ERROR,
+    NUMBER_LESS_THAN_ERROR
+  ]);
 });
