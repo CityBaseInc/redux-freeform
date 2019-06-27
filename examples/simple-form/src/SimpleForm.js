@@ -1,4 +1,9 @@
-import { required, matchesField, onlyIntegers } from "./redux-formal";
+import {
+  required,
+  matchesField,
+  onlyIntegers,
+  numberLessThan
+} from "./redux-formal";
 import React from "react";
 
 const nameFieldErrorMessages = {
@@ -10,7 +15,8 @@ const confirmNameFieldErrorMessages = {
 };
 const ageFieldErrorMessages = {
   [required.error]: "age is required",
-  [onlyIntegers.error]: "age must be a whole number"
+  [onlyIntegers.error]: "age must be a whole number",
+  [numberLessThan.error]: "age must be less than 99"
 };
 
 const InputField = ({

@@ -43,26 +43,30 @@ const createFormReducer = formConfig => (
 ) => {
   switch (action.type) {
     case SET:
-      const fieldName = action.payload.fieldName;
+      const changedFieldName = action.payload.fieldName;
       const newRawValue = action.payload.value;
-      const field = state[fieldName];
+      const field = state[changedFieldName];
       const newFormState = {
         ...state,
-        [fieldName]: {
+        [changedFieldName]: {
           ...field,
           rawValue: newRawValue
         }
       };
-      const errors = computeErrors(fieldName, newFormState);
-      return {
-        ...newFormState,
-        [fieldName]: {
-          ...newFormState[fieldName],
-          dirty: true,
-          errors,
-          hasErrors: errors.length > 0
-        }
-      };
+      return Object.entries(newFormState)
+        .map(([fieldName, field]) => {
+          const errors = computeErrors(fieldName, newFormState);
+          const dirty = fieldName === changedFieldName ? true : field.dirty;
+          return {
+            [fieldName]: {
+              ...field,
+              errors,
+              dirty,
+              hasErrors: errors.length > 0
+            }
+          };
+        })
+        .reduce((acc, curr) => ({ ...acc, ...curr }));
     default:
       return state;
   }
