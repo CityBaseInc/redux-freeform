@@ -1,9 +1,10 @@
-import createFormState, {
+import {
+  createFormState,
   matchesField,
   numberLessThan,
   onlyIntegers,
   required
-} from "./redux-formal";
+} from "redux-formal";
 
 const formConfig = {
   age: {

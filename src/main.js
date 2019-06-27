@@ -2,34 +2,26 @@ import produce from "immer";
 import { computeErrors } from "./validation";
 
 export const createInitialState = formConfig => {
-  const unvalidatedForm = Object.entries(formConfig)
-    .map(([key, value]) => {
-      const rawValue = value.defaultValue || "";
-      const validators = value.validators || [];
-      return {
-        [key]: {
-          dirty: false,
-          rawValue,
-          validators
-        }
-      };
-    })
-    .reduce((acc, next) => ({ ...acc, ...next }));
+  let initialForm = {};
+  const formConfigKeys = Object.keys(formConfig);
+  let formKey;
+  for (formKey of formConfigKeys) {
+    initialForm[formKey] = {
+      dirty: false,
+      rawValue: formConfig[formKey].defaultValue || "",
+      validators: formConfig[formKey].validators || []
+    };
+  }
   // Because validators require the entire form we have to do a
   // second pass to add errors once the initial form has been
   // constructed
-  return Object.entries(unvalidatedForm)
-    .map(([key, value]) => {
-      const errors = computeErrors(key, unvalidatedForm);
-      return {
-        [key]: {
-          ...value,
-          errors,
-          hasErrors: errors.length > 0
-        }
-      };
-    })
-    .reduce((acc, next) => ({ ...acc, ...next }));
+  let errors;
+  for (formKey of formConfigKeys) {
+    errors = computeErrors(formKey, initialForm);
+    initialForm[formKey].errors = errors;
+    initialForm[formKey].hasErrors = errors.length > 0;
+  }
+  return initialForm;
 };
 
 export const SET = "field/SET";
@@ -67,15 +59,28 @@ export const createFormReducer = formConfig => (
   }
 };
 
-export const createMapDispatchToProps = formConfig => dispatch => ({
-  actions: Object.keys(formConfig)
-    .map(fieldName => ({
-      [fieldName]: {
+// FIXME: This is broken
+export const createMapDispatchToProps = formConfig => {
+  // Do memo-ization
+  let cachedDispatch;
+  let cacheValue;
+  return dispatch => {
+    if (dispatch == cachedDispatch) {
+      return cacheValue;
+    }
+    let dispatchObj = {};
+    const keys = Object.keys(formConfig);
+    let fieldName;
+    for (fieldName of keys) {
+      dispatchObj[fieldName] = {
         set: value => dispatch(set(fieldName)(value))
-      }
-    }))
-    .reduce((acc, curr) => ({ ...acc, ...curr }))
-});
+      };
+    }
+    cachedDispatch = dispatch;
+    cacheValue = dispatchObj;
+    return dispatchObj;
+  };
+};
 
 export const createFormState = formConfig => ({
   reducer: createFormReducer(formConfig),
