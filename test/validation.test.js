@@ -1,6 +1,7 @@
 import test from "ava";
 import { testProp, fc } from "ava-fast-check";
 
+import { fieldNameGen } from "./util";
 import {
   required,
   REQUIRED,
@@ -118,7 +119,7 @@ testProp(
 
 testProp(
   "matchesField accepts value equal to argument field rawValue",
-  [fc.string(1, 15).filter(str => /^[A-z]$/.test(str)), fc.string()],
+  [fieldNameGen(), fc.string()],
   (fieldName, fieldValue) =>
     !!validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
       [fieldName]: {

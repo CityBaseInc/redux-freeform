@@ -1,6 +1,6 @@
 import { computeErrors } from "./validation";
 
-const createInitialState = formConfig => {
+export const createInitialState = formConfig => {
   const unvalidatedForm = Object.entries(formConfig)
     .map(([key, value]) => {
       const rawValue = value.defaultValue || "";
@@ -31,13 +31,13 @@ const createInitialState = formConfig => {
     .reduce((acc, next) => ({ ...acc, ...next }));
 };
 
-const SET = "field/SET";
-const set = fieldName => value => ({
+export const SET = "field/SET";
+export const set = fieldName => value => ({
   type: SET,
   payload: { fieldName, value }
 });
 
-const createFormReducer = formConfig => (
+export const createFormReducer = formConfig => (
   state = createInitialState(formConfig),
   action = {}
 ) => {
