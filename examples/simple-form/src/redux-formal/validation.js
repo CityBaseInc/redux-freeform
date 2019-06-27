@@ -84,7 +84,14 @@ export const runValidator = (validator, value, form) => {
 
 export const computeErrors = (fieldName, form) => {
   const validators = form[fieldName].validators;
-  return validators
-    .map(v => runValidator(v, form[fieldName].rawValue, form))
-    .filter(x => x !== null);
+  let errors = [];
+  let error = null;
+  let v;
+  for (v of validators) {
+    error = runValidator(v, form[fieldName].rawValue, form);
+    if (error !== null) {
+      errors.push(error);
+    }
+  }
+  return errors;
 };
