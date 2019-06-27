@@ -53,20 +53,18 @@ const createFormReducer = formConfig => (
           rawValue: newRawValue
         }
       };
-      return Object.entries(newFormState)
-        .map(([fieldName, field]) => {
-          const errors = computeErrors(fieldName, newFormState);
-          const dirty = fieldName === changedFieldName ? true : field.dirty;
-          return {
-            [fieldName]: {
-              ...field,
-              errors,
-              dirty,
-              hasErrors: errors.length > 0
-            }
-          };
-        })
-        .reduce((acc, curr) => ({ ...acc, ...curr }));
+      let returnState = {};
+      Object.entries(newFormState).forEach(([fieldName, field]) => {
+        const errors = computeErrors(fieldName, newFormState);
+        const dirty = fieldName === changedFieldName ? true : field.dirty;
+        returnState[fieldName] = {
+          ...field,
+          errors,
+          dirty,
+          hasErrors: errors.length > 0
+        };
+      });
+      return returnState;
     default:
       return state;
   }
