@@ -1,7 +1,7 @@
 import test from "ava";
 import { testProp, fc } from "ava-fast-check";
 
-import { fieldNameGen } from "./util";
+import { fieldNameGen, initializeReducer } from "./util";
 
 import {
   createInitialState,
@@ -11,7 +11,12 @@ import {
   set,
   SET
 } from "../src/main";
-import { REQUIRED, REQUIRED_ERROR } from "../src/validation";
+import {
+  REQUIRED,
+  REQUIRED_ERROR,
+  MATCHES_FIELD,
+  MATCHES_FIELD_ERROR
+} from "../src/validation";
 
 const formConfig = {
   foo: {
@@ -74,5 +79,113 @@ test("createFormReducer returns a valid form reducer", t => {
       dirty: false
     }
   };
-  t.deepEqual(formReducer(undefined, { type: "@@init" }), expectedInitialState);
+  t.deepEqual(initializeReducer(formReducer), expectedInitialState);
+});
+
+test("reducer set action updates correct field", t => {
+  const formReducer = createFormReducer(formConfig);
+  const initialState = initializeReducer(formReducer);
+  const expectedState = {
+    foo: {
+      rawValue: "bar",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      errors: [],
+      hasErrors: false,
+      dirty: true
+    }
+  };
+  t.deepEqual(
+    formReducer(initialState, {
+      type: SET,
+      payload: { fieldName: "foo", value: "bar" }
+    }),
+    expectedState
+  );
+});
+
+test("reducer set action re-validates dependent field", t => {
+  const extendedFormConfig = {
+    ...formConfig,
+    matchesFoo: {
+      validators: [
+        {
+          type: MATCHES_FIELD,
+          args: ["foo"],
+          error: MATCHES_FIELD_ERROR
+        }
+      ]
+    }
+  };
+  const formReducer = createFormReducer(extendedFormConfig);
+  const initialState = initializeReducer(formReducer);
+  const expectedInitialState = {
+    foo: {
+      rawValue: "",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      errors: [REQUIRED_ERROR],
+      hasErrors: true,
+      dirty: false
+    },
+    matchesFoo: {
+      rawValue: "",
+      validators: [
+        {
+          type: MATCHES_FIELD,
+          args: ["foo"],
+          error: MATCHES_FIELD_ERROR
+        }
+      ],
+      errors: [],
+      hasErrors: false,
+      dirty: false
+    }
+  };
+  t.deepEqual(expectedInitialState, initialState);
+  const expectedState = {
+    foo: {
+      rawValue: "bar",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      errors: [],
+      hasErrors: false,
+      dirty: true
+    },
+    matchesFoo: {
+      rawValue: "",
+      validators: [
+        {
+          type: MATCHES_FIELD,
+          args: ["foo"],
+          error: MATCHES_FIELD_ERROR
+        }
+      ],
+      errors: [MATCHES_FIELD_ERROR],
+      hasErrors: true,
+      dirty: false
+    }
+  };
+  t.deepEqual(
+    expectedState,
+    formReducer(initialState, {
+      type: SET,
+      payload: { fieldName: "foo", value: "bar" }
+    })
+  );
 });

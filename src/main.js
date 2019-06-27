@@ -1,3 +1,4 @@
+import produce from "immer";
 import { computeErrors } from "./validation";
 
 export const createInitialState = formConfig => {
@@ -46,21 +47,21 @@ export const createFormReducer = formConfig => (
       const changedFieldName = action.payload.fieldName;
       const newRawValue = action.payload.value;
 
-      // mutate as new object will be returned
-      state[changedFieldName].rawValue = newRawValue;
+      return produce(state, draftState => {
+        draftState[changedFieldName].rawValue = newRawValue;
 
-      const fields = Object.entries(state);
-      let entry, fieldName, field, errors, dirty;
-      for (entry of fields) {
-        fieldName = entry[0];
-        field = entry[1];
-        errors = computeErrors(fieldName, state);
-        dirty = fieldName === changedFieldName ? true : field.dirty;
-        state[fieldName].errors = errors;
-        state[fieldName].dirty = dirty;
-        state[fieldName].hasErrors = errors.length > 0;
-      }
-      return state;
+        const fields = Object.entries(draftState);
+        let entry, fieldName, field, errors, dirty;
+        for (entry of fields) {
+          fieldName = entry[0];
+          field = entry[1];
+          errors = computeErrors(fieldName, draftState);
+          dirty = fieldName === changedFieldName ? true : field.dirty;
+          draftState[fieldName].errors = errors;
+          draftState[fieldName].dirty = dirty;
+          draftState[fieldName].hasErrors = errors.length > 0;
+        }
+      });
     default:
       return state;
   }
