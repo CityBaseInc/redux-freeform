@@ -2,7 +2,8 @@ import {
   required,
   matchesField,
   onlyIntegers,
-  numberLessThan
+  numberLessThan,
+  hasLength
 } from "redux-freeform";
 import React from "react";
 
@@ -17,6 +18,10 @@ const ageFieldErrorMessages = {
   [required.error]: "age is required",
   [onlyIntegers.error]: "age must be a whole number",
   [numberLessThan.error]: "age must be less than 99"
+};
+const fourDigitCodeErrorMessages = {
+  [required.error]: "four digit code is required",
+  [hasLength.error]: "four digit code must be 4 numbers"
 };
 
 const InputField = ({
@@ -63,6 +68,12 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.age}
       labelTextWhenNoError="age"
       errorMessages={ageFieldErrorMessages}
+    />
+    <InputField
+      field={fields.fourDigitCode}
+      fieldActions={actions.fourDigitCode}
+      labelTextWhenNoError="four digit code"
+      errorMessages={fourDigitCodeErrorMessages}
     />
   </form>
 );

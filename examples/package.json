@@ -6,14 +6,14 @@
   "author": "Citybase Inc",
   "license": "MIT",
   "scripts": {
-    "start": "parcel build index.html && serve ./dist/"
+    "start": "parcel index.html",
+    "start-prod": "parcel build index.html && serve ./dist/"
   },
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
-    "redux-freeform": "file:../",
     "validation": "^0.0.1"
   },
   "devDependencies": {

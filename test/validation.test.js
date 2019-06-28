@@ -15,6 +15,9 @@ import {
   matchesField,
   MATCHES_FIELD,
   MATCHES_FIELD_ERROR,
+  hasLength,
+  HAS_LENGTH,
+  HAS_LENGTH_ERROR,
   validatorFns,
   runValidator,
   runValidatorErrorMessage,
@@ -75,7 +78,7 @@ testProp(
 
 testProp(
   "onlyIntegers rejects alphabetic string",
-  [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c)))],
+  [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")],
   stringA => !validatorFns[ONLY_INTEGERS](stringA, [], {})
 );
 
@@ -85,6 +88,10 @@ testProp(
   (floatA, fixedLength) =>
     !validatorFns[ONLY_INTEGERS](floatA.toFixed(fixedLength), [], {})
 );
+
+test("onlyIntegers accepts empty string", t => {
+  t.true(validatorFns[ONLY_INTEGERS]("", [], {}));
+});
 
 const smallerBiggerTuple = fc
   .float()
@@ -195,4 +202,76 @@ test("computeErrors returns an array of errors for each rejecting validator", t 
     MATCHES_FIELD_ERROR,
     NUMBER_LESS_THAN_ERROR
   ]);
+});
+
+test("hasLength validator creates valid validator object", t => {
+  t.is(hasLength.error, HAS_LENGTH_ERROR);
+  t.deepEqual(hasLength(1, 10), {
+    type: HAS_LENGTH,
+    args: [1, 10],
+    error: HAS_LENGTH_ERROR
+  });
+});
+
+//TODO: Make prop test
+test("hasLength validator returns null when validator accepts", t => {
+  t.is(
+    runValidator(
+      { type: HAS_LENGTH, args: [1, 10], error: HAS_LENGTH_ERROR },
+      "123",
+      {}
+    ),
+    null
+  );
+});
+
+//TODO: Make prop test
+test("hasLength validator returns error when validator rejects", t => {
+  t.is(
+    runValidator(
+      { type: HAS_LENGTH, args: [1, 3], error: HAS_LENGTH_ERROR },
+      "1234",
+      {}
+    ),
+    HAS_LENGTH_ERROR
+  );
+});
+
+test("hasLength throws error when max or min are not passed", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      { type: HAS_LENGTH, args: [1], error: HAS_LENGTH_ERROR },
+      "",
+      {}
+    )
+  );
+  t.is(
+    validatorError.message,
+    "Max and min need to be defined for hasLength, both or one of them is undefined"
+  );
+  const validatorError2 = t.throws(() =>
+    runValidator(
+      { type: HAS_LENGTH, args: [], error: HAS_LENGTH_ERROR },
+      "",
+      {}
+    )
+  );
+  t.is(
+    validatorError2.message,
+    "Max and min need to be defined for hasLength, both or one of them is undefined"
+  );
+});
+
+test("hasLength throws error when max is less than min", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      { type: HAS_LENGTH, args: [10, 1], error: HAS_LENGTH_ERROR },
+      "",
+      {}
+    )
+  );
+  t.is(
+    validatorError.message,
+    "hasLength validator was passed a min greater than the max"
+  );
 });

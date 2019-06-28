@@ -14,7 +14,7 @@ validatorFns[REQUIRED] = (value, args, form) => value !== "";
 export const ONLY_INTEGERS = "validator/ONLY_INTEGERS";
 export const ONLY_INTEGERS_ERROR = "error/ONLY_INTEGERS";
 export const onlyIntegers = createValidator(ONLY_INTEGERS, ONLY_INTEGERS_ERROR);
-validatorFns[ONLY_INTEGERS] = (value, args, form) => /^-?\d+$/.test(value);
+validatorFns[ONLY_INTEGERS] = (value, args, form) => /^(-?\d+)?$/.test(value);
 
 export const NUMBER_LESS_THAN = "validator/NUMBER_LESS_THAN";
 export const NUMBER_LESS_THAN_ERROR = "error/NUMBER_LESS_THAN";
@@ -43,9 +43,29 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
   return value === form[args[0]].rawValue;
 };
 
+export const HAS_LENGTH = "validator/HAS_LENGTH";
+export const HAS_LENGTH_ERROR = "error/HAS_LENGTH";
+export const hasLength = createValidator(HAS_LENGTH, HAS_LENGTH_ERROR);
+validatorFns[HAS_LENGTH] = (value, args, form) => {
+  const min = args[0];
+  const max = args[1];
+  if (max == undefined || min == undefined) {
+    throw new Error(
+      "Max and min need to be defined for hasLength, both or one of them is undefined"
+    );
+  }
+  if (max < min) {
+    throw new Error(
+      "hasLength validator was passed a min greater than the max"
+    );
+  }
+  const valueLength = value.length;
+  return max >= valueLength && valueLength >= min;
+};
+
 export const runValidatorErrorMessage = type =>
-  `${type} was passed to runValidator, but that validator type does not exist. 
-  Please check that you are only calling validator functions exported from 
+  `${type} was passed to runValidator, but that validator type does not exist.
+  Please check that you are only calling validator functions exported from
   redux-freeform/validators in your form config.`;
 
 export const runValidator = (validator, value, form) => {
@@ -56,9 +76,18 @@ export const runValidator = (validator, value, form) => {
   return validatorFn(value, validator.args, form) ? null : validator.error;
 };
 
-export const computeErrors = (fieldName, form) => {
-  const validators = form[fieldName].validators;
+const _computeErrors = (fieldName, form, validators) => {
   return validators
     .map(v => runValidator(v, form[fieldName].rawValue, form))
     .filter(x => x !== null);
+};
+
+export const computeConstraints = (fieldName, form) => {
+  const constraints = form[fieldName].constraints;
+  return _computeErrors(fieldName, form, constraints);
+};
+
+export const computeErrors = (fieldName, form) => {
+  const validators = form[fieldName].validators;
+  return _computeErrors(fieldName, form, validators);
 };

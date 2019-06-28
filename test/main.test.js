@@ -7,7 +7,6 @@ import {
   createInitialState,
   createFormReducer,
   createMapDispatchToProps,
-  createFormState,
   set,
   SET
 } from "../src/main";
@@ -15,7 +14,9 @@ import {
   REQUIRED,
   REQUIRED_ERROR,
   MATCHES_FIELD,
-  MATCHES_FIELD_ERROR
+  MATCHES_FIELD_ERROR,
+  ONLY_INTEGERS,
+  ONLY_INTEGERS_ERROR
 } from "../src/validation";
 
 const exampleRequiredField = {
@@ -56,6 +57,7 @@ test("createInitialState takes a formConfig and returns a valid formState", t =>
           error: REQUIRED_ERROR
         }
       ],
+      constraints: [],
       errors: [REQUIRED_ERROR],
       hasErrors: true,
       dirty: false
@@ -76,6 +78,7 @@ test("createFormReducer returns a valid form reducer", t => {
           error: REQUIRED_ERROR
         }
       ],
+      constraints: [],
       errors: [REQUIRED_ERROR],
       hasErrors: true,
       dirty: false
@@ -97,6 +100,7 @@ test("reducer set action updates correct field", t => {
           error: REQUIRED_ERROR
         }
       ],
+      constraints: [],
       errors: [],
       hasErrors: false,
       dirty: true
@@ -136,6 +140,7 @@ test("reducer set action re-validates dependent field", t => {
           error: REQUIRED_ERROR
         }
       ],
+      constraints: [],
       errors: [REQUIRED_ERROR],
       hasErrors: true,
       dirty: false
@@ -149,6 +154,7 @@ test("reducer set action re-validates dependent field", t => {
           error: MATCHES_FIELD_ERROR
         }
       ],
+      constraints: [],
       errors: [],
       hasErrors: false,
       dirty: false
@@ -165,6 +171,7 @@ test("reducer set action re-validates dependent field", t => {
           error: REQUIRED_ERROR
         }
       ],
+      constraints: [],
       errors: [],
       hasErrors: false,
       dirty: true
@@ -178,6 +185,7 @@ test("reducer set action re-validates dependent field", t => {
           error: MATCHES_FIELD_ERROR
         }
       ],
+      constraints: [],
       errors: [MATCHES_FIELD_ERROR],
       hasErrors: true,
       dirty: false
@@ -211,4 +219,54 @@ test("createMapDispatchToProps returns a memoized fn", t => {
   // These are reference comparisons, not deep equals
   t.is(mapDispatchToProps(fnA), mapDispatchToProps(fnA));
   t.not(mapDispatchToProps(fnA), mapDispatchToProps(fnB));
+});
+
+test("unable to make change that violates constraints", t => {
+  const _formConfig = {
+    foo: {
+      constraints: [
+        {
+          type: ONLY_INTEGERS,
+          args: [],
+          error: ONLY_INTEGERS_ERROR
+        }
+      ]
+    }
+  };
+  const formReducer = createFormReducer(_formConfig);
+  const initialState = initializeReducer(formReducer);
+  t.deepEqual(initialState, formReducer(initialState, set("foo")("a")));
+});
+
+test("able to make change that does not violate constraints", t => {
+  const _formConfig = {
+    foo: {
+      constraints: [
+        {
+          type: ONLY_INTEGERS,
+          args: [],
+          error: ONLY_INTEGERS_ERROR
+        }
+      ]
+    }
+  };
+  const formReducer = createFormReducer(_formConfig);
+  const initialState = initializeReducer(formReducer);
+  const expectedState = {
+    foo: {
+      errors: [],
+      rawValue: "1",
+      constraints: [
+        {
+          type: ONLY_INTEGERS,
+          args: [],
+          error: ONLY_INTEGERS_ERROR
+        }
+      ],
+      validators: [],
+      hasErrors: false,
+      dirty: true
+    }
+  };
+  t.deepEqual(expectedState, formReducer(initialState, set("foo")("1")));
 });

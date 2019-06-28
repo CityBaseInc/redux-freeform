@@ -3,6 +3,7 @@ import {
   matchesField,
   numberLessThan,
   onlyIntegers,
+  hasLength,
   required
 } from "redux-freeform";
 
@@ -19,6 +20,10 @@ const formConfig = {
   country: {
     defaultValue: "U.S.",
     validators: [required()]
+  },
+  fourDigitCode: {
+    validators: [required(), hasLength(4, 4)],
+    constraints: [onlyIntegers(), hasLength(0, 4)]
   }
 };
 

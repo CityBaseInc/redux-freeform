@@ -1,11 +1,8 @@
 export {
   required,
-  REQUIRED,
   onlyIntegers,
-  ONLY_INTEGERS,
   numberLessThan,
-  NUMBER_LESS_THAN,
   matchesField,
-  MATCHES_FIELD
+  hasLength
 } from "./validation";
 export { createFormState } from "./main";
