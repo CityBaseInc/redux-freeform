@@ -6,7 +6,7 @@
   "author": "Citybase Inc",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel build index.html && serve ./dist/"
   },
   "dependencies": {
     "react": "^16.8.6",
