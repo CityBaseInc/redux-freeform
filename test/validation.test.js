@@ -104,6 +104,10 @@ const smallerBiggerTuple = fc
     )
   );
 
+test("numberLessThan accepts empty string", t => {
+  t.true(validatorFns[NUMBER_LESS_THAN]("", {}));
+});
+
 testProp(
   "numberLessThan accepts value less than argument",
   [smallerBiggerTuple],
@@ -149,6 +153,20 @@ testProp(
       }
     })
 );
+
+test("matchesField throws an error when form does not include field", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      { type: MATCHES_FIELD, args: ["foo"], error: MATCHES_FIELD_ERROR },
+      "bar",
+      {}
+    )
+  );
+  t.is(
+    validatorError.message,
+    "foo was passed to matchesField, but that field does not exist in the form"
+  );
+});
 
 test("runValidator returns null when validator accepts", t => {
   t.is(runValidator({ type: REQUIRED, args: [] }, "foo", {}), null);

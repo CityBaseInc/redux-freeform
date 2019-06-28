@@ -33,7 +33,7 @@ export const set = fieldName => value => ({
 
 export const createFormReducer = formConfig => (
   state = createInitialState(formConfig),
-  action = {}
+  action
 ) => {
   switch (action.type) {
     case SET:
@@ -87,8 +87,10 @@ export const createMapDispatchToProps = formConfig => {
   };
 };
 
+export const mapStateToProps = state => state;
+
 export const createFormState = formConfig => ({
   reducer: createFormReducer(formConfig),
   mapDispatchToProps: createMapDispatchToProps(formConfig),
-  mapStateToProps: state => state
+  mapStateToProps: mapStateToProps
 });

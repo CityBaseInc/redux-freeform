@@ -24,7 +24,7 @@ export const numberLessThan = createValidator(
 );
 validatorFns[NUMBER_LESS_THAN] = (value, args, form) => {
   if (value === "") {
-    return false;
+    return true;
   }
   return Number(value) < args[0];
 };

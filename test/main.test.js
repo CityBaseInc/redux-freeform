@@ -7,6 +7,7 @@ import {
   createInitialState,
   createFormReducer,
   createMapDispatchToProps,
+  createFormState,
   set,
   SET
 } from "../src/main";
@@ -32,6 +33,13 @@ const exampleRequiredField = {
 const formConfig = {
   foo: exampleRequiredField
 };
+
+test("createFormState produces an object with valid state keys", t => {
+  t.deepEqual(
+    Object.keys(createFormState(formConfig)).sort(),
+    ["reducer", "mapDispatchToProps", "mapStateToProps"].sort()
+  );
+});
 
 testProp(
   "set creates returns an action creator that returns a valid action",
