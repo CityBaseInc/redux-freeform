@@ -70,8 +70,7 @@ export const createMapDispatchToProps = formConfig => {
     }
     let dispatchObj = {};
     const keys = Object.keys(formConfig);
-    let fieldName;
-    for (fieldName of keys) {
+    for (let fieldName of keys) {
       dispatchObj[fieldName] = {
         set: value => dispatch(set(fieldName)(value))
       };
@@ -85,5 +84,5 @@ export const createMapDispatchToProps = formConfig => {
 export const createFormState = formConfig => ({
   reducer: createFormReducer(formConfig),
   mapDispatchToProps: createMapDispatchToProps(formConfig),
-  mapStateToProps: state => ({ fields: state })
+  mapStateToProps: state => state
 });

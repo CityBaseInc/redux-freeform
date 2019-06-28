@@ -18,16 +18,18 @@ import {
   MATCHES_FIELD_ERROR
 } from "../src/validation";
 
+const exampleRequiredField = {
+  validators: [
+    {
+      type: REQUIRED,
+      args: [],
+      error: REQUIRED_ERROR
+    }
+  ]
+};
+
 const formConfig = {
-  foo: {
-    validators: [
-      {
-        type: REQUIRED,
-        args: [],
-        error: REQUIRED_ERROR
-      }
-    ]
-  }
+  foo: exampleRequiredField
 };
 
 testProp(
@@ -188,4 +190,25 @@ test("reducer set action re-validates dependent field", t => {
       payload: { fieldName: "foo", value: "bar" }
     })
   );
+});
+
+test("createMapDispatchToProps returns valid action creators", t => {
+  const extendedFormConfig = {
+    ...formConfig,
+    bax: exampleRequiredField,
+    baz: exampleRequiredField
+  };
+  const dispatchObj = createMapDispatchToProps(extendedFormConfig)(x => x);
+  t.deepEqual(dispatchObj.foo.set("bar1"), set("foo")("bar1"));
+  t.deepEqual(dispatchObj.bax.set("bar2"), set("bax")("bar2"));
+  t.deepEqual(dispatchObj.baz.set("bar3"), set("baz")("bar3"));
+});
+
+test("createMapDispatchToProps returns a memoized fn", t => {
+  const fnA = x => x;
+  const fnB = x => x;
+  const mapDispatchToProps = createMapDispatchToProps(formConfig);
+  // These are reference comparisons, not deep equals
+  t.is(mapDispatchToProps(fnA), mapDispatchToProps(fnA));
+  t.not(mapDispatchToProps(fnA), mapDispatchToProps(fnB));
 });

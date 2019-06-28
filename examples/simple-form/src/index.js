@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { createStore } from "redux";
 
 import SimpleForm from "./SimpleForm";
 import {
@@ -15,8 +14,8 @@ const rootEl = document.getElementById("simple-form");
 const render = () =>
   ReactDOM.render(
     <SimpleForm
-      {...mapStateToProps(store.getState())}
-      {...mapDispatchToProps(store.dispatch)}
+      fields={mapStateToProps(store.getState())}
+      actions={mapDispatchToProps(store.dispatch)}
     />,
     rootEl
   );

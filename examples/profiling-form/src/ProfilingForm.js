@@ -32,8 +32,7 @@ const InputField = ({
 );
 
 const ProfilingForm = ({ actions, fields }) => {
-  const x = { "field-1": fields["field-1"] };
-  const fieldComponents = Object.keys(x).map(fieldName => (
+  const fieldComponents = Object.keys(fields).map(fieldName => (
     <InputField
       key={fieldName}
       labelTextWhenNoError={fieldName}

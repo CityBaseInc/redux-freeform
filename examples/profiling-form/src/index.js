@@ -14,15 +14,15 @@ const timedReducer = (...args) => {
   const result = reducer(...args);
   console.timeEnd("Reducer");
   return result;
-}
+};
 
 const store = createStore(timedReducer);
 const rootEl = document.getElementById("profiling-form");
 const render = () =>
   ReactDOM.render(
     <ProfilingForm
-      fields={mapStateToProps(store.getState()).fields}
-      actions={mapDispatchToProps(store.dispatch).actions}
+      fields={mapStateToProps(store.getState())}
+      actions={mapDispatchToProps(store.dispatch)}
     />,
     rootEl
   );

@@ -175,7 +175,7 @@ test("computeErrors returns an empty array when validators accept", t => {
   t.deepEqual(computeErrors("foo", acceptingForm), []);
 });
 
-test("computeErrors returns an array of errors for each rejecting validator ordered by validator for each ", t => {
+test("computeErrors returns an array of errors for each rejecting validator", t => {
   const rejectingForm = {
     foo: {
       rawValue: "11",
