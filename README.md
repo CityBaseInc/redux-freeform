@@ -51,4 +51,8 @@ const formConfig = {
     validators: [required()]
   }
 };
+
+const { reducer, mapStateToProps, mapDispatchToProps } = createFormState(
+  formConfig
+);
 ```
