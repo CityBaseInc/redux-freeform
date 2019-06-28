@@ -3,7 +3,7 @@ import {
   matchesField,
   onlyIntegers,
   numberLessThan
-} from "redux-formal";
+} from "redux-freeform";
 import React from "react";
 
 const nameFieldErrorMessages = {

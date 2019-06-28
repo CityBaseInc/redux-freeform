@@ -7,7 +7,7 @@ export default [
   {
     input: "src/index.js",
     output: {
-      name: "redux-formal",
+      name: "redux-freeform",
       file: pkg.browser,
       format: "umd"
     },

@@ -1,4 +1,4 @@
-import { required, matchesField } from "redux-formal";
+import { required, matchesField } from "redux-freeform";
 import React from "react";
 
 const fieldErrorMessages = {

@@ -4,7 +4,7 @@ import {
   numberLessThan,
   onlyIntegers,
   required
-} from "redux-formal";
+} from "redux-freeform";
 
 const formConfig = {
   age: {

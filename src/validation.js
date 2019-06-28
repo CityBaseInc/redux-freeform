@@ -46,7 +46,7 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
 export const runValidatorErrorMessage = type =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator functions exported from 
-  redux-formal/validators in your form config.`;
+  redux-freeform/validators in your form config.`;
 
 export const runValidator = (validator, value, form) => {
   const validatorFn = validatorFns[validator.type];

@@ -3604,9 +3604,9 @@ redent@^2.0.0:
     indent-string "^3.0.0"
     strip-indent "^2.0.0"
 
-redux-formal@^0.0.2:
+redux-freeform@^0.0.2:
   version "0.0.2"
-  resolved "https://registry.yarnpkg.com/redux-formal/-/redux-formal-0.0.2.tgz#e4589e45fc88e68205609d82209993f0a3df062f"
+  resolved "https://registry.yarnpkg.com/redux-freeform/-/redux-freeform-0.0.2.tgz#e4589e45fc88e68205609d82209993f0a3df062f"
   integrity sha512-C9h7TGLZgZLA5Dqs4Mq7KMiw8fP42746s/LQzkEjkWJ+Su2AzTvpNVrhX/ad/o1PJIv6yj1yEA3w303wy6VCyw==
 
 regenerate-unicode-properties@^8.0.2:

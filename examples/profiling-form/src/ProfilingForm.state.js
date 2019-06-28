@@ -1,4 +1,4 @@
-import { createFormState, matchesField, required } from "redux-formal";
+import { createFormState, matchesField, required } from "redux-freeform";
 
 let formConfig = {};
 formConfig["field-0"] = {
