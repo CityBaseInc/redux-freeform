@@ -65,7 +65,6 @@ export const createFormReducer = formConfig => (
   }
 };
 
-// FIXME: This is broken
 export const createMapDispatchToProps = formConfig => {
   // Do memo-ization
   let cachedDispatch;
