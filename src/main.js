@@ -4,8 +4,7 @@ import { computeErrors, computeConstraints } from "./validation";
 export const createInitialState = formConfig => {
   let initialForm = {};
   const formConfigKeys = Object.keys(formConfig);
-  let formKey;
-  for (formKey of formConfigKeys) {
+  for (let formKey of formConfigKeys) {
     initialForm[formKey] = {
       dirty: false,
       rawValue: formConfig[formKey].defaultValue || "",
@@ -16,9 +15,8 @@ export const createInitialState = formConfig => {
   // Because validators require the entire form we have to do a
   // second pass to add errors once the initial form has been
   // constructed
-  let errors;
-  for (formKey of formConfigKeys) {
-    errors = computeErrors(formKey, initialForm);
+  for (let formKey of formConfigKeys) {
+    let errors = computeErrors(formKey, initialForm);
     initialForm[formKey].errors = errors;
     initialForm[formKey].hasErrors = errors.length > 0;
   }
