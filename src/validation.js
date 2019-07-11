@@ -63,6 +63,22 @@ validatorFns[HAS_LENGTH] = (value, args, form) => {
   return max >= valueLength && valueLength >= min;
 };
 
+export const EXCLUDES_CHARS = "validator/EXCLUDES_CHARS";
+export const EXCLUDES_CHARS_ERROR = "error/EXCLUDES_CHARS";
+export const excludesChars = createValidator(
+  EXCLUDES_CHARS,
+  EXCLUDES_CHARS_ERROR
+);
+validatorFns[EXCLUDES_CHARS] = (value, args, form) => {
+  const excludedChars = args[0];
+  if (excludedChars == undefined) {
+    throw new Error(
+      "excludesChars requires an array of excluded characters, but was passed undefined"
+    );
+  }
+  return !value.split("").filter(char => excludedChars.includes(char)).length;
+};
+
 export const runValidatorErrorMessage = type =>
   `${type} was passed to runValidator, but that validator type does not exist.
   Please check that you are only calling validator functions exported from

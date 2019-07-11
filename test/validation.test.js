@@ -1,7 +1,12 @@
 import test from "ava";
 import { testProp, fc } from "ava-fast-check";
 
-import { fieldNameGen } from "./util";
+import {
+  fieldNameGen,
+  smallerBiggerTupleGen,
+  stringWithoutCharTupleGen,
+  stringWithCharTupleGen
+} from "./util";
 import {
   required,
   REQUIRED,
@@ -18,6 +23,9 @@ import {
   hasLength,
   HAS_LENGTH,
   HAS_LENGTH_ERROR,
+  excludesChars,
+  EXCLUDES_CHARS_ERROR,
+  EXCLUDES_CHARS,
   validatorFns,
   runValidator,
   runValidatorErrorMessage,
@@ -93,31 +101,20 @@ test("onlyIntegers accepts empty string", t => {
   t.true(validatorFns[ONLY_INTEGERS]("", [], {}));
 });
 
-const smallerBiggerTuple = fc
-  .float()
-  .chain(smallerNumber =>
-    fc.tuple(
-      fc.constant(smallerNumber),
-      fc
-        .float(smallerNumber, Number.MAX_SAFE_INTEGER)
-        .filter(n => n !== smallerNumber)
-    )
-  );
-
 test("numberLessThan accepts empty string", t => {
   t.true(validatorFns[NUMBER_LESS_THAN]("", {}));
 });
 
 testProp(
   "numberLessThan accepts value less than argument",
-  [smallerBiggerTuple],
+  [smallerBiggerTupleGen],
   ([smallerNumber, biggerNumber]) =>
     !!validatorFns[NUMBER_LESS_THAN](String(smallerNumber), [biggerNumber], {})
 );
 
 testProp(
   "numberLessThan rejects value greater than argument",
-  [smallerBiggerTuple],
+  [smallerBiggerTupleGen],
   ([smallerNumber, biggerNumber]) =>
     !validatorFns[NUMBER_LESS_THAN](String(biggerNumber), [smallerNumber], {})
 );
@@ -291,5 +288,42 @@ test("hasLength throws error when max is less than min", t => {
   t.is(
     validatorError.message,
     "hasLength validator was passed a min greater than the max"
+  );
+});
+
+test("excludesChars validator creates valid validator object", t => {
+  t.is(excludesChars.error, EXCLUDES_CHARS_ERROR);
+  t.deepEqual(excludesChars(["f", "o", "o"]), {
+    type: EXCLUDES_CHARS,
+    args: [["f", "o", "o"]],
+    error: EXCLUDES_CHARS_ERROR
+  });
+});
+
+testProp(
+  "excludesChars accepts string containing excluded char",
+  [stringWithoutCharTupleGen],
+  ([excludedChar, stringWithoutExcludedChar]) =>
+    validatorFns[EXCLUDES_CHARS](
+      stringWithoutExcludedChar,
+      [[excludedChar]],
+      {}
+    )
+);
+
+testProp(
+  "excludesChars rejects string containing excluded char",
+  [stringWithCharTupleGen],
+  ([excludedChar, stringWithExcludedChar]) =>
+    !validatorFns[EXCLUDES_CHARS](stringWithExcludedChar, [[excludedChar]], {})
+);
+
+test("excludesChars throws an error when not passed array", t => {
+  const validatorError = t.throws(
+    () => !validatorFns[EXCLUDES_CHARS]("foo", {})
+  );
+  t.is(
+    validatorError.message,
+    "excludesChars requires an array of excluded characters, but was passed undefined"
   );
 });
