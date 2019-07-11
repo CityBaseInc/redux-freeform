@@ -46,7 +46,17 @@ const PHONE_FORMATS = [
   "+__ (___) ___ - ____",
   "+___ (___) ___ - ____"
 ];
-const phoneUniqueDelimeters = getUniqueFormatDelimeters(PHONE_FORMATS);
-export const phone = "formatter/PHONE";
-formattingFns[phone] = format(PHONE_FORMATS);
-unformattingFns[phone] = unformat(phoneUniqueDelimeters);
+export const PHONE = "formatter/PHONE";
+export const phoneUniqueDelimeters = getUniqueFormatDelimeters(PHONE_FORMATS);
+export const phone = {
+  type: PHONE,
+  uniqueDelimeters: phoneUniqueDelimeters
+};
+formattingFns[PHONE] = format(PHONE_FORMATS);
+unformattingFns[PHONE] = unformat(phoneUniqueDelimeters);
+
+export const computeUnformattedValue = (value, formatter) =>
+  unformattingFns[formatter.type](value);
+
+export const computeFormattedValue = (value, formatter) =>
+  formattingFns[formatter.type](value);

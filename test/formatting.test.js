@@ -3,6 +3,7 @@ import {
   formattingFns,
   unformattingFns,
   phone,
+  PHONE,
   getUniqueFormatDelimeters
 } from "../src/formatting";
 
@@ -26,13 +27,13 @@ const allPhoneLengths = [
 
 test("phone numbers are formatted properly", t => {
   for (let l of allPhoneLengths) {
-    t.is(formattingFns[phone](l.input), l.output);
+    t.is(formattingFns[PHONE](l.input), l.output);
   }
 });
 
 test("phone numbers unformat properly", t => {
   for (let l of allPhoneLengths) {
-    t.is(unformattingFns[phone](l.output), l.input);
+    t.is(unformattingFns[PHONE](l.output), l.input);
   }
 });
 

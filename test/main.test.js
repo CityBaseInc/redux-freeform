@@ -68,7 +68,9 @@ test("createInitialState takes a formConfig and returns a valid formState", t =>
       constraints: [],
       errors: [REQUIRED_ERROR],
       hasErrors: true,
-      dirty: false
+      dirty: false,
+      formattedValue: "",
+      formatter: null
     }
   };
   t.deepEqual(createInitialState(formConfig), expectedFormState);
@@ -89,7 +91,9 @@ test("createFormReducer returns a valid form reducer", t => {
       constraints: [],
       errors: [REQUIRED_ERROR],
       hasErrors: true,
-      dirty: false
+      dirty: false,
+      formattedValue: "",
+      formatter: null
     }
   };
   t.deepEqual(initializeReducer(formReducer), expectedInitialState);
@@ -111,7 +115,9 @@ test("reducer set action updates correct field", t => {
       constraints: [],
       errors: [],
       hasErrors: false,
-      dirty: true
+      dirty: true,
+      formattedValue: "bar",
+      formatter: null
     }
   };
   t.deepEqual(
@@ -151,7 +157,9 @@ test("reducer set action re-validates dependent field", t => {
       constraints: [],
       errors: [REQUIRED_ERROR],
       hasErrors: true,
-      dirty: false
+      dirty: false,
+      formattedValue: "",
+      formatter: null
     },
     matchesFoo: {
       rawValue: "",
@@ -165,7 +173,9 @@ test("reducer set action re-validates dependent field", t => {
       constraints: [],
       errors: [],
       hasErrors: false,
-      dirty: false
+      dirty: false,
+      formattedValue: "",
+      formatter: null
     }
   };
   t.deepEqual(expectedInitialState, initialState);
@@ -182,7 +192,9 @@ test("reducer set action re-validates dependent field", t => {
       constraints: [],
       errors: [],
       hasErrors: false,
-      dirty: true
+      dirty: true,
+      formattedValue: "bar",
+      formatter: null
     },
     matchesFoo: {
       rawValue: "",
@@ -196,7 +208,9 @@ test("reducer set action re-validates dependent field", t => {
       constraints: [],
       errors: [MATCHES_FIELD_ERROR],
       hasErrors: true,
-      dirty: false
+      dirty: false,
+      formattedValue: "",
+      formatter: null
     }
   };
   t.deepEqual(
@@ -273,7 +287,9 @@ test("able to make change that does not violate constraints", t => {
       ],
       validators: [],
       hasErrors: false,
-      dirty: true
+      dirty: true,
+      formattedValue: "1",
+      formatter: null
     }
   };
   t.deepEqual(expectedState, formReducer(initialState, set("foo")("1")));

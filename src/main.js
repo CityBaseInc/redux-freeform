@@ -1,15 +1,29 @@
 import produce from "immer";
-import { computeErrors, computeConstraints } from "./validation";
+import { computeErrors, computeConstraints, excludesChars } from "./validation";
+import { computeFormattedValue, computeUnformattedValue } from "./formatting";
 
 export const createInitialState = formConfig => {
   let initialForm = {};
   const formConfigKeys = Object.keys(formConfig);
   for (let formKey of formConfigKeys) {
+    const formatter = formConfig[formKey].formatter || null;
+    const formatterConstraint = formatter
+      ? [excludesChars(formatter.uniqueDelimeters)]
+      : [];
+    const defaultValue = formConfig[formKey].defaultValue || "";
+    const formattedValue = formatter
+      ? computeFormattedValue(defaultValue, formatter)
+      : defaultValue;
     initialForm[formKey] = {
       dirty: false,
-      rawValue: formConfig[formKey].defaultValue || "",
+      rawValue: defaultValue,
       validators: formConfig[formKey].validators || [],
-      constraints: formConfig[formKey].constraints || []
+      constraints: [
+        ...(formConfig[formKey].constraints || []),
+        ...formatterConstraint
+      ],
+      formattedValue,
+      formatter
     };
   }
   // Because validators require the entire form we have to do a
@@ -36,7 +50,14 @@ export const createFormReducer = formConfig => (
   switch (action.type) {
     case SET:
       const changedFieldName = action.payload.fieldName;
-      const newRawValue = action.payload.value;
+      const incomingValue = action.payload.value;
+      const fieldFormatter = state[changedFieldName].formatter;
+      const newRawValue = fieldFormatter
+        ? computeUnformattedValue(
+            incomingValue,
+            state[changedFieldName].formatter
+          )
+        : incomingValue;
 
       return produce(state, draftState => {
         let originalValue = draftState[changedFieldName].rawValue;
@@ -46,7 +67,12 @@ export const createFormReducer = formConfig => (
           draftState[changedFieldName].rawValue = originalValue;
           return draftState;
         }
-
+        draftState[changedFieldName].formattedValue = fieldFormatter
+          ? computeFormattedValue(
+              newRawValue,
+              draftState[changedFieldName].formatter
+            )
+          : newRawValue;
         const fields = Object.entries(draftState);
         for (let entry of fields) {
           let fieldName = entry[0];
