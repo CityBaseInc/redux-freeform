@@ -4,7 +4,8 @@ import {
   numberLessThan,
   onlyIntegers,
   hasLength,
-  required
+  required,
+  phone
 } from "redux-freeform";
 
 const formConfig = {
@@ -24,6 +25,10 @@ const formConfig = {
   fourDigitCode: {
     validators: [required(), hasLength(4, 4)],
     constraints: [onlyIntegers(), hasLength(0, 4)]
+  },
+  phoneNumber: {
+    constraints: [onlyIntegers()],
+    formatter: phone()
   }
 };
 

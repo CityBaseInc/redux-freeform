@@ -2,7 +2,6 @@ import test from "ava";
 import {
   formattingFns,
   unformattingFns,
-  phone,
   PHONE,
   getUniqueFormatDelimeters
 } from "../src/formatting";

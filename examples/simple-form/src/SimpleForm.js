@@ -39,7 +39,7 @@ const InputField = ({
       </label>
     </div>
     <input
-      value={field.rawValue}
+      value={field.formattedValue}
       onChange={e => fieldActions.set(e.target.value)}
     />
     {!field.dirty && " ✴️"}
@@ -74,6 +74,11 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.fourDigitCode}
       labelTextWhenNoError="four digit code"
       errorMessages={fourDigitCodeErrorMessages}
+    />
+    <InputField
+      field={fields.phoneNumber}
+      fieldActions={actions.phoneNumber}
+      labelTextWhenNoError="phone number"
     />
   </form>
 );

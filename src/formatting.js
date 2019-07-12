@@ -48,10 +48,10 @@ const PHONE_FORMATS = [
 ];
 export const PHONE = "formatter/PHONE";
 export const phoneUniqueDelimeters = getUniqueFormatDelimeters(PHONE_FORMATS);
-export const phone = {
+export const phone = () => ({
   type: PHONE,
   uniqueDelimeters: phoneUniqueDelimeters
-};
+});
 formattingFns[PHONE] = format(PHONE_FORMATS);
 unformattingFns[PHONE] = unformat(phoneUniqueDelimeters);
 
