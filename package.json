@@ -8,7 +8,7 @@
   "repository": "https://github.com/CityBaseInc/redux-freeform",
   "author": "Citybase Inc.",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
