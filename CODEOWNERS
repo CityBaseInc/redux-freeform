@@ -1,0 +1,6 @@
+# This file defines the codeowners for this repository.
+# More details in: https://help.github.com/en/articles/about-code-owners
+
+# Main Ownership
+# Serve and Digital Payments teams will have shared ownership but will focus on different parts of the repository
+* beeeth liam-cb hlee-cb
