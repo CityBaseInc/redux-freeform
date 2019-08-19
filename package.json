@@ -1,6 +1,6 @@
 {
   "name": "redux-freeform",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TBD",
   "main": "dist/redux-freeform.cjs.js",
   "module": "dist/redux-freeform.esm.js",
