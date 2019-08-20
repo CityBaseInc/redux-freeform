@@ -40,3 +40,11 @@ jobs:
             - ~/.cache/npm
             - node_modules
       - run: yarn test
+
+      - run:
+          name: Deploying to GitHub Pages
+          command: |
+            git config --global user.email "liam-cb@users.noreply.github.com"
+            git config --global user.name "liam-cb"
+            echo "machine github.com login liam-cb password $GITHUB_TOKEN" > ~/.netrc
+            cd website && yarn install && GIT_USER=liam-cb yarn run publish-gh-pages
