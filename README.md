@@ -1,5 +1,4 @@
-# redux-freeform
-
+# redux-freeform [![CircleCI](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master.svg?style=svg&circle-token=c438da276819dc386059028121b088ca581341fc)](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master)
 ## What?
 
 Freeform is a library that generates form management reducers for you. It handles validation and formatting
