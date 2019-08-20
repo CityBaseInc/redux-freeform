@@ -14,7 +14,7 @@ const users = [];
 const siteConfig = {
   title: "Redux Freeform", // Title for your website.
   tagline: "A form state management library",
-  url: "https://opensource.thecitybase.com/redux-freeform", // Your website URL
+  url: "https://citybaseinc.github.io", // Your website URL
   baseUrl: "/redux-freeform/", // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
