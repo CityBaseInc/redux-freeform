@@ -1,42 +1,62 @@
-version: 2
+common_environment: &common_environment
+  docker:
+    - image: circleci/node:10.14
+  working_directory: ~/redux-freeform
+
+cache_keys: &cache_keys
+  keys:
+    - citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}-{{ .Branch }}
+    - citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}
+    - citybaseinc-redux-freeform-v1
+
+cache_paths: &cache_paths
+  paths:
+    - ~/.cache/yarn
+    - ~/.cache/npm
+    - node_modules
+
+save_cache_map: &save_cache_map
+  <<: *cache_paths
+  name: Persist Node Cache
+
+test_steps: &test_steps
+  - checkout
+  - restore_cache: *cache_keys
+  - run: yarn install
+  - save-cache:
+      <<: *save_cache_map
+      key: citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}-{{ .Branch }}
+  - save-cache:
+      <<: *save_cache_map
+      key: citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}
+  - save-cache:
+      <<: *save_cache_map
+      key: citybaseinc-redux-freeform-v1
+  - run: yarn test
+
+coverage_steps: &coverage_steps
+  - checkout
+  - restore_cache: *cache_keys
+  - run: yarn install
+  - run: yarn coverage
+
 jobs:
-  build:
-    docker:
-      - image: circleci/node:10.14
+  test:
+    <<: *common_environment
+    steps: *test_steps
+  coverage:
+    <<: *common_environment
+    steps: *coverage_steps
 
-    working_directory: ~/redux-freeform
-
-    steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}-{{ .Branch }}
-            - citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}
-            - citybaseinc-redux-freeform-v1
-
-      - run: yarn install
-
-      - save_cache:
-          name: Saving Node Cache
-          key: citybaseinc-redux-freeform-v1-dependencies-yarn-{{ checksum "yarn.lock" }}-{{ .Branch}}
-          paths:
-            - ~/.cache/yarn
-            - ~/.cache/npm
-            - node_modules
-      - save_cache:
-          name: Saving Node Cache
-          key: citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-            - ~/.cache/npm
-            - node_modules
-      - save_cache:
-          name: Saving Node Cache
-          key: citybaseinc-redux-freeform-v1
-          paths:
-            - ~/.cache/yarn
-            - ~/.cache/npm
-            - node_modules
-      - run: yarn test
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - coverage:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - test

@@ -12,7 +12,8 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "test": "nyc ava"
+    "test": "nyc ava",
+    "coverage": "echo 'to be implemented'"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -22,6 +23,7 @@
     "ava-fast-check": "^1.1.1",
     "babel-eslint": "^10.0.2",
     "babel-plugin-istanbul": "^5.1.4",
+    "coveralls": "^3.0.6",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
