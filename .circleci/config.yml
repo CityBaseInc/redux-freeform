@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.14
+
+    working_directory: ~/redux-freeform
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}-{{ .Branch }}
+            - citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}
+            - citybaseinc-redux-freeform-v1
+
+      - run: yarn install
+
+      - save_cache:
+          name: Saving Node Cache
+          key: citybaseinc-redux-freeform-v1-dependencies-yarn-{{ checksum "yarn.lock" }}-{{ .Branch}}
+          paths:
+            - ~/.cache/yarn
+            - ~/.cache/npm
+            - node_modules
+      - save_cache:
+          name: Saving Node Cache
+          key: citybaseinc-redux-freeform-v1-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+            - ~/.cache/npm
+            - node_modules
+      - save_cache:
+          name: Saving Node Cache
+          key: citybaseinc-redux-freeform-v1
+          paths:
+            - ~/.cache/yarn
+            - ~/.cache/npm
+            - node_modules
+      - run: yarn test
