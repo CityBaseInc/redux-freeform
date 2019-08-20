@@ -3,35 +3,31 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A website for testing",
+    "tagline": "A form state management library",
     "docs": {
-      "doc1": {
-        "title": "Latin-ish",
-        "sidebar_label": "Example Page"
+      "create-form-state": {
+        "title": "createFormState",
+        "sidebar_label": "createFormState"
       },
-      "doc2": {
-        "title": "document number 2"
+      "getting-started": {
+        "title": "Getting Started",
+        "sidebar_label": "Getting Started"
       },
-      "doc3": {
-        "title": "This is document number 3"
+      "intro": {
+        "title": "Intro",
+        "sidebar_label": "Intro"
       },
-      "doc4": {
-        "title": "Other Document"
-      },
-      "doc5": {
-        "title": "Fifth Document"
+      "validators-api": {
+        "title": "Validators",
+        "sidebar_label": "Validators"
       }
     },
     "links": {
-      "Docs": "Docs",
-      "API": "API",
-      "Help": "Help",
-      "Blog": "Blog"
+      "Docs": "Docs"
     },
     "categories": {
-      "Docusaurus": "Docusaurus",
-      "First Category": "First Category",
-      "Second Category": "Second Category"
+      "Getting Started": "Getting Started",
+      "API Reference": "API Reference"
     }
   },
   "pages-strings": {
