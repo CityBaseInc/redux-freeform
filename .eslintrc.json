@@ -1,10 +1,11 @@
 {
-  "extends": ["plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended", "plugin:react/recommended"],
   "plugins": ["prettier"],
   "parser": "babel-eslint",
   "rules": {
     "prettier/prettier": "error",
-    "no-unused-vars": 2
+    "no-unused-vars": 2,
+    "react/prop-types": 0
   },
   "env": {
     "browser": true
