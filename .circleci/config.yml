@@ -40,6 +40,18 @@ coverage_steps: &coverage_steps
   - run: yarn install
   - run: yarn coverage
 
+deploy_docs_steps: &deploy_docs_steps
+  - checkout
+  - restore_cache: *cache_keys
+  - run: yarn install
+  - run:
+      name: Deploying to GitHub Pages
+      command: |
+        git config --global user.email "liam-cb@users.noreply.github.com"
+        git config --global user.name "liam-cb"
+        echo "machine github.com login liam-cb password $GITHUB_TOKEN" > ~/.netrc
+        cd website && yarn install && GIT_USER=liam-cb yarn run publish-gh-pages
+
 jobs:
   test:
     <<: *common_environment
@@ -47,16 +59,22 @@ jobs:
   coverage:
     <<: *common_environment
     steps: *coverage_steps
+  deploy_docs:
+    <<: *common_environment
+    steps: *deploy_docs_steps
+
+only_healthy_master: &only_healthy_master
+  filters:
+    branches:
+      only:
+        - master
+  requires:
+    - test
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - test
-      - coverage:
-          filters:
-            branches:
-              only:
-                - master
-          requires:
-            - test
+      - coverage: *only_healthy_master
+      - deploy_docs: *only_healthy_master
