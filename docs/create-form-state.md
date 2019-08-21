@@ -27,8 +27,8 @@ The form config object has as top level keys the names of your fields, for examp
 each field has its own configuration with these options:
 
 - `defaultValue` the value to initialize the field to, by default an empty string
-- `validators` a list of validator object to apply to the field, these generate errors [Read More]()
-- `constraints` a list of constraint objects to apply to the field, these block changes [Read More]()
+- `validators` a list of validator object to apply to the field, these generate errors [Read More](validators.md)
+- `constraints` a list of constraint objects to apply to the field, these block changes [Read More](constraints.md)
 
 ## Form State
 
@@ -69,7 +69,7 @@ Each sub-object has the following keys:
 
 - `dirty` a boolean, this is false initially and becomes true once any change has occurred to the field
 - `rawValue` a string, this is the value of the field as a string
-- `validators` an array of objects, the validators to be applied to the field [Read More]()
-- `constraints` an array of object, the constraints to be applied to the field [Read More]()
+- `validators` an array of objects, the validators to be applied to the field [Read More](validators.md)
+- `constraints` an array of object, the constraints to be applied to the field [Read More](constraints.md)
 - `errors` an array of strings, representing which validators are not satisfied by the current value
 - `hasErrors` a boolean, representing if there are any errors (equivalent to checking if the errors array is empty)

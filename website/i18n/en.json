@@ -5,6 +5,10 @@
     "previous": "Previous",
     "tagline": "A form state management library",
     "docs": {
+      "constraints": {
+        "title": "Constraints",
+        "sidebar_label": "Constraints"
+      },
       "create-form-state": {
         "title": "createFormState",
         "sidebar_label": "createFormState"
