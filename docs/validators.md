@@ -36,3 +36,13 @@ representing validators and their parameters. They will return object that look 
 - `type` a constant representing the validator type, used for validation function lookup
 - `args` an optional array of arguments that parameterize the validator
 - `error` the error constant that will be given to the state if the validator does not pass
+
+## Errors
+
+You can access errors from the state and compare them to a given validator like so:
+
+```javascript
+import { required } from "redux-freeform";
+
+formState.fieldName.errors.includes(required.error); // true if "fieldName" field has a "required" error
+```

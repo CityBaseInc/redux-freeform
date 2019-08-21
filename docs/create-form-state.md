@@ -69,7 +69,7 @@ Each sub-object has the following keys:
 
 - `dirty` a boolean, this is false initially and becomes true once any change has occurred to the field
 - `rawValue` a string, this is the value of the field as a string
-- `validators` an array of obejcts, the validators to be applied to the field [Read More]()
-- `contrainsts` an array of obejct, the constraints to be applied to the field [Read More]()
+- `validators` an array of objects, the validators to be applied to the field [Read More]()
+- `constraints` an array of object, the constraints to be applied to the field [Read More]()
 - `errors` an array of strings, representing which validators are not satisfied by the current value
 - `hasErrors` a boolean, representing if there are any errors (equivalent to checking if the errors array is empty)
