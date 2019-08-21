@@ -1,6 +1,6 @@
 {
   "docs": {
-    "Getting Started": ["intro", "getting-started"],
-    "API Reference": ["create-form-state", "validators-api"]
+    "Getting Started": ["intro", "getting-started", "create-form-state", "validators"],
+    "API Reference": ["validators-api"]
   }
 }

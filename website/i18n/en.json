@@ -20,6 +20,10 @@
       "validators-api": {
         "title": "Validators",
         "sidebar_label": "Validators"
+      },
+      "validators": {
+        "title": "Validators",
+        "sidebar_label": "Validators"
       }
     },
     "links": {
