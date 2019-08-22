@@ -32,7 +32,7 @@ each field has its own configuration with these options (none of which are requi
 
 ## Form State
 
-`createFormState) will consume the formConfig object and return generated form state object that can be consumed by your view. The generated form state will look like this:
+`createFormState` will consume the formConfig object and return generated form state object that can be consumed by your view. The generated form state will look like this:
 
 ```jsx
 {

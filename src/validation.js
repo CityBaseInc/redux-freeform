@@ -64,9 +64,11 @@ validatorFns[HAS_LENGTH] = (value, args, form) => {
 };
 
 export const runValidatorErrorMessage = type =>
-  `${type} was passed to runValidator, but that validator type does not exist.
-  Please check that you are only calling validator functions exported from
-  redux-freeform/validators in your form config.`;
+  `${type} was passed to runValidator, but that validator type does not exist. 
+  Please check that you are only calling validator functions exported from 
+  redux-freeform in your form config and that you didn't forget to 
+  invoke the validator function (you cannot pass the functions themselves to 
+  createFormState)`;
 
 export const runValidator = (validator, value, form) => {
   const validatorFn = validatorFns[validator.type];

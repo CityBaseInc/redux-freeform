@@ -4,8 +4,6 @@ title: Validators
 sidebar_label: Validators
 ---
 
-All validators are functions that may or may not take arguments and return a validator object that will be consumed by [createFormState](create-form-state.md).
-
 ## required
 
 required validates on anything other than an empty string
