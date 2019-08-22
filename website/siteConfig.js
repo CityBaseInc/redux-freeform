@@ -34,8 +34,8 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: "img/favicon.ico",
-  footerIcon: "img/favicon.ico",
+  headerIcon: "img/redux-freeform_logo.svg",
+  footerIcon: "img/redux-freeform_logo.svg",
   favicon: "img/favicon.ico",
 
   /* Colors for website */

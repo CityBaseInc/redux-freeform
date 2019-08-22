@@ -1,4 +1,9 @@
-# redux-freeform [![CircleCI](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master.svg?style=svg&circle-token=c438da276819dc386059028121b088ca581341fc)](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master)
+![header](/images/freeform-banner.png)
+
+[![CircleCI](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master.svg?style=svg&circle-token=c438da276819dc386059028121b088ca581341fc)](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master)
+
+[Read the Docs!](https://citbaseinc.github.io/redux-freeform)
+
 ## What?
 
 Freeform is a library that generates form management reducers for you. It handles validation and formatting
@@ -17,10 +22,6 @@ and `reducer` for you to use at your leisure.
 There are a lot of redux form management libraries. Some of those may suit your needs better. This library
 will be of use to you if you want your app to contain a single source of truth for app state and
 you want full flexibility in your rendering.
-
-## Should I use this in prod?
-
-Not yet. We'll update when we're using it in prod successfully at Citybase.
 
 ## Example Usage
 
