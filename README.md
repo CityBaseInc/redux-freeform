@@ -1,4 +1,4 @@
-![header](/images/freeform-banner.png)
+![header](/images/freeform-banner-small.png)
 
 [![CircleCI](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master.svg?style=svg&circle-token=c438da276819dc386059028121b088ca581341fc)](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master)
 
