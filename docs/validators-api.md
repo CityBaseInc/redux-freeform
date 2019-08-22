@@ -4,11 +4,13 @@ title: Validators
 sidebar_label: Validators
 ---
 
+All validators are functions that may or may not take arguments and return a validator object that will be consumed by [createFormState](create-form-state.md).
+
 ## required
 
 required validates on anything other than an empty string
 
-```javascript
+```jsx
 import { required } from "redux-freeform";
 
 const formConfig = {
@@ -27,7 +29,7 @@ const formConfig = {
 
 onlyIntegers will validate only on fields containing integers
 
-```javascript
+```jsx
 import { onlyIntegers } from "redux-freeform";
 
 const formConfig = {
@@ -48,7 +50,7 @@ const formConfig = {
 
 numberLessThan will validate any number less than the one provided
 
-```javascript
+```jsx
 import { onlyIntegers } from "redux-freeform";
 
 const formConfig = {
@@ -61,7 +63,7 @@ const formConfig = {
 Arguments:
 `hasLength(n)`
 
-- `n` value must be numerically < this value
+- `n` value must be numerically `<` this value
 
 | Value | n   | Validates |
 | ----- | --- | --------- |
@@ -73,7 +75,7 @@ Arguments:
 
 hasLength will validate for any string of the given length
 
-```javascript
+```jsx
 import { onlyIntegers } from "redux-freeform";
 
 const formConfig = {
@@ -105,7 +107,7 @@ you can specify exactly one length like so:
 
 matchesField validates if this fields value is equivalent to another given fields value
 
-```javascript
+```jsx
 import { onlyIntegers } from "redux-freeform";
 
 const formConfig = {
