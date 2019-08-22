@@ -4,8 +4,9 @@ title: Validators
 sidebar_label: Validators
 ---
 
-Validators are object that you can attach to your form fields in your form
-config object in order to generate errors. For example:
+Validators are small configuration objects that get consumed by [createFormState](create-form-state.md) and the internals of redux-freeform when performing validation. These objects would be combersome to write by hand, so redux-freeform exposes functions to generate these objects. Some validator creators take no arguments, some take arguments that will be used in the returned configuration objects `args` array and consumed during validation.
+
+Example usage:
 
 ```jsx
 import {
