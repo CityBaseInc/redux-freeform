@@ -7,7 +7,7 @@ sidebar_label: Validators
 Validators are object that you can attach to your form fields in your form
 config object in order to generate errors. For example:
 
-```javascript
+```jsx
 import {
   createFormState,
   numberLessThan,
@@ -25,7 +25,7 @@ const formConfig = {
 `required`, `onlyIntegers`, and `numberLessThan` are functions that generate serializable objects
 representing validators and their parameters. They will return object that look like this:
 
-```javascript
+```jsx
 {
   type: "validator/REQUIRED",
   args: [],
@@ -41,7 +41,7 @@ representing validators and their parameters. They will return object that look 
 
 You can access errors from the state and compare them to a given validator like so:
 
-```javascript
+```jsx
 import { required } from "redux-freeform";
 
 formState.fieldName.errors.includes(required.error); // true if "fieldName" field has a "required" error

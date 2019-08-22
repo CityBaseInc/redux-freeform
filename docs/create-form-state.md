@@ -16,7 +16,7 @@ This should be familiar if you have used redux and react-redux.
 
 The form config object has as top level keys the names of your fields, for example:
 
-```javascript
+```jsx
 {
   name: {},
   age: {},
@@ -24,7 +24,7 @@ The form config object has as top level keys the names of your fields, for examp
 }
 ```
 
-each field has its own configuration with these options:
+each field has its own configuration with these options (none of which are required):
 
 - `defaultValue` the value to initialize the field to, by default an empty string
 - `validators` a list of validator object to apply to the field, these generate errors [Read More](validators.md)
@@ -32,10 +32,9 @@ each field has its own configuration with these options:
 
 ## Form State
 
-The form config object will be used to generate form state that can be consumed by your view that
-looks like this:
+`createFormState) will consume the formConfig object and return generated form state object that can be consumed by your view. The generated form state will look like this:
 
-```javascript
+```jsx
 {
   name: {
     dirty: false,

@@ -10,7 +10,7 @@ not validate.
 
 They are specified on the constraints key of a field in a form config object.
 
-```javascript
+```jsx
 {
   name: {
     constraints: [hasLength(0, 10)];
