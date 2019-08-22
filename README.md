@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master.svg?style=svg&circle-token=c438da276819dc386059028121b088ca581341fc)](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master)
 
-[Read the Docs!](https://citbaseinc.github.io/redux-freeform)
+[Read the Docs!](https://citybaseinc.github.io/redux-freeform)
 
 ## What?
 
