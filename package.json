@@ -1,7 +1,7 @@
 {
   "name": "redux-freeform",
   "version": "1.0.0",
-  "description": "TBD",
+  "description": "A small Redux form library that supports purely functional apps, without magic",
   "main": "dist/redux-freeform.cjs.js",
   "module": "dist/redux-freeform.esm.js",
   "browser": "dist/redux-freeform.umd.js",
