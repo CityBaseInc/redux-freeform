@@ -49,7 +49,7 @@ const formConfig = {
 numberLessThan will validate any number less than the one provided
 
 ```jsx
-import { onlyIntegers } from "redux-freeform";
+import { numberLessThan } from "redux-freeform";
 
 const formConfig = {
   age: {
@@ -59,9 +59,9 @@ const formConfig = {
 ```
 
 Arguments:
-`hasLength(n)`
+`numberLessThan(n)`
 
-- `n` value must be numerically `<` this value
+- `n` value must be numerically `<` than _n_
 
 | Value | n   | Validates |
 | ----- | --- | --------- |
@@ -74,7 +74,7 @@ Arguments:
 hasLength will validate for any string of the given length
 
 ```jsx
-import { onlyIntegers } from "redux-freeform";
+import { hasLength } from "redux-freeform";
 
 const formConfig = {
   code: {
@@ -86,8 +86,8 @@ const formConfig = {
 Arguments:
 `hasLength(min, max)`
 
-- `min` value must be >= this value
-- `max` value must be <= this value
+- `min` value must be >= _min_
+- `max` value must be <= _max_
 
 you can specify exactly one length like so:
 
@@ -98,6 +98,7 @@ you can specify exactly one length like so:
 | ""       | 0   | 4   | True      |
 | ""       | 1   | 4   | False     |
 | "abc"    | 4   | 4   | False     |
+| "abcd"   | 4   | 4   | True      |
 | "abc"    | 2   | 4   | True      |
 | "abcdef" | 1   | 3   | False     |
 
@@ -106,7 +107,7 @@ you can specify exactly one length like so:
 matchesField validates if this fields value is equivalent to another given fields value
 
 ```jsx
-import { onlyIntegers } from "redux-freeform";
+import { matchesField } from "redux-freeform";
 
 const formConfig = {
   password: {
@@ -129,4 +130,4 @@ Note: this causes the field to essentially "inherit" the validators of the match
 | ----- | ----------------- | --------- |
 | "foo" | "foo"             | True      |
 | ""    | ""                | True      |
-| "foo" | "bar"             | True      |
+| "foo" | "bar"             | False     |
