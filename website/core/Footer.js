@@ -24,7 +24,7 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="nav-footer" id="footer">
-        <section className="copyright"><a href="https://www.thecitybase.com">Made with 💖 by Citybase.</a></section>
+        <section className="copyright"><a href="https://www.thecitybase.com">Made with  💖 by Citybase.</a></section>
       </footer>
     );
   }
