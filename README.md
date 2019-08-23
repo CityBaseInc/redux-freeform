@@ -14,7 +14,7 @@ Freeform supports a functional all-in approach to Redux apps. There are many ben
 but it can be tedious to write out all the reducers and actions. By generating form reducers from simple configs we make 
 this much more manageable.
 
-Freeform will takes a form configuration object and generates a `mapStateToProps`, `mapDispatchToProps`,
+Freeform takes a form configuration object and generates a `mapStateToProps`, `mapDispatchToProps`,
 and `reducer` for you to use at your leisure.
 
 ## Why?
