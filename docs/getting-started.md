@@ -95,8 +95,8 @@ const rootEl = document.getElementById("root");
 const render = () =>
   ReactDOM.render(
     <MyForm
-      fields={mapStateToProps(store.getState())}
-      actions={mapDispatchToProps(store.dispatch)}
+      {...mapStateToProps(store.getState())}
+      {...mapDispatchToProps(store.dispatch)}
     />,
     rootEl
   );

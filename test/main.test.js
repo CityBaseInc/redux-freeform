@@ -215,9 +215,9 @@ test("createMapDispatchToProps returns valid action creators", t => {
     baz: exampleRequiredField
   };
   const dispatchObj = createMapDispatchToProps(extendedFormConfig)(x => x);
-  t.deepEqual(dispatchObj.foo.set("bar1"), set("foo")("bar1"));
-  t.deepEqual(dispatchObj.bax.set("bar2"), set("bax")("bar2"));
-  t.deepEqual(dispatchObj.baz.set("bar3"), set("baz")("bar3"));
+  t.deepEqual(dispatchObj.actions.foo.set("bar1"), set("foo")("bar1"));
+  t.deepEqual(dispatchObj.actions.bax.set("bar2"), set("bax")("bar2"));
+  t.deepEqual(dispatchObj.actions.baz.set("bar3"), set("baz")("bar3"));
 });
 
 test("createMapDispatchToProps returns a memoized fn", t => {
