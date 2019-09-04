@@ -34,16 +34,22 @@ const { reducer, mapStateToProps, mapDispatchToProps } = createFormState(
 Now you can use `reducer, mapStateToProps, mapDispatchToProps` as you would in any
 other Redux app.
 
-mapStateToProps is an identity function provided for verisimilitude with react-redux and
-for backwards compatibility as we add features. It is recommended you pass your state through
-this function before using it in your view.
+mapStateToProps is an function for use with react-redux that takes the form state and returns an object
+
+```jsx
+{ 
+  fields: state 
+}
+```
 
 mapDispatchToProps takes a dispatch function and returns an object like so:
 
 ```jsx
 {
-  field1: { set: String -> () },
-  field2: { set: String -> () }
+  actions: {
+    field1: { set: String -> () },
+    field2: { set: String -> () }
+  }
 }
 ```
 
@@ -53,8 +59,8 @@ in the state by [validators](validators.md) and [constraints](constraints.md).
 Example usage:
 
 ```jsx
-const actions = mapDispatchToProps(dispatch);
-actions.field1.set("foo");
+const props = mapDispatchToProps(dispatch);
+props.actions.field1.set("foo");
 ```
 
 ## Putting It Together With React

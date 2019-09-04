@@ -45,5 +45,5 @@ You can access errors from the state and compare them to a given validator like 
 ```jsx
 import { required } from "redux-freeform";
 
-formState.fieldName.errors.includes(required.error); // true if "fieldName" field has a "required" error
+fields.fieldName.errors.includes(required.error); // true if "fieldName" field has a "required" error
 ```
