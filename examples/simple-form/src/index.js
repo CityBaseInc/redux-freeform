@@ -17,8 +17,8 @@ const rootEl = document.getElementById("simple-form");
 const render = () =>
   ReactDOM.render(
     <SimpleForm
-      fields={mapStateToProps(store.getState())}
-      actions={mapDispatchToProps(store.dispatch)}
+      {...mapStateToProps(store.getState())}
+      {...mapDispatchToProps(store.dispatch)}
     />,
     rootEl
   );

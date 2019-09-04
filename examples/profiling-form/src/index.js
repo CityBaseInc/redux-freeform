@@ -21,8 +21,8 @@ const rootEl = document.getElementById("profiling-form");
 const render = () =>
   ReactDOM.render(
     <ProfilingForm
-      fields={mapStateToProps(store.getState())}
-      actions={mapDispatchToProps(store.dispatch)}
+      {...mapStateToProps(store.getState())}
+      {...mapDispatchToProps(store.dispatch)}
     />,
     rootEl
   );
