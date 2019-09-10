@@ -79,12 +79,12 @@ export const createMapDispatchToProps = formConfig => {
       };
     }
     cachedDispatch = dispatch;
-    cacheValue = dispatchObj;
-    return dispatchObj;
+    cacheValue = { actions: dispatchObj };
+    return cacheValue;
   };
 };
 
-export const mapStateToProps = state => state;
+export const mapStateToProps = state => ({ fields: state });
 
 export const createFormState = formConfig => ({
   reducer: createFormReducer(formConfig),
