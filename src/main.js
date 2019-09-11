@@ -29,6 +29,9 @@ export const set = fieldName => value => ({
   payload: { fieldName, value }
 });
 
+export const CLEAR = "CLEAR";
+export const clear = () => ({ type: CLEAR });
+
 export const createFormReducer = formConfig => (
   state = createInitialState(formConfig),
   action
@@ -58,6 +61,18 @@ export const createFormReducer = formConfig => (
           draftState[fieldName].hasErrors = errors.length > 0;
         }
       });
+    case CLEAR:
+      return produce(state, draftState => {
+        const formConfigKeys = Object.keys(formConfig);
+        formConfigKeys.forEach(key => {
+          draftState[key] = {
+            dirty: false,
+            rawValue: formConfig[key].defaultValue || "",
+            validators: formConfig[key].validators || [],
+            constraints: formConfig[key].constraints || []
+          };
+        });
+      });
     default:
       return state;
   }
@@ -79,7 +94,7 @@ export const createMapDispatchToProps = formConfig => {
       };
     }
     cachedDispatch = dispatch;
-    cacheValue = { actions: dispatchObj };
+    cacheValue = { actions: dispatchObj, clear: () => dispatch(clear()) };
     return cacheValue;
   };
 };
