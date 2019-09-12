@@ -47,8 +47,13 @@ mapDispatchToProps takes a dispatch function and returns an object like so:
 ```jsx
 {
   actions: {
-    field1: { set: String -> () },
-    field2: { set: String -> () }
+    fields: {
+      field1: { set: String -> () },
+      field2: { set: String -> () }
+    },
+    form: {
+      clear: () -> ()
+    }
   }
 }
 ```
@@ -60,7 +65,8 @@ Example usage:
 
 ```jsx
 const props = mapDispatchToProps(dispatch);
-props.actions.field1.set("foo");
+props.actions.fields.field1.set("foo");
+props.actions.form.clear();
 ```
 
 ## Putting It Together With React
@@ -87,7 +93,7 @@ const MyForm = ({ actions, fields }) => (
       : "Field 1"}
     <input
       value={fields.field1.rawValue}
-      onChange={evt => actions.field1.set(evt.target.value)}
+      onChange={evt => actions.fields.field1.set(evt.target.value)}
       type="text"
     />
   </div>

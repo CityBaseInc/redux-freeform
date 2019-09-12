@@ -29,7 +29,7 @@ export const set = fieldName => value => ({
   payload: { fieldName, value }
 });
 
-export const CLEAR = "CLEAR";
+export const CLEAR = "form/CLEAR";
 export const clear = () => ({ type: CLEAR });
 
 export const createFormReducer = formConfig => (
@@ -77,14 +77,16 @@ export const createMapDispatchToProps = formConfig => {
       return cacheValue;
     }
     let dispatchObj = {};
+    dispatchObj.fields = {};
     const keys = Object.keys(formConfig);
     for (let fieldName of keys) {
-      dispatchObj[fieldName] = {
+      dispatchObj.fields[fieldName] = {
         set: value => dispatch(set(fieldName)(value))
       };
     }
+    dispatchObj.form = { clear: () => dispatch(clear()) };
     cachedDispatch = dispatch;
-    cacheValue = { actions: dispatchObj, clear: () => dispatch(clear()) };
+    cacheValue = { actions: dispatchObj };
     return cacheValue;
   };
 };

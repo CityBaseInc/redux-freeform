@@ -50,32 +50,33 @@ const InputField = ({
 );
 
 const SimpleForm = ({ actions, fields }) => (
-  <form>
+  <div>
     <InputField
       field={fields.name}
-      fieldActions={actions.name}
+      fieldActions={actions.fields.name}
       labelTextWhenNoError="name"
       errorMessages={nameFieldErrorMessages}
     />
     <InputField
       field={fields.confirmName}
-      fieldActions={actions.confirmName}
+      fieldActions={actions.fields.confirmName}
       labelTextWhenNoError="confirm name"
       errorMessages={confirmNameFieldErrorMessages}
     />
     <InputField
       field={fields.age}
-      fieldActions={actions.age}
+      fieldActions={actions.fields.age}
       labelTextWhenNoError="age"
       errorMessages={ageFieldErrorMessages}
     />
     <InputField
       field={fields.fourDigitCode}
-      fieldActions={actions.fourDigitCode}
+      fieldActions={actions.fields.fourDigitCode}
       labelTextWhenNoError="four digit code"
       errorMessages={fourDigitCodeErrorMessages}
     />
-  </form>
+    <button onClick={() => actions.form.clear()}>Clear the form</button>
+  </div>
 );
 
 export default SimpleForm;
