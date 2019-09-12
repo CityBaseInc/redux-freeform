@@ -62,17 +62,7 @@ export const createFormReducer = formConfig => (
         }
       });
     case CLEAR:
-      return produce(state, draftState => {
-        const formConfigKeys = Object.keys(formConfig);
-        formConfigKeys.forEach(key => {
-          draftState[key] = {
-            dirty: false,
-            rawValue: formConfig[key].defaultValue || "",
-            validators: formConfig[key].validators || [],
-            constraints: formConfig[key].constraints || []
-          };
-        });
-      });
+      return createInitialState(formConfig);
     default:
       return state;
   }
