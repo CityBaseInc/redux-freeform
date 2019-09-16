@@ -301,7 +301,7 @@ test("reducer clear action updates form to have a cleared state", t => {
   };
   const formReducer = createFormReducer(formState);
   const initialState = initializeReducer(formReducer);
-  const clearedForm = {
+  const clearedFormState = {
     foo: {
       rawValue: "",
       validators: [
@@ -312,13 +312,10 @@ test("reducer clear action updates form to have a cleared state", t => {
         }
       ],
       constraints: [],
-      errors: [],
-      hasErrors: false,
+      errors: [REQUIRED_ERROR],
+      hasErrors: true,
       dirty: false
     }
   };
-  t.deepEqual(
-    formReducer(initialState, { type: CLEAR }),
-    createInitialState(clearedForm)
-  );
+  t.deepEqual(formReducer(initialState, { type: CLEAR }), clearedFormState);
 });
