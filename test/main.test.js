@@ -10,7 +10,8 @@ import {
   createFormState,
   set,
   clear,
-  SET
+  SET,
+  CLEAR
 } from "../src/main";
 import {
   REQUIRED,
@@ -279,4 +280,45 @@ test("able to make change that does not violate constraints", t => {
     }
   };
   t.deepEqual(expectedState, formReducer(initialState, set("foo")("1")));
+});
+
+test("reducer clear action updates form to have a cleared state", t => {
+  const formState = {
+    foo: {
+      rawValue: "bar",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      constraints: [],
+      errors: [],
+      hasErrors: false,
+      dirty: true
+    }
+  };
+  const formReducer = createFormReducer(formState);
+  const initialState = initializeReducer(formReducer);
+  const clearedForm = {
+    foo: {
+      rawValue: "",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      constraints: [],
+      errors: [],
+      hasErrors: false,
+      dirty: false
+    }
+  };
+  t.deepEqual(
+    formReducer(initialState, { type: CLEAR }),
+    createInitialState(clearedForm)
+  );
 });
