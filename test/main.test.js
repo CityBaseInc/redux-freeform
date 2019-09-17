@@ -9,7 +9,9 @@ import {
   createMapDispatchToProps,
   createFormState,
   set,
-  SET
+  clear,
+  SET,
+  CLEAR
 } from "../src/main";
 import {
   REQUIRED,
@@ -215,9 +217,10 @@ test("createMapDispatchToProps returns valid action creators", t => {
     baz: exampleRequiredField
   };
   const dispatchObj = createMapDispatchToProps(extendedFormConfig)(x => x);
-  t.deepEqual(dispatchObj.actions.foo.set("bar1"), set("foo")("bar1"));
-  t.deepEqual(dispatchObj.actions.bax.set("bar2"), set("bax")("bar2"));
-  t.deepEqual(dispatchObj.actions.baz.set("bar3"), set("baz")("bar3"));
+  t.deepEqual(dispatchObj.actions.fields.foo.set("bar1"), set("foo")("bar1"));
+  t.deepEqual(dispatchObj.actions.fields.bax.set("bar2"), set("bax")("bar2"));
+  t.deepEqual(dispatchObj.actions.fields.baz.set("bar3"), set("baz")("bar3"));
+  t.deepEqual(dispatchObj.actions.form.clear(), clear());
 });
 
 test("createMapDispatchToProps returns a memoized fn", t => {
@@ -277,4 +280,42 @@ test("able to make change that does not violate constraints", t => {
     }
   };
   t.deepEqual(expectedState, formReducer(initialState, set("foo")("1")));
+});
+
+test("reducer clear action updates form to have a cleared state", t => {
+  const formState = {
+    foo: {
+      rawValue: "bar",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      constraints: [],
+      errors: [],
+      hasErrors: false,
+      dirty: true
+    }
+  };
+  const formReducer = createFormReducer(formState);
+  const initialState = initializeReducer(formReducer);
+  const clearedFormState = {
+    foo: {
+      rawValue: "",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      constraints: [],
+      errors: [REQUIRED_ERROR],
+      hasErrors: true,
+      dirty: false
+    }
+  };
+  t.deepEqual(formReducer(initialState, { type: CLEAR }), clearedFormState);
 });

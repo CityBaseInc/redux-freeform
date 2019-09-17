@@ -37,11 +37,16 @@ const ProfilingForm = ({ actions, fields }) => {
       key={fieldName}
       labelTextWhenNoError={fieldName}
       field={fields[fieldName]}
-      fieldActions={actions[fieldName]}
+      fieldActions={actions.fields[fieldName]}
       errorMessages={fieldErrorMessages}
     />
   ));
-  return <form>{fieldComponents}</form>;
+  return (
+    <div>
+      <button onClick={() => actions.form.clear()}>Clear the form</button>
+      {fieldComponents}
+    </div>
+  );
 };
 
 export default ProfilingForm;
