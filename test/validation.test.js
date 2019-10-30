@@ -21,7 +21,10 @@ import {
   validatorFns,
   runValidator,
   runValidatorErrorMessage,
-  computeErrors
+  computeErrors,
+  MATCHES_REGEX,
+  MATCHES_REGEX_ERROR,
+  matchesRegex
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -57,6 +60,15 @@ test("matchesField validator produces correct validator object", t => {
     type: MATCHES_FIELD,
     args: ["foo"],
     error: MATCHES_FIELD_ERROR
+  });
+});
+
+test("matchesRegex validator produces correct validator object", t => {
+  t.is(matchesRegex.error, MATCHES_REGEX_ERROR);
+  t.deepEqual(matchesRegex("^hey.*joe$"), {
+    type: MATCHES_REGEX,
+    args: ["^hey.*joe$"],
+    error: MATCHES_REGEX_ERROR
   });
 });
 
