@@ -4,7 +4,8 @@ import {
   numberLessThan,
   onlyIntegers,
   hasLength,
-  required
+  required,
+  matchesRegex
 } from "redux-freeform";
 
 const formConfig = {
@@ -24,6 +25,9 @@ const formConfig = {
   fourDigitCode: {
     validators: [required(), hasLength(4, 4)],
     constraints: [onlyIntegers(), hasLength(0, 4)]
+  },
+  regexMatch: {
+    validators: [required(), matchesRegex("^[^\s@]+@[^\s@]+\.[^\s@]+$")] //regex to validate email
   }
 };
 

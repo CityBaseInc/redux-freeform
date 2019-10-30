@@ -63,6 +63,12 @@ validatorFns[HAS_LENGTH] = (value, args, form) => {
   return max >= valueLength && valueLength >= min;
 };
 
+export const MATCHES_REGEX = "validator/MATCHES_REGEX";
+export const MATCHES_REGEX_ERROR = "error/MATCHES_REGEX";
+export const matchesRegex = createValidator(MATCHES_REGEX, MATCHES_REGEX_ERROR);
+validatorFns[MATCHES_REGEX] = (value, args, form) =>
+  new RegExp(args[0]).test(value);
+
 export const runValidatorErrorMessage = type =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator creator functions exported from 

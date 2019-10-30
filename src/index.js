@@ -3,6 +3,7 @@ export {
   onlyIntegers,
   numberLessThan,
   matchesField,
-  hasLength
+  hasLength,
+  matchesRegex
 } from "./validation";
 export { createFormState } from "./main";

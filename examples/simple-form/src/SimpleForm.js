@@ -3,7 +3,8 @@ import {
   matchesField,
   onlyIntegers,
   numberLessThan,
-  hasLength
+  hasLength,
+  matchesRegex
 } from "redux-freeform";
 import React from "react";
 
@@ -22,6 +23,10 @@ const ageFieldErrorMessages = {
 const fourDigitCodeErrorMessages = {
   [required.error]: "four digit code is required",
   [hasLength.error]: "four digit code must be 4 numbers"
+};
+const matchesRegexError = {
+  [required.error]: "email is required",
+  [matchesRegex.error]: "email is invalid"
 };
 
 const InputField = ({
@@ -74,6 +79,12 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.fields.fourDigitCode}
       labelTextWhenNoError="four digit code"
       errorMessages={fourDigitCodeErrorMessages}
+    />
+    <InputField
+      field={fields.regexMatch}
+      fieldActions={actions.fields.regexMatch}
+      labelTextWhenNoError="email"
+      errorMessages={matchesRegexError}
     />
     <button onClick={() => actions.form.clear()}>Clear the form</button>
   </div>
