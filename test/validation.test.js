@@ -166,6 +166,21 @@ testProp(
     })
 );
 
+const testRegexStr = "^[^s@]+@[^s@]+.[^s@]+$";
+testProp(
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test",
+  [fc.string(1, 15).filter(str => new RegExp(testRegexStr).test(str))],
+  valueThatMatchesRegex =>
+    validatorFns[MATCHES_REGEX](valueThatMatchesRegex, [testRegexStr], {})
+);
+
+testProp(
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test",
+  [fc.string(1, 15).filter(str => !new RegExp(testRegexStr).test(str))],
+  valueThatDoesNotMatchRegex =>
+    !validatorFns[MATCHES_REGEX](valueThatDoesNotMatchRegex, [testRegexStr], {})
+);
+
 test("matchesField throws an error when form does not include field", t => {
   const validatorError = t.throws(() =>
     runValidator(

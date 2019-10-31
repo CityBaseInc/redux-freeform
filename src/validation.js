@@ -67,7 +67,7 @@ export const MATCHES_REGEX = "validator/MATCHES_REGEX";
 export const MATCHES_REGEX_ERROR = "error/MATCHES_REGEX";
 export const matchesRegex = createValidator(MATCHES_REGEX, MATCHES_REGEX_ERROR);
 validatorFns[MATCHES_REGEX] = (value, args, form) =>
-  new RegExp(args[0]).test(value);
+  new RegExp(args[0]).test(value); // new RexExp never throws an error, no matter the input
 
 export const runValidatorErrorMessage = type =>
   `${type} was passed to runValidator, but that validator type does not exist. 
