@@ -131,3 +131,28 @@ Note: this causes the field to essentially "inherit" the validators of the match
 | "foo" | "foo"             | True      |
 | ""    | ""                | True      |
 | "foo" | "bar"             | False     |
+
+## matchesRegex
+
+matchesRegex validates if this fields value is equivalent to the regex argument passed in the matchesRegex function
+
+```jsx
+import { matchesRegex } from "redux-freeform";
+
+const formConfig = {
+  email: {
+    validators: [matchesRegex("^[^\s@]+@[^\s@]+\.[^\s@]+$")]
+  }
+};
+```
+
+Arguments:
+`matchesRegex(regexValue)`
+
+- `regexValue` the regex value must be a string, excluding the first and last slash `/`
+
+|  regexValue  |   Other Field Value   | Validates |
+| ------------ | --------------------- | --------- |
+| "^hey.*joe$" | "hey joe"             | True      |
+| "^hey.*joe$" | "hey joe!"            | False     |
+| "^hey.*joe$" | "hey how are you joe" | True      |

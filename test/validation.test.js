@@ -21,7 +21,10 @@ import {
   validatorFns,
   runValidator,
   runValidatorErrorMessage,
-  computeErrors
+  computeErrors,
+  MATCHES_REGEX,
+  MATCHES_REGEX_ERROR,
+  matchesRegex
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -57,6 +60,15 @@ test("matchesField validator produces correct validator object", t => {
     type: MATCHES_FIELD,
     args: ["foo"],
     error: MATCHES_FIELD_ERROR
+  });
+});
+
+test("matchesRegex validator produces correct validator object", t => {
+  t.is(matchesRegex.error, MATCHES_REGEX_ERROR);
+  t.deepEqual(matchesRegex("^hey.*joe$"), {
+    type: MATCHES_REGEX,
+    args: ["^hey.*joe$"],
+    error: MATCHES_REGEX_ERROR
   });
 });
 
@@ -152,6 +164,21 @@ testProp(
         rawValue: `${fieldValue}${fieldValueModifier}`
       }
     })
+);
+
+const testRegexStr = "^[^s@]+@[^s@]+.[^s@]+$";
+testProp(
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test",
+  [fc.string(1, 15).filter(str => new RegExp(testRegexStr).test(str))],
+  valueThatMatchesRegex =>
+    validatorFns[MATCHES_REGEX](valueThatMatchesRegex, [testRegexStr], {})
+);
+
+testProp(
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test",
+  [fc.string(1, 15).filter(str => !new RegExp(testRegexStr).test(str))],
+  valueThatDoesNotMatchRegex =>
+    !validatorFns[MATCHES_REGEX](valueThatDoesNotMatchRegex, [testRegexStr], {})
 );
 
 test("matchesField throws an error when form does not include field", t => {
