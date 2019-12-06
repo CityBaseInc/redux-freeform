@@ -4,6 +4,7 @@ export {
   numberLessThan,
   matchesField,
   hasLength,
-  matchesRegex
+  matchesRegex,
+  isRoutingNumber
 } from "./validation";
 export { createFormState } from "./main";
