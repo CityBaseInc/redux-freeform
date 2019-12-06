@@ -69,6 +69,36 @@ export const matchesRegex = createValidator(MATCHES_REGEX, MATCHES_REGEX_ERROR);
 validatorFns[MATCHES_REGEX] = (value, args, form) =>
   new RegExp(args[0]).test(value); // new RexExp never throws an error, no matter the input
 
+// based on http://www.brainjar.com/js/validation/
+export const IS_ROUTING_NUMBER = "validator/IS_ROUTING_NUMBER";
+export const IS_ROUTING_NUMBER_ERROR = "error/IS_ROUTING_NUMBER";
+export const isRoutingNumber = createValidator(
+  IS_ROUTING_NUMBER,
+  IS_ROUTING_NUMBER_ERROR
+);
+validatorFns[IS_ROUTING_NUMBER] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  if (value.length != 9) {
+    return false;
+  }
+  const sum = value
+    .split("")
+    .map(ch => parseInt(ch))
+    .reduce((acc, cur, idx) => {
+      switch (idx % 3) {
+        case 0:
+          return acc + 3 * cur;
+        case 1:
+          return acc + 7 * cur;
+        case 2:
+          return acc + 1 * cur;
+      }
+    }, 0);
+  return sum != 0 && sum % 10 == 0;
+};
+
 export const runValidatorErrorMessage = type =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator creator functions exported from 

@@ -141,7 +141,7 @@ import { matchesRegex } from "redux-freeform";
 
 const formConfig = {
   email: {
-    validators: [matchesRegex("^[^\s@]+@[^\s@]+\.[^\s@]+$")]
+    validators: [matchesRegex("^[^s@]+@[^s@]+.[^s@]+$")]
   }
 };
 ```
@@ -151,8 +151,31 @@ Arguments:
 
 - `regexValue` the regex value must be a string, excluding the first and last slash `/`
 
-|  regexValue  |   Other Field Value   | Validates |
-| ------------ | --------------------- | --------- |
-| "^hey.*joe$" | "hey joe"             | True      |
-| "^hey.*joe$" | "hey joe!"            | False     |
-| "^hey.*joe$" | "hey how are you joe" | True      |
+| regexValue     | Value                 | Validates |
+| -------------- | --------------------- | --------- |
+| "^hey.\*joe\$" | "hey joe"             | True      |
+| "^hey.\*joe\$" | "hey joe!"            | False     |
+| "^hey.\*joe\$" | "hey how are you joe" | True      |
+
+## isRoutingNumber
+
+isRoutingNumber validates if this fields value is 9 digits long and has a valid checksum
+
+```jsx
+import { isRoutingNumber } from "redux-freeform";
+
+const formConfig = {
+  email: {
+    validators: [isRoutingNumber()]
+  }
+};
+```
+
+Note: checksum based on http://www.brainjar.com/js/validation/ and assumes value
+contains no letters or special characters
+
+| Value       | Validates |
+| ----------- | --------- |
+| "122105155" | True      |
+| "122105156" | False     |
+| "000000000" | False     |

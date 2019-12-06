@@ -24,7 +24,10 @@ import {
   computeErrors,
   MATCHES_REGEX,
   MATCHES_REGEX_ERROR,
-  matchesRegex
+  matchesRegex,
+  isRoutingNumber,
+  IS_ROUTING_NUMBER,
+  IS_ROUTING_NUMBER_ERROR
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -69,6 +72,15 @@ test("matchesRegex validator produces correct validator object", t => {
     type: MATCHES_REGEX,
     args: ["^hey.*joe$"],
     error: MATCHES_REGEX_ERROR
+  });
+});
+
+test("isRoutingNumber validator produces correct validator object", t => {
+  t.is(matchesRegex.error, MATCHES_REGEX_ERROR);
+  t.deepEqual(isRoutingNumber(), {
+    type: IS_ROUTING_NUMBER,
+    args: [],
+    error: IS_ROUTING_NUMBER_ERROR
   });
 });
 
@@ -193,6 +205,55 @@ test("matchesField throws an error when form does not include field", t => {
     validatorError.message,
     "foo was passed to matchesField, but that field does not exist in the form"
   );
+});
+
+// based on http://www.brainjar.com/js/validation
+const calcCheckSum = (n0, n1, n2, n3, n4, n5, n6, n7) =>
+  (10 -
+    ((n0 * 3 + n1 * 7 + n2 * 1 + n3 * 3 + n4 * 7 + n5 * 1 + n6 * 3 + n7 * 7) %
+      10)) %
+  10;
+
+testProp(
+  "isRoutingNumber validates numbers that satisfy routing checksum rules",
+  [
+    fc.integer(1, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9)
+  ],
+  (...first8Digits) => {
+    const validRoutingNumber = `${first8Digits.join("")}${calcCheckSum(
+      ...first8Digits
+    )}`;
+    return validatorFns[IS_ROUTING_NUMBER](validRoutingNumber, [], {});
+  }
+);
+
+testProp(
+  "isRoutingNumber does not validate when value is less than 9 digits",
+  [
+    fc.integer(1, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9),
+    fc.integer(0, 9)
+  ],
+  (...first8Digits) => {
+    const invalidRoutingNumber = first8Digits.join("");
+    return !validatorFns[IS_ROUTING_NUMBER](invalidRoutingNumber, [], {});
+  }
+);
+
+test("isRoutingNumber validated on empty string", t => {
+  t.is(validatorFns[IS_ROUTING_NUMBER]("", [], {}), true);
 });
 
 test("runValidator returns null when validator accepts", t => {
