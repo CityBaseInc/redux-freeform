@@ -9,6 +9,9 @@ import {
   onlyIntegers,
   ONLY_INTEGERS,
   ONLY_INTEGERS_ERROR,
+  onlyNaturals,
+  ONLY_NATURALS,
+  ONLY_NATURALS_ERROR,
   numberLessThan,
   NUMBER_LESS_THAN,
   NUMBER_LESS_THAN_ERROR,
@@ -45,6 +48,15 @@ test("onlyIntegers validator produces correct validator object", t => {
     type: ONLY_INTEGERS,
     args: [],
     error: ONLY_INTEGERS_ERROR
+  });
+});
+
+test("onlyNaturals validator produces correct validator object", t => {
+  t.is(onlyNaturals.error, ONLY_NATURALS_ERROR);
+  t.deepEqual(onlyNaturals(), {
+    type: ONLY_NATURALS,
+    args: [],
+    error: ONLY_NATURALS_ERROR
   });
 });
 
@@ -115,6 +127,35 @@ testProp(
 
 test("onlyIntegers accepts empty string", t => {
   t.true(validatorFns[ONLY_INTEGERS]("", [], {}));
+});
+
+testProp(
+  "onlyNaturals validator accepts any natural string",
+  [fc.nat()],
+  natA => !!validatorFns[ONLY_NATURALS](String(natA), [], {})
+);
+
+testProp(
+  "onlyNaturals rejects alphabetic string",
+  [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")],
+  stringA => !validatorFns[ONLY_NATURALS](stringA, [], {})
+);
+
+testProp(
+  "onlyNaturals rejects float string",
+  [fc.float(), fc.integer(1, 10)],
+  (floatA, fixedLength) =>
+    !validatorFns[ONLY_NATURALS](floatA.toFixed(fixedLength), [], {})
+);
+
+testProp(
+  "onlyNaturals rejects negative integers string",
+  [fc.integer(-1)],
+  negativeInt => !validatorFns[ONLY_NATURALS](negativeInt, [], {})
+);
+
+test("onlyNaturals accepts empty string", t => {
+  t.true(validatorFns[ONLY_NATURALS]("", [], {}));
 });
 
 const smallerBiggerTuple = fc

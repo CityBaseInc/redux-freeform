@@ -16,6 +16,11 @@ export const ONLY_INTEGERS_ERROR = "error/ONLY_INTEGERS";
 export const onlyIntegers = createValidator(ONLY_INTEGERS, ONLY_INTEGERS_ERROR);
 validatorFns[ONLY_INTEGERS] = (value, args, form) => /^(-?\d+)?$/.test(value);
 
+export const ONLY_NATURALS = "validator/ONLY_NATURALS";
+export const ONLY_NATURALS_ERROR = "error/ONLY_NATURALS";
+export const onlyNaturals = createValidator(ONLY_NATURALS, ONLY_NATURALS_ERROR);
+validatorFns[ONLY_NATURALS] = (value, args, form) => /^(\d+)?$/.test(value);
+
 export const NUMBER_LESS_THAN = "validator/NUMBER_LESS_THAN";
 export const NUMBER_LESS_THAN_ERROR = "error/NUMBER_LESS_THAN";
 export const numberLessThan = createValidator(

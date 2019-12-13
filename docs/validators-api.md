@@ -41,6 +41,29 @@ const formConfig = {
 | ------- | --------- |
 | ""      | True      |
 | "123"   | True      |
+| "-123"  | True      |
+| "asdf"  | False     |
+| "as123" | False     |
+
+## onlyNaturals
+
+onlyNaturals will validate only on fields containing positive and zero integers
+
+```jsx
+import { onlyNaturals } from "redux-freeform";
+
+const formConfig = {
+  age: {
+    validators: [onlyNaturals()]
+  }
+};
+```
+
+| Value   | Validates |
+| ------- | --------- |
+| ""      | True      |
+| "123"   | True      |
+| "-123"  | False     |
 | "asdf"  | False     |
 | "as123" | False     |
 
