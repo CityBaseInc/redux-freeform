@@ -1,6 +1,7 @@
 export {
   required,
   onlyIntegers,
+  onlyNaturals,
   numberLessThan,
   matchesField,
   hasLength,
