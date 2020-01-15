@@ -2,15 +2,22 @@ import {
   createFormState,
   matchesField,
   numberLessThan,
+  numberGreaterThan,
   onlyIntegers,
   hasLength,
   required,
-  matchesRegex
+  matchesRegex,
+  validateWhen
 } from "redux-freeform";
+
+console.log(validateWhen(required(), numberGreaterThan(18), "age"));
 
 const formConfig = {
   age: {
     validators: [required(), onlyIntegers(), numberLessThan(99)]
+  },
+  maritalStatus: {
+    validators: [validateWhen(required(), numberGreaterThan(18), "age")]
   },
   name: {
     validators: [required()]

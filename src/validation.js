@@ -34,6 +34,19 @@ validatorFns[NUMBER_LESS_THAN] = (value, args, form) => {
   return Number(value) < args[0];
 };
 
+export const NUMBER_GREATER_THAN = "validator/NUMBER_GREATER_THAN";
+export const NUMBER_GREATER_THAN_ERROR = "error/NUMBER_GREATER_THAN";
+export const numberGreaterThan = createValidator(
+  NUMBER_GREATER_THAN,
+  NUMBER_GREATER_THAN_ERROR
+);
+validatorFns[NUMBER_GREATER_THAN] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return Number(value) > args[0];
+};
+
 export const MATCHES_FIELD = "validator/MATCHES_FIELD";
 export const MATCHES_FIELD_ERROR = "error/MATCHES_FIELD";
 export const matchesField = createValidator(MATCHES_FIELD, MATCHES_FIELD_ERROR);
@@ -46,6 +59,49 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
     );
   }
   return value === form[args[0]].rawValue;
+};
+
+// validateWhen(required(), numberGreaterThan(18), "age")
+export const VALIDATE_WHEN = "validator/VALIDATE_WHEN";
+export const VALIDATE_WHEN_ERROR = "error/VALIDATE_WHEN";
+export const validateWhen = (dependentValidator, ...restArgs) => ({
+  type: VALIDATE_WHEN,
+  args: [dependentValidator, ...restArgs],
+  error: dependentValidator.error
+});
+validatorFns[VALIDATE_WHEN] = (value, args, form) => {
+  const optionalFieldName = args[2];
+  const dependsOnOtherField = typeof optionalFieldName === "string";
+  const primaryValidator = args[1];
+  const dependentValidator = args[0];
+  if (dependsOnOtherField && form[optionalFieldName] === undefined) {
+    throw new Error(
+      `${
+        args[2]
+      } was passed to matchesField, but that field does not exist in the form`
+    );
+  }
+  const primaryValue = dependsOnOtherField
+    ? form[optionalFieldName].rawValue
+    : value;
+  const primaryValidatorResult = runValidator(
+    primaryValidator,
+    primaryValue,
+    form
+  );
+  // come up with a validator -> predicate conversion based on empty string rules
+  console.log("value", value);
+  console.log("primaryValue", primaryValue);
+  console.log("type", primaryValidator.type);
+  if (value === "" && primaryValue === "" && primaryValidator.type !== REQUIRED) {
+    console.log("BUTTTT");
+    return true;
+  }
+  const res = primaryValidatorResult === null 
+    ? !runValidator(dependentValidator, value, form)
+    : true;
+  console.log(res)
+  return res
 };
 
 export const HAS_LENGTH = "validator/HAS_LENGTH";

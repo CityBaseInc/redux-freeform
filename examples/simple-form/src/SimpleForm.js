@@ -20,6 +20,9 @@ const ageFieldErrorMessages = {
   [onlyIntegers.error]: "age must be a whole number",
   [numberLessThan.error]: "age must be less than 99"
 };
+const maritalStatusErrorMessages = {
+  [required.error]: "marital status is required when over 18"
+};
 const fourDigitCodeErrorMessages = {
   [required.error]: "four digit code is required",
   [hasLength.error]: "four digit code must be 4 numbers"
@@ -73,6 +76,12 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.fields.age}
       labelTextWhenNoError="age"
       errorMessages={ageFieldErrorMessages}
+    />
+    <InputField
+      field={fields.maritalStatus}
+      fieldActions={actions.fields.maritalStatus}
+      labelTextWhenNoError="marriage status"
+      errorMessages={maritalStatusErrorMessages}
     />
     <InputField
       field={fields.fourDigitCode}
