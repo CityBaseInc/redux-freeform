@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+import { validatorToPredicate } from "./util";
+
 const createValidator = (type, error) => {
   let validator = (...args) => ({ type, args, error });
   validator.error = error;
@@ -53,55 +56,64 @@ export const matchesField = createValidator(MATCHES_FIELD, MATCHES_FIELD_ERROR);
 validatorFns[MATCHES_FIELD] = (value, args, form) => {
   if (form[args[0]] === undefined) {
     throw new Error(
-      `${
-        args[0]
-      } was passed to matchesField, but that field does not exist in the form`
+      `${args[0]} was passed to matchesField, but that field does not exist in the form`
     );
   }
   return value === form[args[0]].rawValue;
 };
 
-// validateWhen(required(), numberGreaterThan(18), "age")
+export const validateWhenErrorMessage = type =>
+  `${type} was passed to validateWhen, but that validator type does not exist. 
+  Please check that you are only calling validator creator functions exported from 
+  redux-freeform in your form config and that you didn't forget to 
+  invoke the validator creator (you cannot pass the functions themselves to 
+  createFormState). Also make sure you aren't passing validateWhen() to validateWhen
+  as the primary validator.`;
+
 export const VALIDATE_WHEN = "validator/VALIDATE_WHEN";
 export const VALIDATE_WHEN_ERROR = "error/VALIDATE_WHEN";
-export const validateWhen = (dependentValidator, ...restArgs) => ({
+export const validateWhen = (
+  dependentValidator,
+  primaryValidator,
+  optionalFieldName
+) => ({
   type: VALIDATE_WHEN,
-  args: [dependentValidator, ...restArgs],
+  args: [dependentValidator, primaryValidator, optionalFieldName],
   error: dependentValidator.error
 });
 validatorFns[VALIDATE_WHEN] = (value, args, form) => {
-  const optionalFieldName = args[2];
+  const [dependentValidator, primaryValidator, optionalFieldName] = args;
   const dependsOnOtherField = typeof optionalFieldName === "string";
-  const primaryValidator = args[1];
-  const dependentValidator = args[0];
+  const primaryPredicate = validatorToPredicate(
+    validatorFns[primaryValidator.type],
+    false
+  );
+
+  if (primaryPredicate === undefined) {
+    throw validateWhenErrorMessage(primaryValidator.type);
+  }
   if (dependsOnOtherField && form[optionalFieldName] === undefined) {
     throw new Error(
-      `${
-        args[2]
-      } was passed to matchesField, but that field does not exist in the form`
+      `${args[2]} was passed to matchesField, but that field does not exist in the form`
     );
   }
+
   const primaryValue = dependsOnOtherField
     ? form[optionalFieldName].rawValue
     : value;
-  const primaryValidatorResult = runValidator(
-    primaryValidator,
+  const primaryPredicatePassed = primaryPredicate(
     primaryValue,
+    primaryValidator.args,
     form
   );
-  // come up with a validator -> predicate conversion based on empty string rules
-  console.log("value", value);
-  console.log("primaryValue", primaryValue);
-  console.log("type", primaryValidator.type);
-  if (value === "" && primaryValue === "" && primaryValidator.type !== REQUIRED) {
-    console.log("BUTTTT");
-    return true;
-  }
-  const res = primaryValidatorResult === null 
-    ? !runValidator(dependentValidator, value, form)
+
+  return primaryPredicatePassed
+    ? validatorFns[dependentValidator.type](
+        value,
+        dependentValidator.args,
+        form
+      )
     : true;
-  console.log(res)
-  return res
 };
 
 export const HAS_LENGTH = "validator/HAS_LENGTH";

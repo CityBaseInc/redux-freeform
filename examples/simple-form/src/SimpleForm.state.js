@@ -34,7 +34,7 @@ const formConfig = {
     constraints: [onlyIntegers(), hasLength(0, 4)]
   },
   regexMatch: {
-    validators: [required(), matchesRegex("^[^\s@]+@[^\s@]+\.[^\s@]+$")] //simple regex to validate email address
+    validators: [required(), matchesRegex("^[^s@]+@[^s@]+.[^s@]+$")] //simple regex to validate email address
   }
 };
 
