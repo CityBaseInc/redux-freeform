@@ -125,6 +125,56 @@ you can specify exactly one length like so:
 | "abc"    | 2   | 4   | True      |
 | "abcdef" | 1   | 3   | False     |
 
+## matchesRegex
+
+matchesRegex validates if this fields value is equivalent to the regex argument passed in the matchesRegex function
+
+```jsx
+import { matchesRegex } from "redux-freeform";
+
+const formConfig = {
+  email: {
+    validators: [matchesRegex("^[^s@]+@[^s@]+.[^s@]+$")]
+  }
+};
+```
+
+Arguments:
+`matchesRegex(regexValue)`
+
+- `regexValue` the regex value must be a string, excluding the first and last slash `/`
+- empty string _always_ validates, keeping with validator convention (only [required](/validators-api/#required) rejects an empty string)
+
+| regexValue     | Value                 | Validates |
+| -------------- | --------------------- | --------- |
+| "^hey.\*joe\$" | ""                    | True      |
+| "^hey.\*joe\$" | "hey joe"             | True      |
+| "^hey.\*joe\$" | "hey joe!"            | False     |
+| "^hey.\*joe\$" | "hey how are you joe" | True      |
+
+## isRoutingNumber
+
+isRoutingNumber validates if this fields value is 9 digits long and has a valid checksum
+
+```jsx
+import { isRoutingNumber } from "redux-freeform";
+
+const formConfig = {
+  email: {
+    validators: [isRoutingNumber()]
+  }
+};
+```
+
+Note: checksum based on http://www.brainjar.com/js/validation/ and assumes value
+contains no letters or special characters
+
+| Value       | Validates |
+| ----------- | --------- |
+| "122105155" | True      |
+| "122105156" | False     |
+| "000000000" | False     |
+
 ## matchesField
 
 matchesField validates if this fields value is equivalent to another given fields value
@@ -155,50 +205,33 @@ Note: this causes the field to essentially "inherit" the validators of the match
 | ""    | ""                | True      |
 | "foo" | "bar"             | False     |
 
-## matchesRegex
+## validateWhen
 
-matchesRegex validates if this fields value is equivalent to the regex argument passed in the matchesRegex function
+validateWhen is a higher-order validator that runs a dependentValidator iff a precondition has been met. This precondition is called the primaryValidator and can optionally depend on another field. The error key resulting in a rejection will correspond to the dependentValidator. If the primaryValidator rejects, no error key will be added to the errors array.
 
 ```jsx
-import { matchesRegex } from "redux-freeform";
+import { matchesField } from "redux-freeform";
 
 const formConfig = {
-  email: {
-    validators: [matchesRegex("^[^s@]+@[^s@]+.[^s@]+$")]
+  age: {
+    validators: [required(), onlyIntegers()]
+  },
+  favoriteDrink: {
+    validators: [validateWhen(required(), numberGreaterThan(20), "age")]
   }
 };
 ```
 
 Arguments:
-`matchesRegex(regexValue)`
+`validateWhen(dependentValidator, primaryValidator fieldName?)`
 
-- `regexValue` the regex value must be a string, excluding the first and last slash `/`
+- `dependentValidator` validator to run if primaryValidator passes
+- `primaryValidator` validator that runs as precondition for dependentValidator (read validators section for more)
+- `fieldName` the string name of another key in the form object, determines what field primaryValidator runs against. If omitted, primaryValidator will run against the same field as dependentValidator (the field who's validators array when belongs to)
 
-| regexValue     | Value                 | Validates |
-| -------------- | --------------------- | --------- |
-| "^hey.\*joe\$" | "hey joe"             | True      |
-| "^hey.\*joe\$" | "hey joe!"            | False     |
-| "^hey.\*joe\$" | "hey how are you joe" | True      |
-
-## isRoutingNumber
-
-isRoutingNumber validates if this fields value is 9 digits long and has a valid checksum
-
-```jsx
-import { isRoutingNumber } from "redux-freeform";
-
-const formConfig = {
-  email: {
-    validators: [isRoutingNumber()]
-  }
-};
-```
-
-Note: checksum based on http://www.brainjar.com/js/validation/ and assumes value
-contains no letters or special characters
-
-| Value       | Validates |
-| ----------- | --------- |
-| "122105155" | True      |
-| "122105156" | False     |
-| "000000000" | False     |
+| value (favoriteDrink) | Other Field Value | Validates |
+| --------------------- | ----------------- | --------- |
+| ""                    | ""                | True      |
+| ""                    | "20"              | True      |
+| ""                    | "21"              | False     |
+| "Manhattan"           | "21"              | True      |

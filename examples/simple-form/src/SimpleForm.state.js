@@ -35,6 +35,17 @@ const formConfig = {
   },
   regexMatch: {
     validators: [required(), matchesRegex("^[^s@]+@[^s@]+.[^s@]+$")] //simple regex to validate email address
+  },
+  animal: {
+    validators: [required()]
+  },
+  animalNoise: {
+    validators: [
+      validateWhen(required(), matchesRegex("^.+$"), "animal"),
+      validateWhen(matchesRegex("^woof$"), matchesRegex("^dog$"), "animal"),
+      validateWhen(matchesRegex("^meow$"), matchesRegex("^cat$"), "animal"),
+      validateWhen(matchesRegex("^moo$"), matchesRegex("^cow$"), "animal")
+    ]
   }
 };
 

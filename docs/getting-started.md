@@ -37,8 +37,8 @@ other Redux app.
 mapStateToProps is an function for use with react-redux that takes the form state and returns an object
 
 ```jsx
-{ 
-  fields: state 
+{
+  fields: state;
 }
 ```
 

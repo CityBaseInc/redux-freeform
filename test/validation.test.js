@@ -30,7 +30,14 @@ import {
   matchesRegex,
   isRoutingNumber,
   IS_ROUTING_NUMBER,
-  IS_ROUTING_NUMBER_ERROR
+  IS_ROUTING_NUMBER_ERROR,
+  validateWhen,
+  VALIDATE_WHEN,
+  VALIDATE_WHEN_ERROR,
+  validateWhenErrorMessage,
+  numberGreaterThan,
+  NUMBER_GREATER_THAN,
+  NUMBER_GREATER_THAN_ERROR
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -88,12 +95,278 @@ test("matchesRegex validator produces correct validator object", t => {
 });
 
 test("isRoutingNumber validator produces correct validator object", t => {
-  t.is(matchesRegex.error, MATCHES_REGEX_ERROR);
+  t.is(isRoutingNumber.error, IS_ROUTING_NUMBER_ERROR);
   t.deepEqual(isRoutingNumber(), {
     type: IS_ROUTING_NUMBER,
     args: [],
     error: IS_ROUTING_NUMBER_ERROR
   });
+});
+
+test("numberGreaterThan validator produces correct validator object", t => {
+  t.is(numberGreaterThan.error, NUMBER_GREATER_THAN_ERROR);
+  t.deepEqual(numberGreaterThan("0"), {
+    type: NUMBER_GREATER_THAN,
+    args: ["0"],
+    error: NUMBER_GREATER_THAN_ERROR
+  });
+});
+
+test("validateWhen validator produces correct validator object", t => {
+  t.is(validateWhen.error, VALIDATE_WHEN_ERROR);
+  t.deepEqual(validateWhen(required(), required(), "foo"), {
+    type: VALIDATE_WHEN,
+    args: [
+      {
+        type: REQUIRED,
+        args: [],
+        error: REQUIRED_ERROR
+      },
+      {
+        type: REQUIRED,
+        args: [],
+        error: REQUIRED_ERROR
+      },
+      "foo"
+    ],
+    // this is not a mistake, error key in validateWhen
+    // object is the error key of the dependent validator
+    error: REQUIRED_ERROR
+  });
+});
+
+test("validateWhen validator accepts when precondition is met and dependentValidator validates", t => {
+  const form = {
+    a: {
+      rawValue: "21"
+    }
+  };
+  t.is(
+    validatorFns[VALIDATE_WHEN](
+      "foo",
+      [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        },
+        {
+          type: NUMBER_GREATER_THAN,
+          args: ["20"],
+          error: NUMBER_GREATER_THAN_ERROR
+        },
+        "a"
+      ],
+      form
+    ),
+    true
+  );
+});
+
+test("validateWhen validator rejects when precondition is met and dependentValidator doesn't validate", t => {
+  const form = {
+    a: {
+      rawValue: "21"
+    }
+  };
+  t.is(
+    validatorFns[VALIDATE_WHEN](
+      "",
+      [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        },
+        {
+          type: NUMBER_GREATER_THAN,
+          args: ["20"],
+          error: NUMBER_GREATER_THAN_ERROR
+        },
+        "a"
+      ],
+      form
+    ),
+    false
+  );
+});
+
+test("validateWhen validator accepts when precondition is met and dependentValidator validates without other field dep", t => {
+  t.is(
+    validatorFns[VALIDATE_WHEN](
+      "6",
+      [
+        {
+          type: NUMBER_GREATER_THAN,
+          args: ["5"],
+          error: NUMBER_GREATER_THAN_ERROR
+        },
+        {
+          type: NUMBER_LESS_THAN,
+          args: ["7"],
+          error: NUMBER_GREATER_THAN_ERROR
+        }
+      ],
+      {}
+    ),
+    true
+  );
+});
+
+test("validateWhen validator rejects when precondition is met and dependentValidator validates without other field dep", t => {
+  t.is(
+    validatorFns[VALIDATE_WHEN](
+      "4",
+      [
+        {
+          type: NUMBER_GREATER_THAN,
+          args: ["5"],
+          error: NUMBER_GREATER_THAN_ERROR
+        },
+        {
+          type: NUMBER_LESS_THAN,
+          args: ["7"],
+          error: NUMBER_GREATER_THAN_ERROR
+        }
+      ],
+      {}
+    ),
+    false
+  );
+});
+
+test("validateWhen validator accepts when precondition is not met", t => {
+  const form = {
+    a: {
+      rawValue: "20"
+    }
+  };
+  t.is(
+    validatorFns[VALIDATE_WHEN](
+      "foo",
+      [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        },
+        {
+          type: NUMBER_GREATER_THAN,
+          args: ["20"],
+          error: NUMBER_GREATER_THAN_ERROR
+        },
+        "a"
+      ],
+      form
+    ),
+    true
+  );
+});
+
+test("validateWhen validator accepts when precondition is not met and dependentValidator validates without other field dep", t => {
+  const form = {
+    a: {
+      rawValue: "21"
+    }
+  };
+  t.is(
+    validatorFns[VALIDATE_WHEN](
+      "20",
+      [
+        {
+          type: NUMBER_LESS_THAN,
+          args: ["20"],
+          error: NUMBER_LESS_THAN_ERROR
+        },
+        {
+          type: NUMBER_GREATER_THAN,
+          args: ["20"],
+          error: NUMBER_GREATER_THAN_ERROR
+        }
+      ],
+      form
+    ),
+    true
+  );
+});
+
+test("validateWhen error message formats properly", t => {
+  const expected = `foo was passed to validateWhen, but that validator type does not exist.
+  Please check that you are only calling validator creator functions exported from
+  redux-freeform in your form config and that you didn't forget to
+  invoke the validator creator (you cannot pass the functions themselves to
+  createFormState). Also make sure you aren't passing validateWhen() to validateWhen
+  as the primary validator.`;
+  t.is(validateWhenErrorMessage("foo"), expected);
+});
+
+test("validateWhen throws error when dependent field does not exist", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      {
+        type: VALIDATE_WHEN,
+        args: [
+          {
+            type: REQUIRED,
+            args: [],
+            error: REQUIRED_ERROR
+          },
+          {
+            type: REQUIRED,
+            args: [],
+            error: REQUIRED_ERROR
+          },
+          "foo"
+        ],
+        error: REQUIRED_ERROR
+      },
+      "bar",
+      {}
+    )
+  );
+  const expected = Error(
+    "foo was passed to matchesField, but that field does not exist in the form"
+  );
+  t.deepEqual(validatorError, expected);
+});
+
+test("validateWhen throws error when dependent validator doesn't exist", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      {
+        type: VALIDATE_WHEN,
+        args: [
+          {
+            type: REQUIRED,
+            args: [],
+            error: REQUIRED_ERROR
+          },
+          {
+            type: "NOT REAL VALIDATOR",
+            args: [],
+            error: REQUIRED_ERROR
+          },
+          "foo"
+        ],
+        error: REQUIRED_ERROR
+      },
+      "bar",
+      {
+        foo: {
+          rawValue: "bar"
+        }
+      }
+    )
+  );
+  const expected = Error(
+    `NOT REAL VALIDATOR was passed to validateWhen, but that validator type does not exist.
+  Please check that you are only calling validator creator functions exported from
+  redux-freeform in your form config and that you didn't forget to
+  invoke the validator creator (you cannot pass the functions themselves to
+  createFormState). Also make sure you aren't passing validateWhen() to validateWhen
+  as the primary validator.`
+  );
+  t.deepEqual(validatorError, expected);
 });
 
 testProp(
@@ -158,16 +431,14 @@ test("onlyNaturals accepts empty string", t => {
   t.true(validatorFns[ONLY_NATURALS]("", [], {}));
 });
 
-const smallerBiggerTuple = fc
-  .float()
-  .chain(smallerNumber =>
-    fc.tuple(
-      fc.constant(smallerNumber),
-      fc
-        .float(smallerNumber, Number.MAX_SAFE_INTEGER)
-        .filter(n => n !== smallerNumber)
-    )
-  );
+const smallerBiggerTuple = fc.float().chain(smallerNumber =>
+  fc.tuple(
+    fc.constant(smallerNumber),
+    fc
+      .float(smallerNumber, Number.MAX_SAFE_INTEGER)
+      .filter(n => n !== smallerNumber)
+  )
+);
 
 test("numberLessThan accepts empty string", t => {
   t.true(validatorFns[NUMBER_LESS_THAN]("", {}));
@@ -193,6 +464,38 @@ testProp(
   numberA => !validatorFns[NUMBER_LESS_THAN](String(numberA), [numberA], {})
 );
 
+test("numberGreaterThan accepts empty string", t => {
+  t.true(validatorFns[NUMBER_GREATER_THAN]("", {}));
+});
+
+testProp(
+  "numberGreaterThan accepts value less than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !!validatorFns[NUMBER_GREATER_THAN](
+      String(biggerNumber),
+      [smallerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberGreaterThan rejects value greater than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !validatorFns[NUMBER_GREATER_THAN](
+      String(smallerNumber),
+      [biggerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberGreaterThan rejects value equal to argument",
+  [fc.float()],
+  numberA => !validatorFns[NUMBER_GREATER_THAN](String(numberA), [numberA], {})
+);
+
 testProp(
   "matchesField accepts value equal to argument field rawValue",
   [fieldNameGen(), fc.string()],
@@ -207,9 +510,9 @@ testProp(
 testProp(
   "matchesField rejects value not equal to argument field rawValue",
   [
-    fc.string(1, 15).filter(str => /^[A-z]$/.test(str)),
-    fc.string(),
-    fc.string(1, 15)
+    fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str)),
+    fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str)),
+    fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str))
   ],
   (fieldName, fieldValue, fieldValueModifier) =>
     !validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
@@ -233,6 +536,10 @@ testProp(
   valueThatDoesNotMatchRegex =>
     !validatorFns[MATCHES_REGEX](valueThatDoesNotMatchRegex, [testRegexStr], {})
 );
+
+test("matchesRegex accepts when value is empty string", t => {
+  t.is(validatorFns[MATCHES_REGEX]("", ["doesntmatter"], {}), true);
+});
 
 test("matchesField throws an error when form does not include field", t => {
   const validatorError = t.throws(() =>
@@ -372,6 +679,10 @@ test("hasLength validator returns null when validator accepts", t => {
   );
 });
 
+test("hasLength validator accepts when value is empty string", t => {
+  t.is(validatorFns[HAS_LENGTH]("", [1, 10], {}), true);
+});
+
 //TODO: Make prop test
 test("hasLength validator returns error when validator rejects", t => {
   t.is(
@@ -388,7 +699,7 @@ test("hasLength throws error when max or min are not passed", t => {
   const validatorError = t.throws(() =>
     runValidator(
       { type: HAS_LENGTH, args: [1], error: HAS_LENGTH_ERROR },
-      "",
+      "9",
       {}
     )
   );
@@ -399,7 +710,7 @@ test("hasLength throws error when max or min are not passed", t => {
   const validatorError2 = t.throws(() =>
     runValidator(
       { type: HAS_LENGTH, args: [], error: HAS_LENGTH_ERROR },
-      "",
+      "9",
       {}
     )
   );
@@ -413,7 +724,7 @@ test("hasLength throws error when max is less than min", t => {
   const validatorError = t.throws(() =>
     runValidator(
       { type: HAS_LENGTH, args: [10, 1], error: HAS_LENGTH_ERROR },
-      "",
+      "9",
       {}
     )
   );
