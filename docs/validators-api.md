@@ -92,6 +92,31 @@ Arguments:
 | "10"  | 11  | True      |
 | "15"  | 11  | False     |
 
+## numberGreaterThan
+
+numberGreaterThan will validate any number greater than the one provided
+
+```jsx
+import { numberGreaterThan } from "redux-freeform";
+
+const formConfig = {
+  age: {
+    validators: [numberGreaterThan(11)]
+  }
+};
+```
+
+Arguments:
+`numberGreaterThan(n)`
+
+- `n` value must be numerically `<` than _n_
+
+| Value | n   | Validates |
+| ----- | --- | --------- |
+| ""    | any | True      |
+| "10"  | 11  | False     |
+| "15"  | 11  | True      |
+
 ## hasLength
 
 hasLength will validate for any string of the given length
