@@ -10,8 +10,6 @@ import {
   validateWhen
 } from "redux-freeform";
 
-console.log(validateWhen(required(), numberGreaterThan(18), "age"));
-
 const formConfig = {
   age: {
     validators: [required(), onlyIntegers(), numberLessThan(99)]

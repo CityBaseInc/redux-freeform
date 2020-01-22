@@ -38,7 +38,7 @@ mapStateToProps is an function for use with react-redux that takes the form stat
 
 ```jsx
 {
-  fields: state;
+  fields: state
 }
 ```
 
