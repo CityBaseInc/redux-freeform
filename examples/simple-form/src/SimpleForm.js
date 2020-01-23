@@ -20,6 +20,9 @@ const ageFieldErrorMessages = {
   [onlyIntegers.error]: "age must be a whole number",
   [numberLessThan.error]: "age must be less than 99"
 };
+const maritalStatusErrorMessages = {
+  [required.error]: "marital status is required when over 18"
+};
 const fourDigitCodeErrorMessages = {
   [required.error]: "four digit code is required",
   [hasLength.error]: "four digit code must be 4 numbers"
@@ -28,6 +31,13 @@ const matchesRegexError = {
   [required.error]: "email is required",
   [matchesRegex.error]: "email is invalid"
 };
+const animalError = {
+  [required.error]: "animal type is required"
+};
+const animalNoiseError = a => ({
+  [matchesRegex.error]: `that's not what a ${a} sounds like`,
+  [required.error]: `animal noise is required`
+});
 
 const InputField = ({
   labelTextWhenNoError,
@@ -47,6 +57,38 @@ const InputField = ({
       value={field.rawValue}
       onChange={e => fieldActions.set(e.target.value)}
     />
+    {!field.dirty && " ✴️"}
+    {field.dirty && field.hasErrors && " ❌"}
+    {field.dirty && !field.hasErrors && " ✅"}
+    <p />
+  </div>
+);
+
+const InputDropDown = ({
+  labelTextWhenNoError,
+  field,
+  fieldActions,
+  errorMessages,
+  choices
+}) => (
+  <div>
+    <div>
+      <label>
+        {field.hasErrors
+          ? errorMessages[field.errors[0]]
+          : labelTextWhenNoError}
+      </label>
+    </div>
+    <select
+      value={field.rawValue}
+      onChange={e => fieldActions.set(e.target.value)}
+    >
+      {choices.map(c => (
+        <option key={c} value={c}>
+          {c}
+        </option>
+      ))}
+    </select>
     {!field.dirty && " ✴️"}
     {field.dirty && field.hasErrors && " ❌"}
     {field.dirty && !field.hasErrors && " ✅"}
@@ -75,6 +117,12 @@ const SimpleForm = ({ actions, fields }) => (
       errorMessages={ageFieldErrorMessages}
     />
     <InputField
+      field={fields.maritalStatus}
+      fieldActions={actions.fields.maritalStatus}
+      labelTextWhenNoError="marriage status"
+      errorMessages={maritalStatusErrorMessages}
+    />
+    <InputField
       field={fields.fourDigitCode}
       fieldActions={actions.fields.fourDigitCode}
       labelTextWhenNoError="four digit code"
@@ -85,6 +133,19 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.fields.regexMatch}
       labelTextWhenNoError="email"
       errorMessages={matchesRegexError}
+    />
+    <InputDropDown
+      field={fields.animal}
+      fieldActions={actions.fields.animal}
+      labelTextWhenNoError="animal"
+      errorMessages={animalError}
+      choices={["dog", "cat", "cow"]}
+    />
+    <InputField
+      field={fields.animalNoise}
+      fieldActions={actions.fields.animalNoise}
+      labelTextWhenNoError="animal noise"
+      errorMessages={animalNoiseError(fields.animal.rawValue)}
     />
     <button onClick={() => actions.form.clear()}>Clear the form</button>
   </div>

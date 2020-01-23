@@ -171,6 +171,7 @@ test("reducer set action re-validates dependent field", t => {
     }
   };
   t.deepEqual(expectedInitialState, initialState);
+  initialState.matchesFoo.rawValue = "baz";
   const expectedState = {
     foo: {
       rawValue: "bar",
@@ -187,7 +188,7 @@ test("reducer set action re-validates dependent field", t => {
       dirty: true
     },
     matchesFoo: {
-      rawValue: "",
+      rawValue: "baz",
       validators: [
         {
           type: MATCHES_FIELD,

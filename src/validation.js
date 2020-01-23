@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+import { validatorToPredicate } from "./util";
+
 const createValidator = (type, error) => {
   let validator = (...args) => ({ type, args, error });
   validator.error = error;
@@ -34,24 +37,100 @@ validatorFns[NUMBER_LESS_THAN] = (value, args, form) => {
   return Number(value) < args[0];
 };
 
+export const NUMBER_GREATER_THAN = "validator/NUMBER_GREATER_THAN";
+export const NUMBER_GREATER_THAN_ERROR = "error/NUMBER_GREATER_THAN";
+export const numberGreaterThan = createValidator(
+  NUMBER_GREATER_THAN,
+  NUMBER_GREATER_THAN_ERROR
+);
+validatorFns[NUMBER_GREATER_THAN] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return Number(value) > args[0];
+};
+
 export const MATCHES_FIELD = "validator/MATCHES_FIELD";
 export const MATCHES_FIELD_ERROR = "error/MATCHES_FIELD";
 export const matchesField = createValidator(MATCHES_FIELD, MATCHES_FIELD_ERROR);
 validatorFns[MATCHES_FIELD] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
   if (form[args[0]] === undefined) {
     throw new Error(
-      `${
-        args[0]
-      } was passed to matchesField, but that field does not exist in the form`
+      `${args[0]} was passed to matchesField, but that field does not exist in the form`
     );
   }
   return value === form[args[0]].rawValue;
+};
+
+export const validateWhenErrorMessage = type =>
+  `${type} was passed to validateWhen, but that validator type does not exist.
+  Please check that you are only calling validator creator functions exported from
+  redux-freeform in your form config and that you didn't forget to
+  invoke the validator creator (you cannot pass the functions themselves to
+  createFormState). Also make sure you aren't passing validateWhen() to validateWhen
+  as the primary validator.`;
+
+export const VALIDATE_WHEN = "validator/VALIDATE_WHEN";
+export const VALIDATE_WHEN_ERROR = "error/VALIDATE_WHEN";
+const validateWhen = (
+  dependentValidator,
+  primaryValidator,
+  optionalFieldName
+) => ({
+  type: VALIDATE_WHEN,
+  args: [dependentValidator, primaryValidator, optionalFieldName],
+  error: dependentValidator.error
+});
+validateWhen.error = VALIDATE_WHEN_ERROR;
+export { validateWhen };
+validatorFns[VALIDATE_WHEN] = (value, args, form) => {
+  const [dependentValidator, primaryValidator, optionalFieldName] = args;
+  const dependsOnOtherField = typeof optionalFieldName === "string";
+
+  if (
+    primaryValidator.type === undefined ||
+    typeof validatorFns[primaryValidator.type] !== "function"
+  ) {
+    throw new Error(validateWhenErrorMessage(primaryValidator.type));
+  }
+  if (dependsOnOtherField && form[optionalFieldName] === undefined) {
+    throw new Error(
+      `${args[2]} was passed to matchesField, but that field does not exist in the form`
+    );
+  }
+
+  const primaryPredicate = validatorToPredicate(
+    validatorFns[primaryValidator.type],
+    false
+  );
+  const primaryValue = dependsOnOtherField
+    ? form[optionalFieldName].rawValue
+    : value;
+  const primaryPredicatePassed = primaryPredicate(
+    primaryValue,
+    primaryValidator.args,
+    form
+  );
+
+  return primaryPredicatePassed
+    ? validatorFns[dependentValidator.type](
+        value,
+        dependentValidator.args,
+        form
+      )
+    : true;
 };
 
 export const HAS_LENGTH = "validator/HAS_LENGTH";
 export const HAS_LENGTH_ERROR = "error/HAS_LENGTH";
 export const hasLength = createValidator(HAS_LENGTH, HAS_LENGTH_ERROR);
 validatorFns[HAS_LENGTH] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
   const min = args[0];
   const max = args[1];
   if (max == undefined || min == undefined) {
@@ -71,8 +150,12 @@ validatorFns[HAS_LENGTH] = (value, args, form) => {
 export const MATCHES_REGEX = "validator/MATCHES_REGEX";
 export const MATCHES_REGEX_ERROR = "error/MATCHES_REGEX";
 export const matchesRegex = createValidator(MATCHES_REGEX, MATCHES_REGEX_ERROR);
-validatorFns[MATCHES_REGEX] = (value, args, form) =>
-  new RegExp(args[0]).test(value); // new RexExp never throws an error, no matter the input
+validatorFns[MATCHES_REGEX] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return new RegExp(args[0]).test(value); // new RexExp never throws an error, no matter the input
+};
 
 // based on http://www.brainjar.com/js/validation/
 export const IS_ROUTING_NUMBER = "validator/IS_ROUTING_NUMBER";

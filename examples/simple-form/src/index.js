@@ -15,6 +15,7 @@ const store = createStore(
 );
 const rootEl = document.getElementById("simple-form");
 const render = () =>
+  // eslint-disable-next-line react/no-render-return-value
   ReactDOM.render(
     <SimpleForm
       {...mapStateToProps(store.getState())}

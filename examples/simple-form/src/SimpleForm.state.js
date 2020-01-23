@@ -2,15 +2,20 @@ import {
   createFormState,
   matchesField,
   numberLessThan,
+  numberGreaterThan,
   onlyIntegers,
   hasLength,
   required,
-  matchesRegex
+  matchesRegex,
+  validateWhen
 } from "redux-freeform";
 
 const formConfig = {
   age: {
     validators: [required(), onlyIntegers(), numberLessThan(99)]
+  },
+  maritalStatus: {
+    validators: [validateWhen(required(), numberGreaterThan(18), "age")]
   },
   name: {
     validators: [required()]
@@ -27,7 +32,18 @@ const formConfig = {
     constraints: [onlyIntegers(), hasLength(0, 4)]
   },
   regexMatch: {
-    validators: [required(), matchesRegex("^[^\s@]+@[^\s@]+\.[^\s@]+$")] //simple regex to validate email address
+    validators: [required(), matchesRegex("^[^s@]+@[^s@]+.[^s@]+$")] //simple regex to validate email address
+  },
+  animal: {
+    validators: [required()]
+  },
+  animalNoise: {
+    validators: [
+      validateWhen(required(), matchesRegex("^.+$"), "animal"),
+      validateWhen(matchesRegex("^woof$"), matchesRegex("^dog$"), "animal"),
+      validateWhen(matchesRegex("^meow$"), matchesRegex("^cat$"), "animal"),
+      validateWhen(matchesRegex("^moo$"), matchesRegex("^cow$"), "animal")
+    ]
   }
 };
 

@@ -6,6 +6,8 @@ export {
   matchesField,
   hasLength,
   matchesRegex,
-  isRoutingNumber
+  isRoutingNumber,
+  validateWhen,
+  numberGreaterThan
 } from "./validation";
 export { createFormState } from "./main";
