@@ -187,6 +187,68 @@ validatorFns[IS_ROUTING_NUMBER] = (value, args, form) => {
   return sum != 0 && sum % 10 == 0;
 };
 
+export const HAS_NUMBER = "validator/HAS_NUMBER";
+export const HAS_NUMBER_ERROR = "error/HAS_NUMBER";
+export const hasNumber = createValidator(HAS_NUMBER, HAS_NUMBER_ERROR);
+validatorFns[HAS_NUMBER] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return new RegExp(/[0-9]/).test(value); // new RexExp never throws an error, no matter the input
+};
+
+export const HAS_LOWERCASE_LETTER = "validator/HAS_LOWERCASE_LETTER";
+export const HAS_LOWERCASE_LETTER_ERROR = "error/HAS_LOWERCASE_LETTER";
+export const hasLowercaseLetter = createValidator(
+  HAS_LOWERCASE_LETTER,
+  HAS_LOWERCASE_LETTER_ERROR
+);
+validatorFns[HAS_LOWERCASE_LETTER] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return new RegExp(/[a-z]/).test(value); // new RexExp never throws an error, no matter the input
+};
+
+export const HAS_UPPERCASE_LETTER = "validator/HAS_UPPERCASE_LETTER";
+export const HAS_UPPERCASE_LETTER_ERROR = "error/HAS_UPPERCASE_LETTER";
+export const hasUppercaseLetter = createValidator(
+  HAS_UPPERCASE_LETTER,
+  HAS_UPPERCASE_LETTER_ERROR
+);
+validatorFns[HAS_UPPERCASE_LETTER] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return new RegExp(/[A-Z]/).test(value); // new RexExp never throws an error, no matter the input
+};
+
+export const HAS_SPECIAL_CHARACTER = "validator/HAS_SPECIAL_CHARACTER";
+export const HAS_SPECIAL_CHARACTER_ERROR = "error/HAS_SPECIAL_CHARACTER";
+export const hasSpecialCharacter = createValidator(
+  HAS_SPECIAL_CHARACTER,
+  HAS_SPECIAL_CHARACTER_ERROR
+);
+validatorFns[HAS_SPECIAL_CHARACTER] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return new RegExp(/[!@#$%^&*.?]/).test(value); // new RexExp never throws an error, no matter the input
+};
+
+export const IS_PROBABLY_EMAIL = "validator/IS_PROBABLY_EMAIL";
+export const IS_PROBABLY_EMAIL_ERROR = "error/IS_PROBABLY_EMAIL";
+export const isProbablyEmail = createValidator(
+  IS_PROBABLY_EMAIL,
+  IS_PROBABLY_EMAIL_ERROR
+);
+validatorFns[IS_PROBABLY_EMAIL] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return new RegExp(/^\S+@\S+\.\S+$/).test(value); // new RexExp never throws an error, no matter the input
+};
+
 export const runValidatorErrorMessage = type =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator creator functions exported from 
