@@ -194,7 +194,7 @@ validatorFns[HAS_NUMBER] = (value, args, form) => {
   if (value === "") {
     return true;
   }
-  return new RegExp(/[0-9]/).test(value); 
+  return new RegExp(/[0-9]/).test(value);
 };
 
 export const HAS_LOWERCASE_LETTER = "validator/HAS_LOWERCASE_LETTER";
@@ -207,7 +207,7 @@ validatorFns[HAS_LOWERCASE_LETTER] = (value, args, form) => {
   if (value === "") {
     return true;
   }
-  return new RegExp(/[a-z]/).test(value); 
+  return new RegExp(/[a-z]/).test(value);
 };
 
 export const HAS_UPPERCASE_LETTER = "validator/HAS_UPPERCASE_LETTER";
@@ -220,7 +220,7 @@ validatorFns[HAS_UPPERCASE_LETTER] = (value, args, form) => {
   if (value === "") {
     return true;
   }
-  return new RegExp(/[A-Z]/).test(value); 
+  return new RegExp(/[A-Z]/).test(value);
 };
 
 export const HAS_SPECIAL_CHARACTER = "validator/HAS_SPECIAL_CHARACTER";
