@@ -37,7 +37,22 @@ import {
   validateWhenErrorMessage,
   numberGreaterThan,
   NUMBER_GREATER_THAN,
-  NUMBER_GREATER_THAN_ERROR
+  NUMBER_GREATER_THAN_ERROR,
+  hasNumber,
+  HAS_NUMBER,
+  HAS_NUMBER_ERROR,
+  hasLowercaseLetter,
+  HAS_LOWERCASE_LETTER,
+  HAS_LOWERCASE_LETTER_ERROR,
+  hasUppercaseLetter,
+  HAS_UPPERCASE_LETTER,
+  HAS_UPPERCASE_LETTER_ERROR,
+  hasSpecialCharacter,
+  HAS_SPECIAL_CHARACTER,
+  HAS_SPECIAL_CHARACTER_ERROR,
+  isProbablyEmail,
+  IS_PROBABLY_EMAIL,
+  IS_PROBABLY_EMAIL_ERROR
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -733,3 +748,191 @@ test("hasLength throws error when max is less than min", t => {
     "hasLength validator was passed a min greater than the max"
   );
 });
+
+test("hasNumber validator produces correct validator object", t => {
+  t.is(hasNumber.error, HAS_NUMBER_ERROR);
+  t.deepEqual(hasNumber(), {
+    type: HAS_NUMBER,
+    args: [],
+    error: HAS_NUMBER_ERROR
+  });
+});
+
+test("hasNumber accepts when value is empty string", t => {
+  t.is(validatorFns[HAS_NUMBER]("", ["doesntmatter"], {}), true);
+});
+
+testProp(
+  "hasNumber rejects string with no numbers",
+  [
+    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) => !validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {})
+);
+
+testProp(
+  "hasNumber accepts string with number",
+  [
+    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) => validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {})
+);
+
+test("hasLowercaseLetter validator produces correct validator object", t => {
+  t.is(hasLowercaseLetter.error, HAS_LOWERCASE_LETTER_ERROR);
+  t.deepEqual(hasLowercaseLetter(), {
+    type: HAS_LOWERCASE_LETTER,
+    args: [],
+    error: HAS_LOWERCASE_LETTER_ERROR
+  });
+});
+
+test("hasLowercaseLetter accepts when value is empty string", t => {
+  t.is(validatorFns[HAS_LOWERCASE_LETTER]("", ["doesntmatter"], {}), true);
+});
+
+testProp(
+  "hasLowercaseLetter rejects string with with no lowercase letter",
+  [
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) =>
+    !validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {})
+);
+
+testProp(
+  "hasLowercaseLetter accepts string with with a lowercase letter",
+  [
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) =>
+    validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {})
+);
+
+test("hasUppercaseLetter validator produces correct validator object", t => {
+  t.is(hasUppercaseLetter.error, HAS_UPPERCASE_LETTER_ERROR);
+  t.deepEqual(hasUppercaseLetter(), {
+    type: HAS_UPPERCASE_LETTER,
+    args: [],
+    error: HAS_UPPERCASE_LETTER_ERROR
+  });
+});
+
+test("hasUppercaseLetter accepts when value is empty string", t => {
+  t.is(validatorFns[HAS_UPPERCASE_LETTER]("", ["doesntmatter"], {}), true);
+});
+
+testProp(
+  "hasUpperLetter rejects string with with no uppercase letter",
+  [
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) =>
+    !validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {})
+);
+
+testProp(
+  "hasUppercaseLetter accepts string with with a uppercase letter",
+  [
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) =>
+    validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {})
+);
+
+test("hasSpecialCharacter validator produces correct validator object", t => {
+  t.is(hasSpecialCharacter.error, HAS_SPECIAL_CHARACTER_ERROR);
+  t.deepEqual(hasSpecialCharacter(), {
+    type: HAS_SPECIAL_CHARACTER,
+    args: [],
+    error: HAS_SPECIAL_CHARACTER_ERROR
+  });
+});
+
+test("hasSpecialCharacter accepts when value is empty string", t => {
+  t.is(validatorFns[HAS_SPECIAL_CHARACTER]("", ["doesntmatter"], {}), true);
+});
+
+testProp(
+  "hasSpecialCharacter rejects string with with no special character",
+  [
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+  ],
+  (...stringA) =>
+    !validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {})
+);
+
+testProp(
+  "hasSpecialCharacter accepts string with with a special character",
+  [
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
+    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
+    fc
+      .stringOf(fc.char().filter(c => /[!@#$%^&*.?]/.test(c)))
+      .filter(s => s !== "")
+  ],
+  (...stringA) =>
+    validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {})
+);
+
+test("isProbablyEmail validator produces correct validator object", t => {
+  t.is(isProbablyEmail.error, IS_PROBABLY_EMAIL_ERROR);
+  t.deepEqual(isProbablyEmail(), {
+    type: IS_PROBABLY_EMAIL,
+    args: [],
+    error: IS_PROBABLY_EMAIL_ERROR
+  });
+});
+
+test("isProbablyEmail accepts when value is empty string", t => {
+  t.is(validatorFns[IS_PROBABLY_EMAIL]("", ["doesntmatter"], {}), true);
+});
+
+const testRegexEmailString = /^\S+@\S+\.\S+$/;
+
+testProp(
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test",
+  [fc.string(1, 15).filter(str => new RegExp(testRegexEmailString).test(str))],
+  valueThatMatchesRegex =>
+    validatorFns[IS_PROBABLY_EMAIL](
+      valueThatMatchesRegex,
+      [testRegexEmailString],
+      {}
+    )
+);
+
+testProp(
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test",
+  [fc.string(1, 15).filter(str => !new RegExp(testRegexEmailString).test(str))],
+  valueThatDoesNotMatchRegex =>
+    !validatorFns[IS_PROBABLY_EMAIL](
+      valueThatDoesNotMatchRegex,
+      [testRegexEmailString],
+      {}
+    )
+);
