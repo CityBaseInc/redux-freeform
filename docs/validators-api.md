@@ -260,3 +260,110 @@ Arguments:
 | ""                    | "20"              | True      |
 | ""                    | "21"              | False     |
 | "Manhattan"           | "21"              | True      |
+
+## hasNumber
+
+hasNumber validates if this field contains a minimum of one integer
+
+```jsx
+import { hasNumber } from "redux-freeform";
+
+const formConfig = {
+  password: {
+    validators: [hasNumber()]
+  }
+};
+```
+
+| Value         | Validates |
+| ------------- | --------- |
+| "password"    | False     |
+| "Pa$$word"    | False     |
+| "Pa$$word123" | True      |
+| "PASSWORD1!"  | True      |
+
+## hasLowercaseLetter
+
+hasLowercaseLetter validates if this field contains a minimum of one lowercase letter
+
+```jsx
+import { hasLowercaseLetter } from "redux-freeform";
+
+const formConfig = {
+  password: {
+    validators: [hasLowercaseLetter()]
+  }
+};
+```
+
+| Value         | Validates |
+| ------------- | --------- |
+| "123!@#"      | False     |
+| "Pa$$word"    | True      |
+| "Pa$$word123" | True      |
+| "PASSWORD1!"  | False     |
+
+## hasUppercaseLetter
+
+hasUppercaseLetter validates if this field contains a minimum of one uppercase letter
+
+```jsx
+import { hasUppercaseLetter } from "redux-freeform";
+
+const formConfig = {
+  password: {
+    validators: [hasUppercaseLetter()]
+  }
+};
+```
+
+| Value         | Validates |
+| ------------- | --------- |
+| "123!@#"      | False     |
+| "password"    | False     |
+| "Pa$$word123" | True      |
+| "PASSWORD1!"  | True      |
+
+## hasSpecialCharacter
+
+hasSpecialCharacter validates if this field contains a minimum of one special character ("!@#$%^&*.?")
+
+```jsx
+import { hasSpecialCharacter } from "redux-freeform";
+
+const formConfig = {
+  password: {
+    validators: [hasSpecialCharacter()]
+  }
+};
+```
+
+| Value         | Validates |
+| ------------- | --------- |
+| "123!@#"      | True      |
+| "password"    | False     |
+| "Pa$$word123" | True      |
+| "PASSWORD1"   | False     |
+| "PASSWORD2!"  | True      |
+
+## isProbablyEmail
+
+isProbablyEmail validates if this field is most likely an email.
+
+```jsx
+import { isProbablyEmail } from "redux-freeform";
+
+const formConfig = {
+  email: {
+    validators: [isProbablyEmail()]
+  }
+};
+```
+
+| Value                 | Validates |
+| --------------------- | --------- |
+| "testEmail@email.com" | True      |
+| "testEmail@.com"      | False     |
+| "@testEmail.com"      | False     |
+| "testEmail"           | False     |
+| "testEmail.com"       | False     |
