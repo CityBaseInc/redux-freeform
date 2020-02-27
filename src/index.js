@@ -8,6 +8,11 @@ export {
   matchesRegex,
   isRoutingNumber,
   validateWhen,
-  numberGreaterThan
+  numberGreaterThan,
+  hasNumber,
+  hasLowercaseLetter,
+  hasUppercaseLetter,
+  hasSpecialCharacter,
+  isProbablyEmail
 } from "./validation";
 export { createFormState } from "./main";
