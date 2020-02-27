@@ -277,6 +277,7 @@ const formConfig = {
 
 | Value         | Validates |
 | ------------- | --------- |
+| ""            | True      |
 | "password"    | False     |
 | "Pa$$word"    | False     |
 | "Pa$$word123" | True      |
@@ -298,6 +299,7 @@ const formConfig = {
 
 | Value         | Validates |
 | ------------- | --------- |
+| ""            | True      |
 | "123!@#"      | False     |
 | "Pa$$word"    | True      |
 | "Pa$$word123" | True      |
@@ -319,6 +321,7 @@ const formConfig = {
 
 | Value         | Validates |
 | ------------- | --------- |
+| ""            | True      |
 | "123!@#"      | False     |
 | "password"    | False     |
 | "Pa$$word123" | True      |
@@ -340,6 +343,7 @@ const formConfig = {
 
 | Value         | Validates |
 | ------------- | --------- |
+| ""            | True      |
 | "123!@#"      | True      |
 | "password"    | False     |
 | "Pa$$word123" | True      |
@@ -362,6 +366,7 @@ const formConfig = {
 
 | Value                 | Validates |
 | --------------------- | --------- |
+| ""                    | True      |
 | "testEmail@email.com" | True      |
 | "testEmail@.com"      | False     |
 | "@testEmail.com"      | False     |
