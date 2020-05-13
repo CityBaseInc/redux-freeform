@@ -235,7 +235,7 @@ Note: this causes the field to essentially "inherit" the validators of the match
 validateWhen is a higher-order validator that runs a dependentValidator iff a precondition has been met. This precondition is called the primaryValidator and can optionally depend on another field. The error key resulting in a rejection will correspond to the dependentValidator. If the primaryValidator rejects, no error key will be added to the errors array.
 
 ```jsx
-import { matchesField } from "redux-freeform";
+import { required, onlyIntegers, validateWhen, numberGreaterThan } from "redux-freeform";
 
 const formConfig = {
   age: {
@@ -266,14 +266,14 @@ Arguments:
 validateSum is a higher-order validator that runs a validator on the sum of values in the current field a set of identified fields. The error key resulting in a rejection will correspond to the validator. If the validator rejects, no error key will be added to the errors array.
 
 ```jsx
-import { matchesField } from "redux-freeform";
+import { required, onlyNaturals, validateSum, numberLessThan } from "redux-freeform";
 
 const formConfig = {
-  age: {
-    validators: [required(), onlyIntegers()]
+  numberOfCats: {
+    validators: [required(), onlyNaturals(), validateSum(numberLessThan(5), "numberOfDogs")]
   },
-  favoriteDrink: {
-    validators: [validateWhen(required(), numberGreaterThan(20), "age")]
+  numberOfDogs: {
+    validators: [required(), onlyNaturals(), validateSum(numberLessThan(5), "numberOfCats")]
   }
 };
 ```
@@ -284,15 +284,14 @@ Arguments:
 - `validator` validator to run on the sum
 - `fieldNamesArray` the array of string names of keys in the form object, determines what field validator runs against
 
-validator: numberLessThan(5)
-| value                 | Other Field Value | Validates |
-| --------------------- | ----------------- | --------- |
-| ""                    | ""                | True      |
-| "1"                   | ""                | True      |
-| "1"                   | "1"               | True      |
-| "4"                   | "1"               | False     |
-| "1"                   | "4"               | False     |
-| "5"                   | "5"               | False      |
+| value (numberOfCats) | Other Field Value (numberOfDogs) | Validates |
+| -------------------- | -------------------------------- | --------- |
+| ""                   | ""                               | True      |
+| "1"                  | ""                               | True      |
+| "1"                  | "1"                              | True      |
+| "4"                  | "1"                              | False     |
+| "1"                  | "4"                              | False     |
+| "5"                  | "5"                              | False     |
 
 ## hasNumber
 
