@@ -35,6 +35,10 @@ import {
   VALIDATE_WHEN,
   VALIDATE_WHEN_ERROR,
   validateWhenErrorMessage,
+  validateSum,
+  VALIDATE_SUM,
+  VALIDATE_SUM_ERROR,
+  validateSumErrorMessage,
   numberGreaterThan,
   NUMBER_GREATER_THAN,
   NUMBER_GREATER_THAN_ERROR,
@@ -380,6 +384,141 @@ test("validateWhen throws error when dependent validator doesn't exist", t => {
   invoke the validator creator (you cannot pass the functions themselves to
   createFormState). Also make sure you aren't passing validateWhen() to validateWhen
   as the primary validator.`
+  );
+  t.deepEqual(validatorError, expected);
+});
+
+test("validateSum validator produces", t => {
+  t.is(validateSum.error, VALIDATE_SUM_ERROR);
+  t.deepEqual(validateSum(numberGreaterThan(5), ["foo"]), {
+    type: VALIDATE_SUM,
+    args: [
+      {
+        args: [5],
+        error: NUMBER_GREATER_THAN_ERROR,
+        type: NUMBER_GREATER_THAN
+      },
+      ["foo"]
+    ],
+    error: NUMBER_GREATER_THAN_ERROR
+  });
+});
+
+test("validateSum validates when validator validates against sum of identified fields", t => {
+  const form = {
+    a: {
+      rawValue: "2"
+    },
+    b: {
+      rawValue: "3"
+    }
+  };
+  t.is(
+    validatorFns[VALIDATE_SUM](
+      "5",
+      [
+        {
+          args: [9],
+          error: NUMBER_GREATER_THAN_ERROR,
+          type: NUMBER_GREATER_THAN
+        },
+        ["a", "b"]
+      ],
+      form
+    ),
+    true
+  );
+});
+
+test("validateSum doesn't validate when validator doesn't validate against sum of identified fields", t => {
+  const form = {
+    a: {
+      rawValue: "2"
+    },
+    b: {
+      rawValue: "3"
+    }
+  };
+  t.is(
+    validatorFns[VALIDATE_SUM](
+      "5",
+      [
+        {
+          args: [10],
+          error: NUMBER_GREATER_THAN_ERROR,
+          type: NUMBER_GREATER_THAN
+        },
+        ["a", "b"]
+      ],
+      form
+    ),
+    false
+  );
+});
+
+test("validateSum error message formats properly", t => {
+  const expected = `foo was passed to validateSum, but that validator type does not exist.
+  Please check that you are only calling validator creator functions exported from
+  redux-freeform in your form config and that you didn't forget to
+  invoke the validator creator (you cannot pass the functions themselves to
+  createFormState).`;
+  t.is(validateSumErrorMessage("foo"), expected);
+});
+
+test("validateSum throws error when dependent field does not exist", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      {
+        type: VALIDATE_SUM,
+        args: [
+          {
+            args: [5],
+            error: NUMBER_GREATER_THAN_ERROR,
+            type: NUMBER_GREATER_THAN
+          },
+          ["foo"]
+        ],
+        error: NUMBER_GREATER_THAN_ERROR
+      },
+      "5",
+      {}
+    )
+  );
+  const expected = Error(
+    "foo was passed to matchesField, but that field does not exist in the form"
+  );
+  t.deepEqual(validatorError, expected);
+});
+
+test("validateSum throws error when validator doesn't exist", t => {
+  const validatorError = t.throws(() =>
+    runValidator(
+      {
+        type: VALIDATE_SUM,
+        args: [
+          {
+            args: [5],
+            error: NUMBER_GREATER_THAN_ERROR,
+            type: "NOT REAL VALIDATOR"
+          },
+          ["foo"]
+        ],
+        error: NUMBER_GREATER_THAN_ERROR
+      },
+      "bar",
+      {
+        foo: {
+          rawValue: "5"
+        }
+      }
+    )
+  );
+  const expected = Error(
+    `NOT REAL VALIDATOR was passed to validateSum, but that validator type does not exist.
+  Please check that you are only calling validator creator functions exported from
+  redux-freeform in your form config and that you didn't forget to
+  invoke the validator creator (you cannot pass the functions themselves to
+  createFormState).`
   );
   t.deepEqual(validatorError, expected);
 });

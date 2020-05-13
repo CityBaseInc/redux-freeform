@@ -261,6 +261,39 @@ Arguments:
 | ""                    | "21"              | False     |
 | "Manhattan"           | "21"              | True      |
 
+## validateSum
+
+validateSum is a higher-order validator that runs a validator on the sum of values in the current field a set of identified fields. The error key resulting in a rejection will correspond to the validator. If the validator rejects, no error key will be added to the errors array.
+
+```jsx
+import { matchesField } from "redux-freeform";
+
+const formConfig = {
+  age: {
+    validators: [required(), onlyIntegers()]
+  },
+  favoriteDrink: {
+    validators: [validateWhen(required(), numberGreaterThan(20), "age")]
+  }
+};
+```
+
+Arguments:
+`validateSum(validator, fieldNamesArray)`
+
+- `validator` validator to run on the sum
+- `fieldNamesArray` the array of string names of keys in the form object, determines what field validator runs against
+
+validator: numberLessThan(5)
+| value                 | Other Field Value | Validates |
+| --------------------- | ----------------- | --------- |
+| ""                    | ""                | True      |
+| "1"                   | ""                | True      |
+| "1"                   | "1"               | True      |
+| "4"                   | "1"               | False     |
+| "1"                   | "4"               | False     |
+| "5"                   | "5"               | False      |
+
 ## hasNumber
 
 hasNumber validates if this field contains a minimum of one integer
