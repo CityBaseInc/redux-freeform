@@ -270,10 +270,12 @@ import { required, onlyNaturals, validateSum, numberLessThan } from "redux-freef
 
 const formConfig = {
   numberOfCats: {
-    validators: [required(), onlyNaturals(), validateSum(numberLessThan(5), "numberOfDogs")]
+    validators: [required(), validateSum(numberLessThan(5), "numberOfDogs")],
+    constraints: [onlyNaturals()]
   },
   numberOfDogs: {
-    validators: [required(), onlyNaturals(), validateSum(numberLessThan(5), "numberOfCats")]
+    validators: [required(), validateSum(numberLessThan(5), "numberOfCats")],
+    constraints: [onlyNaturals()]
   }
 };
 ```
