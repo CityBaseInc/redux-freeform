@@ -140,7 +140,6 @@ const validateSum = (validator, fieldNamesArray) => ({
 validateSum.error = VALIDATE_SUM_ERROR;
 export { validateSum };
 validatorFns[VALIDATE_SUM] = (value, args, form) => {
-  console.log(args);
   const [validator, fieldNamesArray] = args;
 
   if (
