@@ -7,7 +7,9 @@ import {
   hasLength,
   required,
   matchesRegex,
-  validateWhen
+  validateWhen,
+  validateSum,
+  onlyNaturals
 } from "redux-freeform";
 
 const formConfig = {
@@ -44,6 +46,14 @@ const formConfig = {
       validateWhen(matchesRegex("^meow$"), matchesRegex("^cat$"), "animal"),
       validateWhen(matchesRegex("^moo$"), matchesRegex("^cow$"), "animal")
     ]
+  },
+  numberOfDogs: {
+    validators: [validateSum(numberLessThan(5), ["numberOfCats"])],
+    constraints: [onlyNaturals()]
+  },
+  numberOfCats: {
+    validators: [validateSum(numberLessThan(5), ["numberOfDogs"])],
+    constraints: [onlyNaturals()]
   }
 };
 

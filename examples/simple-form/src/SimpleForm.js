@@ -38,6 +38,12 @@ const animalNoiseError = a => ({
   [matchesRegex.error]: `that's not what a ${a} sounds like`,
   [required.error]: `animal noise is required`
 });
+const numberOfDogsError = {
+  [numberLessThan.error]: "Number of cats and dogs cannot exceed 5."
+};
+const numberOfCatsError = {
+  [numberLessThan.error]: "Number of cats and dogs cannot exceed 5."
+};
 
 const InputField = ({
   labelTextWhenNoError,
@@ -146,6 +152,18 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.fields.animalNoise}
       labelTextWhenNoError="animal noise"
       errorMessages={animalNoiseError(fields.animal.rawValue)}
+    />
+    <InputField
+      field={fields.numberOfCats}
+      fieldActions={actions.fields.numberOfCats}
+      labelTextWhenNoError="number of cats"
+      errorMessages={numberOfCatsError}
+    />
+    <InputField
+      field={fields.numberOfDogs}
+      fieldActions={actions.fields.numberOfDogs}
+      labelTextWhenNoError="number of dogs"
+      errorMessages={numberOfDogsError}
     />
     <button onClick={() => actions.form.clear()}>Clear the form</button>
   </div>

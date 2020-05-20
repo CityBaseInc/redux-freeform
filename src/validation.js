@@ -124,6 +124,47 @@ validatorFns[VALIDATE_WHEN] = (value, args, form) => {
     : true;
 };
 
+export const validateSumErrorMessage = type =>
+  `${type} was passed to validateSum, but that validator type does not exist.
+  Please check that you are only calling validator creator functions exported from
+  redux-freeform in your form config and that you didn't forget to
+  invoke the validator creator (you cannot pass the functions themselves to
+  createFormState).`;
+export const VALIDATE_SUM = "validator/VALIDATE_SUM";
+export const VALIDATE_SUM_ERROR = "error/VALIDATE_SUM";
+const validateSum = (validator, fieldNamesArray) => ({
+  type: VALIDATE_SUM,
+  args: [validator, fieldNamesArray],
+  error: validator.error
+});
+validateSum.error = VALIDATE_SUM_ERROR;
+export { validateSum };
+validatorFns[VALIDATE_SUM] = (value, args, form) => {
+  const [validator, fieldNamesArray] = args;
+
+  if (
+    validator.type === undefined ||
+    typeof validatorFns[validator.type] !== "function"
+  ) {
+    throw new Error(validateSumErrorMessage(validator.type));
+  }
+
+  for (const fieldName of fieldNamesArray) {
+    if (form[fieldName] === undefined) {
+      throw new Error(
+        `${fieldName} was passed to matchesField, but that field does not exist in the form`
+      );
+    }
+  }
+
+  const sum = fieldNamesArray.reduce(
+    (acc, curr) => acc + Number(form[curr].rawValue),
+    Number(value)
+  );
+
+  return validatorFns[validator.type](sum, validator.args, form);
+};
+
 export const HAS_LENGTH = "validator/HAS_LENGTH";
 export const HAS_LENGTH_ERROR = "error/HAS_LENGTH";
 export const hasLength = createValidator(HAS_LENGTH, HAS_LENGTH_ERROR);

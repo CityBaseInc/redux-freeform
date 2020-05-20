@@ -235,7 +235,7 @@ Note: this causes the field to essentially "inherit" the validators of the match
 validateWhen is a higher-order validator that runs a dependentValidator iff a precondition has been met. This precondition is called the primaryValidator and can optionally depend on another field. The error key resulting in a rejection will correspond to the dependentValidator. If the primaryValidator rejects, no error key will be added to the errors array.
 
 ```jsx
-import { matchesField } from "redux-freeform";
+import { required, onlyIntegers, validateWhen, numberGreaterThan } from "redux-freeform";
 
 const formConfig = {
   age: {
@@ -260,6 +260,40 @@ Arguments:
 | ""                    | "20"              | True      |
 | ""                    | "21"              | False     |
 | "Manhattan"           | "21"              | True      |
+
+## validateSum
+
+validateSum is a higher-order validator that runs a validator on the sum of values in the current field a set of identified fields. The error key resulting in a rejection will correspond to the validator. If the validator rejects, no error key will be added to the errors array.
+
+```jsx
+import { required, onlyNaturals, validateSum, numberLessThan } from "redux-freeform";
+
+const formConfig = {
+  numberOfCats: {
+    validators: [required(), validateSum(numberLessThan(5), "numberOfDogs")],
+    constraints: [onlyNaturals()]
+  },
+  numberOfDogs: {
+    validators: [required(), validateSum(numberLessThan(5), "numberOfCats")],
+    constraints: [onlyNaturals()]
+  }
+};
+```
+
+Arguments:
+`validateSum(validator, fieldNamesArray)`
+
+- `validator` validator to run on the sum
+- `fieldNamesArray` the array of string names of keys in the form object, determines what field validator runs against
+
+| value (numberOfCats) | Other Field Value (numberOfDogs) | Validates |
+| -------------------- | -------------------------------- | --------- |
+| ""                   | ""                               | True      |
+| "1"                  | ""                               | True      |
+| "1"                  | "1"                              | True      |
+| "4"                  | "1"                              | False     |
+| "1"                  | "4"                              | False     |
+| "5"                  | "5"                              | False     |
 
 ## hasNumber
 

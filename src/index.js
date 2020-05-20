@@ -8,6 +8,7 @@ export {
   matchesRegex,
   isRoutingNumber,
   validateWhen,
+  validateSum,
   numberGreaterThan,
   hasNumber,
   hasLowercaseLetter,
