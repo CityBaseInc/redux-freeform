@@ -36,6 +36,10 @@
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.1.0"
   },
+  "resolutions": {
+    "acorn": "^6.4.1",
+    "minimist": "^1.2.2"
+  },
   "files": [
     "dist"
   ],

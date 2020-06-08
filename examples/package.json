@@ -22,5 +22,11 @@
     "@babel/preset-env": "^7.4.5",
     "babel": "^6.23.0",
     "parcel-bundler": "^1.12.3"
+  },
+  "resolutions": {
+    "acorn": "^6.4.1",
+    "minimist": "^1.2.2",
+    "serialize-to-js": "^3.0.1",
+    "kind-of": "^6.0.3"
   }
 }
