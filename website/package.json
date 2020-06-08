@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "docusaurus": "^1.12.0"
+  },
+  "resolutions": {
+    "minimist": "^1.2.2",
+    "kind-of": "^6.0.3"
   }
 }
