@@ -90,6 +90,33 @@ Arguments:
 | ----- | --- | --------- |
 | ""    | any | True      |
 | "10"  | 11  | True      |
+| "11"  | 11  | False     |
+| "15"  | 11  | False     |
+
+## numberLessThanOrEqualTo
+
+numberLessThanOrEqualTo will validate any number less than or equal to the one provided
+
+```jsx
+import { numberLessThanOrEqualTo } from "redux-freeform";
+
+const formConfig = {
+  age: {
+    validators: [numberLessThanOrEqualTo(11)]
+  }
+};
+```
+
+Arguments:
+`numberLessThanOrEqualTo(n)`
+
+- `n` value must be numerically `<=` than _n_
+
+| Value | n   | Validates |
+| ----- | --- | --------- |
+| ""    | any | True      |
+| "10"  | 11  | True      |
+| "11"  | 11  | True      |
 | "15"  | 11  | False     |
 
 ## numberGreaterThan
