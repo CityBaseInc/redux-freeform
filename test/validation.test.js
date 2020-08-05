@@ -15,6 +15,9 @@ import {
   numberLessThan,
   NUMBER_LESS_THAN,
   NUMBER_LESS_THAN_ERROR,
+  numberLessThanOrEqualTo,
+  NUMBER_LESS_THAN_OR_EQUAL_TO,
+  NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR,
   matchesField,
   MATCHES_FIELD,
   MATCHES_FIELD_ERROR,
@@ -92,6 +95,15 @@ test("numberLessThan validator produces correct validator object", t => {
     type: NUMBER_LESS_THAN,
     args: [3],
     error: NUMBER_LESS_THAN_ERROR
+  });
+});
+
+test("numberLessThanOrEqualTo validator produces correct validator object", t => {
+  t.is(numberLessThanOrEqualTo.error, NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR);
+  t.deepEqual(numberLessThanOrEqualTo(3), {
+    type: NUMBER_LESS_THAN_OR_EQUAL_TO,
+    args: [3],
+    error: NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR
   });
 });
 
@@ -616,6 +628,39 @@ testProp(
   "numberLessThan rejects value equal to argument",
   [fc.float()],
   numberA => !validatorFns[NUMBER_LESS_THAN](String(numberA), [numberA], {})
+);
+
+test("numberLessThanOrEqualTo accepts empty string", t => {
+  t.true(validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO]("", {}));
+});
+
+testProp(
+  "numberLessThanOrEqualTo accepts value less than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
+      String(smallerNumber),
+      [biggerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberLessThanOrEqualTo rejects value greater than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
+      String(biggerNumber),
+      [smallerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberLessThanOrEqualTo accepts value equal to argument",
+  [fc.float()],
+  numberA =>
+    !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](String(numberA), [numberA], {})
 );
 
 test("numberGreaterThan accepts empty string", t => {
