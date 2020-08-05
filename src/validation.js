@@ -37,8 +37,10 @@ validatorFns[NUMBER_LESS_THAN] = (value, args, form) => {
   return Number(value) < args[0];
 };
 
-export const NUMBER_LESS_THAN_OR_EQUAL_TO = "validator/NUMBER_LESS_THAN_OR_EQUAL_TO";
-export const NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR = "error/NUMBER_LESS_THAN_OR_EQUAL_TO";
+export const NUMBER_LESS_THAN_OR_EQUAL_TO =
+  "validator/NUMBER_LESS_THAN_OR_EQUAL_TO";
+export const NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR =
+  "error/NUMBER_LESS_THAN_OR_EQUAL_TO";
 export const numberLessThanOrEqualTo = createValidator(
   NUMBER_LESS_THAN_OR_EQUAL_TO,
   NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR
@@ -61,6 +63,21 @@ validatorFns[NUMBER_GREATER_THAN] = (value, args, form) => {
     return true;
   }
   return Number(value) > args[0];
+};
+
+export const NUMBER_GREATER_THAN_OR_EQUAL_TO =
+  "validator/NUMBER_GREATER_THAN_OR_EQUAL_TO";
+export const NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR =
+  "error/NUMBER_GREATER_THAN_OR_EQUAL_TO";
+export const numberGreaterThanOrEqualTo = createValidator(
+  NUMBER_GREATER_THAN_OR_EQUAL_TO,
+  NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR
+);
+validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  return Number(value) >= args[0];
 };
 
 export const MATCHES_FIELD = "validator/MATCHES_FIELD";
