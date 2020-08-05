@@ -15,6 +15,9 @@ import {
   numberLessThan,
   NUMBER_LESS_THAN,
   NUMBER_LESS_THAN_ERROR,
+  numberLessThanOrEqualTo,
+  NUMBER_LESS_THAN_OR_EQUAL_TO,
+  NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR,
   matchesField,
   MATCHES_FIELD,
   MATCHES_FIELD_ERROR,
@@ -42,6 +45,9 @@ import {
   numberGreaterThan,
   NUMBER_GREATER_THAN,
   NUMBER_GREATER_THAN_ERROR,
+  numberGreaterThanOrEqualTo,
+  NUMBER_GREATER_THAN_OR_EQUAL_TO,
+  NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR,
   hasNumber,
   HAS_NUMBER,
   HAS_NUMBER_ERROR,
@@ -95,6 +101,15 @@ test("numberLessThan validator produces correct validator object", t => {
   });
 });
 
+test("numberLessThanOrEqualTo validator produces correct validator object", t => {
+  t.is(numberLessThanOrEqualTo.error, NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR);
+  t.deepEqual(numberLessThanOrEqualTo(3), {
+    type: NUMBER_LESS_THAN_OR_EQUAL_TO,
+    args: [3],
+    error: NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR
+  });
+});
+
 test("matchesField validator produces correct validator object", t => {
   t.is(matchesField.error, MATCHES_FIELD_ERROR);
   t.deepEqual(matchesField("foo"), {
@@ -128,6 +143,15 @@ test("numberGreaterThan validator produces correct validator object", t => {
     type: NUMBER_GREATER_THAN,
     args: ["0"],
     error: NUMBER_GREATER_THAN_ERROR
+  });
+});
+
+test("numberGreaterThanOrEqualTo validator produces correct validator object", t => {
+  t.is(numberGreaterThanOrEqualTo.error, NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR);
+  t.deepEqual(numberGreaterThanOrEqualTo("0"), {
+    type: NUMBER_GREATER_THAN_OR_EQUAL_TO,
+    args: ["0"],
+    error: NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR
   });
 });
 
@@ -618,12 +642,45 @@ testProp(
   numberA => !validatorFns[NUMBER_LESS_THAN](String(numberA), [numberA], {})
 );
 
+test("numberLessThanOrEqualTo accepts empty string", t => {
+  t.true(validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO]("", {}));
+});
+
+testProp(
+  "numberLessThanOrEqualTo accepts value less than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
+      String(smallerNumber),
+      [biggerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberLessThanOrEqualTo rejects value greater than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
+      String(biggerNumber),
+      [smallerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberLessThanOrEqualTo accepts value equal to argument",
+  [fc.float()],
+  numberA =>
+    !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](String(numberA), [numberA], {})
+);
+
 test("numberGreaterThan accepts empty string", t => {
   t.true(validatorFns[NUMBER_GREATER_THAN]("", {}));
 });
 
 testProp(
-  "numberGreaterThan accepts value less than argument",
+  "numberGreaterThan accepts value greater than argument",
   [smallerBiggerTuple],
   ([smallerNumber, biggerNumber]) =>
     !!validatorFns[NUMBER_GREATER_THAN](
@@ -634,7 +691,7 @@ testProp(
 );
 
 testProp(
-  "numberGreaterThan rejects value greater than argument",
+  "numberGreaterThan rejects value less than argument",
   [smallerBiggerTuple],
   ([smallerNumber, biggerNumber]) =>
     !validatorFns[NUMBER_GREATER_THAN](
@@ -645,9 +702,46 @@ testProp(
 );
 
 testProp(
-  "numberGreaterThan rejects value equal to argument",
+  "numberGreaterThan accepts value equal to argument",
   [fc.float()],
   numberA => !validatorFns[NUMBER_GREATER_THAN](String(numberA), [numberA], {})
+);
+
+test("numberGreaterThanOrEqualTo accepts empty string", t => {
+  t.true(validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO]("", {}));
+});
+
+testProp(
+  "numberGreaterThanOrEqualTo accepts value greater than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !!validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
+      String(biggerNumber),
+      [smallerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberGreaterThanOrEqualTo rejects value less than argument",
+  [smallerBiggerTuple],
+  ([smallerNumber, biggerNumber]) =>
+    !validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
+      String(smallerNumber),
+      [biggerNumber],
+      {}
+    )
+);
+
+testProp(
+  "numberGreaterThanOrEqualTo accepts value equal to argument",
+  [fc.float()],
+  numberA =>
+    !!validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
+      String(numberA),
+      [numberA],
+      {}
+    )
 );
 
 testProp(

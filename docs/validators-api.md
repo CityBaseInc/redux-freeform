@@ -90,6 +90,33 @@ Arguments:
 | ----- | --- | --------- |
 | ""    | any | True      |
 | "10"  | 11  | True      |
+| "11"  | 11  | False     |
+| "15"  | 11  | False     |
+
+## numberLessThanOrEqualTo
+
+numberLessThanOrEqualTo will validate any number less than or equal to the one provided
+
+```jsx
+import { numberLessThanOrEqualTo } from "redux-freeform";
+
+const formConfig = {
+  age: {
+    validators: [numberLessThanOrEqualTo(11)]
+  }
+};
+```
+
+Arguments:
+`numberLessThanOrEqualTo(n)`
+
+- `n` value must be numerically `<=` than _n_
+
+| Value | n   | Validates |
+| ----- | --- | --------- |
+| ""    | any | True      |
+| "10"  | 11  | True      |
+| "11"  | 11  | True      |
 | "15"  | 11  | False     |
 
 ## numberGreaterThan
@@ -115,6 +142,33 @@ Arguments:
 | ----- | --- | --------- |
 | ""    | any | True      |
 | "10"  | 11  | False     |
+| "11"  | 11  | False     |
+| "15"  | 11  | True      |
+
+## numberGreaterThanOrEqualTo
+
+numberGreaterThanOrEqualTo will validate any number greater than the one provided
+
+```jsx
+import { numberGreaterThanOrEqualTo } from "redux-freeform";
+
+const formConfig = {
+  age: {
+    validators: [numberGreaterThanOrEqualTo(11)]
+  }
+};
+```
+
+Arguments:
+`numberGreaterThanOrEqualTo(n)`
+
+- `n` value must be numerically `<=` than _n_
+
+| Value | n   | Validates |
+| ----- | --- | --------- |
+| ""    | any | True      |
+| "10"  | 11  | False     |
+| "11"  | 11  | True      |
 | "15"  | 11  | True      |
 
 ## hasLength
