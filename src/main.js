@@ -32,6 +32,12 @@ export const set = fieldName => value => ({
 export const CLEAR = "form/CLEAR";
 export const clear = () => ({ type: CLEAR });
 
+export const ADD_VALIDATOR = "field/ADD_VALIDATOR";
+export const addValidator = fieldName => validator => ({
+  type: ADD_VALIDATOR,
+  payload: { fieldName, validator }
+});
+
 export const createFormReducer = formConfig => (
   state = createInitialState(formConfig),
   action
@@ -63,6 +69,23 @@ export const createFormReducer = formConfig => (
       });
     case CLEAR:
       return createInitialState(formConfig);
+    case ADD_VALIDATOR: 
+      const fieldWithOverride = action.payload.fieldName;
+      const newValidator = action.payload.validator;
+      
+      return produce(state, draftState => {
+        draftState[fieldWithOverride].validators.push(newValidator)
+        const fields = Object.entries(draftState);
+        for (let entry of fields) {
+          let fieldName = entry[0];
+          let field = entry[1];
+          let errors = computeErrors(fieldName, draftState);
+          let dirty = field.dirty;
+          draftState[fieldName].errors = errors;
+          draftState[fieldName].dirty = dirty;
+          draftState[fieldName].hasErrors = errors.length > 0;
+        }
+      });
     default:
       return state;
   }
@@ -81,7 +104,8 @@ export const createMapDispatchToProps = formConfig => {
     const keys = Object.keys(formConfig);
     for (let fieldName of keys) {
       dispatchObj.fields[fieldName] = {
-        set: value => dispatch(set(fieldName)(value))
+        set: value => dispatch(set(fieldName)(value)),
+        addValidator: validator => dispatch(addValidator(fieldName)(validator))
       };
     }
     dispatchObj.form = { clear: () => dispatch(clear()) };
