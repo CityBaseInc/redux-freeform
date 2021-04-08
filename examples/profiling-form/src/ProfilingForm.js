@@ -1,10 +1,5 @@
-import { required, matchesField } from "redux-freeform";
-import React from "react";
-
-const fieldErrorMessages = {
-  [required.error]: "required",
-  [matchesField.error]: "must match"
-};
+import { required, matchesField, hasLength } from "redux-freeform";
+import React, { useEffect } from "react";
 
 const InputField = ({
   labelTextWhenNoError,
@@ -31,7 +26,20 @@ const InputField = ({
   </div>
 );
 
-const ProfilingForm = ({ actions, fields }) => {
+const ProfilingForm = ({ actions, fields, addValidationProp }) => {
+  
+  useEffect(() => {
+    if(addValidationProp) {
+      Object.keys(fields).map(fieldName => actions.fields[fieldName].addValidator(hasLength(3,4)))
+    }
+  }, [])
+
+  const fieldErrorMessages = {
+    [required.error]: "required",
+    [matchesField.error]: "must match",
+    [hasLength.error]: "must have correct length"
+  };
+
   const fieldComponents = Object.keys(fields).map(fieldName => (
     <InputField
       key={fieldName}
