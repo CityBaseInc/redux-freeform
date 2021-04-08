@@ -48,8 +48,14 @@ mapDispatchToProps takes a dispatch function and returns an object like so:
 {
   actions: {
     fields: {
-      field1: { set: String -> () },
-      field2: { set: String -> () }
+      field1: { 
+        set: String -> (),
+        addValidator: Object -> ()
+       },
+      field2: { 
+        set: String -> (),
+        addValidator: Object -> ()
+      }
     },
     form: {
       clear: () -> ()
@@ -66,16 +72,17 @@ Example usage:
 ```jsx
 const props = mapDispatchToProps(dispatch);
 props.actions.fields.field1.set("foo");
+props.actions.fields.fields.addValidator(hasLength(3, 4))
 props.actions.form.clear();
 ```
 
 ## Putting It Together With React
 
 ```jsx
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createStore } from "redux";
-import { createFormState, required } from "redux-freeform";
+import { createFormState, required, hasLength } from "redux-freeform";
 
 const myFormConfig = {
   field1: {
@@ -98,6 +105,28 @@ const MyForm = ({ actions, fields }) => (
     />
   </div>
 );
+
+const MySecondForm = ({ actions, fields, isTrue }) => {
+  useEffect(() => {
+    if(isTrue) {
+      actions.fields.field1.addValidator(hasLength(3, 4))
+    }
+  }, [])
+  return (
+    <div>
+      {fields.field1.hasErrors && fields.field1.errors.includes(required.error)
+        ? "Field 1 is required"
+        : fields.field1.hasErrors && fields.field1.errors.includes(hasLength.error) 
+        ? "Field 1 is incorrect length" 
+        : "Field 1"}
+      <input
+        value={fields.field1.rawValue}
+        onChange={evt => actions.fields.field1.set(evt.target.value)}
+        type="text"
+      />
+    </div>
+  )
+}
 
 const store = createStore(
   reducer,
