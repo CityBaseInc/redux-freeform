@@ -1,0 +1,510 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Validators · Redux Freeform</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## required"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Validators · Redux Freeform"/><meta property="og:type" content="website"/><meta property="og:url" content="https://citybaseinc.github.io/redux-freeform/"/><meta property="og:description" content="## required"/><meta property="og:image" content="https://citybaseinc.github.io/redux-freeform/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://citybaseinc.github.io/redux-freeform/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/redux-freeform/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat|Source+Sans+Pro&amp;display=swap"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/redux-freeform/js/scrollSpy.js"></script><link rel="stylesheet" href="/redux-freeform/css/prism.css"/><link rel="stylesheet" href="/redux-freeform/css/main.css"/><script src="/redux-freeform/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/redux-freeform/"><img class="logo" src="/redux-freeform/img/redux-freeform_logo.svg" alt="Redux Freeform"/><h2 class="headerTitleWithLogo">Redux Freeform</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.com/CityBaseInc/redux-freeform" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>API Reference</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Getting Started</h3><ul class=""><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/intro">Intro</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/create-form-state">createFormState</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/validators">Validators</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/constraints">Constraints</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/redux-freeform/docs/validators-api">Validators</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Validators</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="required"></a><a href="#required" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>required</h2>
+<p>required validates on anything other than an empty string</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> required <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  email<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>False</td></tr>
+<tr><td>&quot;foo&quot;</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="onlyintegers"></a><a href="#onlyintegers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onlyIntegers</h2>
+<p>onlyIntegers will validate only on fields containing integers</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> onlyIntegers <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">onlyIntegers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;123&quot;</td><td>True</td></tr>
+<tr><td>&quot;-123&quot;</td><td>True</td></tr>
+<tr><td>&quot;asdf&quot;</td><td>False</td></tr>
+<tr><td>&quot;as123&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="onlynaturals"></a><a href="#onlynaturals" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onlyNaturals</h2>
+<p>onlyNaturals will validate only on fields containing positive and zero integers</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> onlyNaturals <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">onlyNaturals</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;123&quot;</td><td>True</td></tr>
+<tr><td>&quot;-123&quot;</td><td>False</td></tr>
+<tr><td>&quot;asdf&quot;</td><td>False</td></tr>
+<tr><td>&quot;as123&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="numberlessthan"></a><a href="#numberlessthan" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>numberLessThan</h2>
+<p>numberLessThan will validate any number less than the one provided</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> numberLessThan <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">numberLessThan</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>numberLessThan(n)</code></p>
+<ul>
+<li><code>n</code> value must be numerically <code>&lt;</code> than <em>n</em></li>
+</ul>
+<table>
+<thead>
+<tr><th>Value</th><th>n</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>any</td><td>True</td></tr>
+<tr><td>&quot;10&quot;</td><td>11</td><td>True</td></tr>
+<tr><td>&quot;11&quot;</td><td>11</td><td>False</td></tr>
+<tr><td>&quot;15&quot;</td><td>11</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="numberlessthanorequalto"></a><a href="#numberlessthanorequalto" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>numberLessThanOrEqualTo</h2>
+<p>numberLessThanOrEqualTo will validate any number less than or equal to the one provided</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> numberLessThanOrEqualTo <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">numberLessThanOrEqualTo</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>numberLessThanOrEqualTo(n)</code></p>
+<ul>
+<li><code>n</code> value must be numerically <code>&lt;=</code> than <em>n</em></li>
+</ul>
+<table>
+<thead>
+<tr><th>Value</th><th>n</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>any</td><td>True</td></tr>
+<tr><td>&quot;10&quot;</td><td>11</td><td>True</td></tr>
+<tr><td>&quot;11&quot;</td><td>11</td><td>True</td></tr>
+<tr><td>&quot;15&quot;</td><td>11</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="numbergreaterthan"></a><a href="#numbergreaterthan" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>numberGreaterThan</h2>
+<p>numberGreaterThan will validate any number greater than the one provided</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> numberGreaterThan <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">numberGreaterThan</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>numberGreaterThan(n)</code></p>
+<ul>
+<li><code>n</code> value must be numerically <code>&lt;</code> than <em>n</em></li>
+</ul>
+<table>
+<thead>
+<tr><th>Value</th><th>n</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>any</td><td>True</td></tr>
+<tr><td>&quot;10&quot;</td><td>11</td><td>False</td></tr>
+<tr><td>&quot;11&quot;</td><td>11</td><td>False</td></tr>
+<tr><td>&quot;15&quot;</td><td>11</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="numbergreaterthanorequalto"></a><a href="#numbergreaterthanorequalto" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>numberGreaterThanOrEqualTo</h2>
+<p>numberGreaterThanOrEqualTo will validate any number greater than the one provided</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> numberGreaterThanOrEqualTo <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">numberGreaterThanOrEqualTo</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>numberGreaterThanOrEqualTo(n)</code></p>
+<ul>
+<li><code>n</code> value must be numerically <code>&lt;=</code> than <em>n</em></li>
+</ul>
+<table>
+<thead>
+<tr><th>Value</th><th>n</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>any</td><td>True</td></tr>
+<tr><td>&quot;10&quot;</td><td>11</td><td>False</td></tr>
+<tr><td>&quot;11&quot;</td><td>11</td><td>True</td></tr>
+<tr><td>&quot;15&quot;</td><td>11</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="haslength"></a><a href="#haslength" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>hasLength</h2>
+<p>hasLength will validate for any string of the given length</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> hasLength <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  code<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">hasLength</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>hasLength(min, max)</code></p>
+<ul>
+<li><code>min</code> value must be &gt;= <em>min</em></li>
+<li><code>max</code> value must be &lt;= <em>max</em></li>
+</ul>
+<p>you can specify exactly one length like so:</p>
+<p><code>hasLength(4, 4)</code></p>
+<table>
+<thead>
+<tr><th>Value</th><th>min</th><th>max</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>0</td><td>4</td><td>True</td></tr>
+<tr><td>&quot;&quot;</td><td>1</td><td>4</td><td>False</td></tr>
+<tr><td>&quot;abc&quot;</td><td>4</td><td>4</td><td>False</td></tr>
+<tr><td>&quot;abcd&quot;</td><td>4</td><td>4</td><td>True</td></tr>
+<tr><td>&quot;abc&quot;</td><td>2</td><td>4</td><td>True</td></tr>
+<tr><td>&quot;abcdef&quot;</td><td>1</td><td>3</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="matchesregex"></a><a href="#matchesregex" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>matchesRegex</h2>
+<p>matchesRegex validates if this fields value is equivalent to the regex argument passed in the matchesRegex function</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> matchesRegex <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  email<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">matchesRegex</span><span class="token punctuation">(</span><span class="token string">"^[^s@]+@[^s@]+.[^s@]+$"</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>matchesRegex(regexValue)</code></p>
+<ul>
+<li><code>regexValue</code> the regex value must be a string, excluding the first and last slash <code>/</code></li>
+<li>empty string <em>always</em> validates, keeping with validator convention (only <a href="/validators-api/#required">required</a> rejects an empty string)</li>
+</ul>
+<table>
+<thead>
+<tr><th>regexValue</th><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;^hey.*joe$&quot;</td><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;^hey.*joe$&quot;</td><td>&quot;hey joe&quot;</td><td>True</td></tr>
+<tr><td>&quot;^hey.*joe$&quot;</td><td>&quot;hey joe!&quot;</td><td>False</td></tr>
+<tr><td>&quot;^hey.*joe$&quot;</td><td>&quot;hey how are you joe&quot;</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="isroutingnumber"></a><a href="#isroutingnumber" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>isRoutingNumber</h2>
+<p>isRoutingNumber validates if this fields value is 9 digits long and has a valid checksum</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> isRoutingNumber <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  email<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">isRoutingNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Note: checksum based on <a href="http://www.brainjar.com/js/validation/">http://www.brainjar.com/js/validation/</a> and assumes value
+contains no letters or special characters</p>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;122105155&quot;</td><td>True</td></tr>
+<tr><td>&quot;122105156&quot;</td><td>False</td></tr>
+<tr><td>&quot;000000000&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="matchesfield"></a><a href="#matchesfield" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>matchesField</h2>
+<p>matchesField validates if this fields value is equivalent to another given fields value</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> matchesField <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  password<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">hasLength</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  confirmPassword<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">matchesField</span><span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>matchesField(fieldName)</code></p>
+<ul>
+<li><code>fieldName</code> the string name of another key in the form object</li>
+</ul>
+<p>Note: this causes the field to essentially &quot;inherit&quot; the validators of the matching field, so you do not need to specify them on each one unless you want the errors to populate in both field states</p>
+<table>
+<thead>
+<tr><th>Value</th><th>Other Field Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;foo&quot;</td><td>&quot;foo&quot;</td><td>True</td></tr>
+<tr><td>&quot;&quot;</td><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;foo&quot;</td><td>&quot;bar&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="validatewhen"></a><a href="#validatewhen" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>validateWhen</h2>
+<p>validateWhen is a higher-order validator that runs a dependentValidator iff a precondition has been met. This precondition is called the primaryValidator and can optionally depend on another field. The error key resulting in a rejection will correspond to the dependentValidator. If the primaryValidator rejects, no error key will be added to the errors array.</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> required<span class="token punctuation">,</span> onlyIntegers<span class="token punctuation">,</span> validateWhen<span class="token punctuation">,</span> numberGreaterThan <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">onlyIntegers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  favoriteDrink<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">validateWhen</span><span class="token punctuation">(</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">numberGreaterThan</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"age"</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>validateWhen(dependentValidator, primaryValidator fieldName?)</code></p>
+<ul>
+<li><code>dependentValidator</code> validator to run if primaryValidator passes</li>
+<li><code>primaryValidator</code> validator that runs as precondition for dependentValidator (read validators section for more)</li>
+<li><code>fieldName</code> the string name of another key in the form object, determines what field primaryValidator runs against. If omitted, primaryValidator will run against the same field as dependentValidator (the field who's validators array when belongs to)</li>
+</ul>
+<table>
+<thead>
+<tr><th>value (favoriteDrink)</th><th>Other Field Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;&quot;</td><td>&quot;20&quot;</td><td>True</td></tr>
+<tr><td>&quot;&quot;</td><td>&quot;21&quot;</td><td>False</td></tr>
+<tr><td>&quot;Manhattan&quot;</td><td>&quot;21&quot;</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="validatesum"></a><a href="#validatesum" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>validateSum</h2>
+<p>validateSum is a higher-order validator that runs a validator on the sum of values in the current field a set of identified fields. The error key resulting in a rejection will correspond to the validator. If the validator rejects, no error key will be added to the errors array.</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> required<span class="token punctuation">,</span> onlyNaturals<span class="token punctuation">,</span> validateSum<span class="token punctuation">,</span> numberLessThan <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  numberOfCats<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">validateSum</span><span class="token punctuation">(</span><span class="token function">numberLessThan</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"numberOfDogs"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    constraints<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">onlyNaturals</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  numberOfDogs<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">validateSum</span><span class="token punctuation">(</span><span class="token function">numberLessThan</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"numberOfCats"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    constraints<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">onlyNaturals</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Arguments:
+<code>validateSum(validator, fieldNamesArray)</code></p>
+<ul>
+<li><code>validator</code> validator to run on the sum</li>
+<li><code>fieldNamesArray</code> the array of string names of keys in the form object, determines what field validator runs against</li>
+</ul>
+<table>
+<thead>
+<tr><th>value (numberOfCats)</th><th>Other Field Value (numberOfDogs)</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;1&quot;</td><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;1&quot;</td><td>&quot;1&quot;</td><td>True</td></tr>
+<tr><td>&quot;4&quot;</td><td>&quot;1&quot;</td><td>False</td></tr>
+<tr><td>&quot;1&quot;</td><td>&quot;4&quot;</td><td>False</td></tr>
+<tr><td>&quot;5&quot;</td><td>&quot;5&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="hasnumber"></a><a href="#hasnumber" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>hasNumber</h2>
+<p>hasNumber validates if this field contains a minimum of one integer</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> hasNumber <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  password<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">hasNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;password&quot;</td><td>False</td></tr>
+<tr><td>&quot;Pa$$word&quot;</td><td>False</td></tr>
+<tr><td>&quot;Pa$$word123&quot;</td><td>True</td></tr>
+<tr><td>&quot;PASSWORD1!&quot;</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="haslowercaseletter"></a><a href="#haslowercaseletter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>hasLowercaseLetter</h2>
+<p>hasLowercaseLetter validates if this field contains a minimum of one lowercase letter</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> hasLowercaseLetter <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  password<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">hasLowercaseLetter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;123!@#&quot;</td><td>False</td></tr>
+<tr><td>&quot;Pa$$word&quot;</td><td>True</td></tr>
+<tr><td>&quot;Pa$$word123&quot;</td><td>True</td></tr>
+<tr><td>&quot;PASSWORD1!&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="hasuppercaseletter"></a><a href="#hasuppercaseletter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>hasUppercaseLetter</h2>
+<p>hasUppercaseLetter validates if this field contains a minimum of one uppercase letter</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> hasUppercaseLetter <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  password<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">hasUppercaseLetter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;123!@#&quot;</td><td>False</td></tr>
+<tr><td>&quot;password&quot;</td><td>False</td></tr>
+<tr><td>&quot;Pa$$word123&quot;</td><td>True</td></tr>
+<tr><td>&quot;PASSWORD1!&quot;</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="hasspecialcharacter"></a><a href="#hasspecialcharacter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>hasSpecialCharacter</h2>
+<p>hasSpecialCharacter validates if this field contains a minimum of one special character (&quot;!@#$%^&amp;*.?&quot;)</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> hasSpecialCharacter <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  password<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">hasSpecialCharacter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;123!@#&quot;</td><td>True</td></tr>
+<tr><td>&quot;password&quot;</td><td>False</td></tr>
+<tr><td>&quot;Pa$$word123&quot;</td><td>True</td></tr>
+<tr><td>&quot;PASSWORD1&quot;</td><td>False</td></tr>
+<tr><td>&quot;PASSWORD2!&quot;</td><td>True</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="isprobablyemail"></a><a href="#isprobablyemail" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>isProbablyEmail</h2>
+<p>isProbablyEmail validates if this field is most likely an email.</p>
+<pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> isProbablyEmail <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"redux-freeform"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  email<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token function">isProbablyEmail</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr><th>Value</th><th>Validates</th></tr>
+</thead>
+<tbody>
+<tr><td>&quot;&quot;</td><td>True</td></tr>
+<tr><td>&quot;<a href="mailto:testEmail@email.com">testEmail@email.com</a>&quot;</td><td>True</td></tr>
+<tr><td>&quot;testEmail@.com&quot;</td><td>False</td></tr>
+<tr><td>&quot;@testEmail.com&quot;</td><td>False</td></tr>
+<tr><td>&quot;testEmail&quot;</td><td>False</td></tr>
+<tr><td>&quot;testEmail.com&quot;</td><td>False</td></tr>
+</tbody>
+</table>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 4/9/2021</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/redux-freeform/docs/constraints"><span class="arrow-prev">← </span><span>Constraints</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#required">required</a></li><li><a href="#onlyintegers">onlyIntegers</a></li><li><a href="#onlynaturals">onlyNaturals</a></li><li><a href="#numberlessthan">numberLessThan</a></li><li><a href="#numberlessthanorequalto">numberLessThanOrEqualTo</a></li><li><a href="#numbergreaterthan">numberGreaterThan</a></li><li><a href="#numbergreaterthanorequalto">numberGreaterThanOrEqualTo</a></li><li><a href="#haslength">hasLength</a></li><li><a href="#matchesregex">matchesRegex</a></li><li><a href="#isroutingnumber">isRoutingNumber</a></li><li><a href="#matchesfield">matchesField</a></li><li><a href="#validatewhen">validateWhen</a></li><li><a href="#validatesum">validateSum</a></li><li><a href="#hasnumber">hasNumber</a></li><li><a href="#haslowercaseletter">hasLowercaseLetter</a></li><li><a href="#hasuppercaseletter">hasUppercaseLetter</a></li><li><a href="#hasspecialcharacter">hasSpecialCharacter</a></li><li><a href="#isprobablyemail">isProbablyEmail</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright"><a href="https://www.thecitybase.com">Made with  💖 by Citybase.</a></section></footer></div></body></html>
