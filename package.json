@@ -1,5 +1,5 @@
 {
-  "name": "@thecb/redux-freeform",
+  "name": "redux-freeform",
   "version": "5.0.0",
   "description": "A small Redux form library that supports purely functional apps, without magic",
   "main": "dist/redux-freeform.cjs.js",
