@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>createFormState · Redux Freeform</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="`createFormState` is a function that takes a form config object and returns three functions:"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="createFormState · Redux Freeform"/><meta property="og:type" content="website"/><meta property="og:url" content="https://citybaseinc.github.io/redux-freeform/"/><meta property="og:description" content="`createFormState` is a function that takes a form config object and returns three functions:"/><meta property="og:image" content="https://citybaseinc.github.io/redux-freeform/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://citybaseinc.github.io/redux-freeform/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/redux-freeform/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat|Source+Sans+Pro&amp;display=swap"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/redux-freeform/js/scrollSpy.js"></script><link rel="stylesheet" href="/redux-freeform/css/prism.css"/><link rel="stylesheet" href="/redux-freeform/css/main.css"/><script src="/redux-freeform/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/redux-freeform/"><img class="logo" src="/redux-freeform/img/redux-freeform_logo.svg" alt="Redux Freeform"/><h2 class="headerTitleWithLogo">Redux Freeform</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.com/CityBaseInc/redux-freeform" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Getting Started</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Getting Started</h3><ul class=""><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/intro">Intro</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/getting-started">Getting Started</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/redux-freeform/docs/create-form-state">createFormState</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/validators">Validators</a></li><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/constraints">Constraints</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul class=""><li class="navListItem"><a class="navItem" href="/redux-freeform/docs/validators-api">Validators</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">createFormState</h1></header><article><div><span><p><code>createFormState</code> is a function that takes a form config object and returns three functions:</p>
+<ul>
+<li><code>reducer</code> a function that takes a current state and an action and returns an updated state</li>
+<li><code>mapStateToProps</code> a function that given the state returns the view information about the state</li>
+<li><code>mapDispatchToProps</code> a function that takes a dispatch function to communicate with the redux store and returns an object of functions to manipulate the state</li>
+</ul>
+<p>This should be familiar if you have used redux and react-redux.</p>
+<h2><a class="anchor" aria-hidden="true" id="form-config"></a><a href="#form-config" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Form Config</h2>
+<p>The form config object has as top level keys the names of your fields, for example:</p>
+<pre><code class="hljs css language-jsx"><span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+  city<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>each field has its own configuration with these options (none of which are required):</p>
+<ul>
+<li><code>defaultValue</code> the value to initialize the field to, by default an empty string</li>
+<li><code>validators</code> a list of validator object to apply to the field, these generate errors <a href="/redux-freeform/docs/validators">Read More</a></li>
+<li><code>constraints</code> a list of constraint objects to apply to the field, these block changes <a href="/redux-freeform/docs/constraints">Read More</a></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="form-state"></a><a href="#form-state" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Form State</h2>
+<p><code>createFormState</code> will consume the formConfig object and return generated form state object that can be consumed by your view. The generated form state will look like this:</p>
+<pre><code class="hljs css language-jsx"><span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    dirty<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    rawValue<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    constraints<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    errors<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    hasErrors<span class="token punctuation">:</span> <span class="token boolean">false</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  age<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    dirty<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    rawValue<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    constraints<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    errors<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    hasErrors<span class="token punctuation">:</span> <span class="token boolean">false</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  city<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    dirty<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    rawValue<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+    validators<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    constraints<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    errors<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    hasErrors<span class="token punctuation">:</span> <span class="token boolean">false</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>The top level keys are the same as the keys given to the form config and represent the fields.
+Each sub-object has the following keys:</p>
+<ul>
+<li><code>dirty</code> a boolean, this is false initially and becomes true once any change has occurred to the field</li>
+<li><code>rawValue</code> a string, this is the value of the field as a string</li>
+<li><code>validators</code> an array of objects, the validators to be applied to the field <a href="/redux-freeform/docs/validators">Read More</a></li>
+<li><code>constraints</code> an array of object, the constraints to be applied to the field <a href="/redux-freeform/docs/constraints">Read More</a></li>
+<li><code>errors</code> an array of strings, representing which validators are not satisfied by the current value</li>
+<li><code>hasErrors</code> a boolean, representing if there are any errors (equivalent to checking if the errors array is empty)</li>
+</ul>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 4/9/2021</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/redux-freeform/docs/getting-started"><span class="arrow-prev">← </span><span>Getting Started</span></a><a class="docs-next button" href="/redux-freeform/docs/validators"><span>Validators</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#form-config">Form Config</a></li><li><a href="#form-state">Form State</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright"><a href="https://www.thecitybase.com">Made with  💖 by Citybase.</a></section></footer></div></body></html>
