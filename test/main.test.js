@@ -363,8 +363,8 @@ test("reducer add validator action updates correct field", t => {
       type: ADD_VALIDATOR,
       payload: { fieldName: "foo", validator: {
         type: HAS_LENGTH,
-        args: [3, 5], 
-        error: REQUIRED_ERROR
+        args: [3, 4], 
+        error: HAS_LENGTH_ERROR
       } }
     }),
     expectedState
