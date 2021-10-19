@@ -1,5 +1,6 @@
 import test from "ava";
 import { testProp, fc } from "ava-fast-check";
+import dayjs from "dayjs";
 
 import { fieldNameGen } from "./util";
 import {
@@ -24,6 +25,10 @@ import {
   hasLength,
   HAS_LENGTH,
   HAS_LENGTH_ERROR,
+  DATE_BEFORE_TODAY,
+  DATE_BEFORE_TODAY_ERROR,
+  DATE_AFTER_TODAY,
+  DATE_AFTER_TODAY_ERROR,
   validatorFns,
   runValidator,
   runValidatorErrorMessage,
@@ -927,6 +932,106 @@ test("hasLength validator returns null when validator accepts", t => {
   );
 });
 
+test("dateBeforeToday validator accepts when value is empty string", t => {
+  t.is(validatorFns[DATE_BEFORE_TODAY]("", ["MM/YY", "month", true], {}), true);
+});
+
+test("dateBeforeToday validator returns error when date is after today", t => {
+  t.is(
+    runValidator(
+      {
+        type: DATE_BEFORE_TODAY,
+        args: ["MM/YY", "month", false],
+        error: DATE_BEFORE_TODAY_ERROR
+      },
+      dayjs()
+        .add(5, "month")
+        .format("MM/YY"),
+      {}
+    ),
+    DATE_BEFORE_TODAY_ERROR
+  );
+});
+
+test("dateBeforeToday validator passes when inclusive is true and value is same as today", t => {
+  t.is(
+    runValidator(
+      {
+        type: DATE_BEFORE_TODAY,
+        args: ["MM/YY", "month", true],
+        error: DATE_BEFORE_TODAY_ERROR
+      },
+      dayjs().format("MM/YY"),
+      {}
+    ),
+    null
+  );
+});
+
+test("dateBeforeToday validator returns error when inclusive is false and value is same as today", t => {
+  t.is(
+    runValidator(
+      {
+        type: DATE_BEFORE_TODAY,
+        args: ["MM/YY", "month", false],
+        error: DATE_BEFORE_TODAY_ERROR
+      },
+      dayjs().format("MM/YY"),
+      {}
+    ),
+    DATE_BEFORE_TODAY_ERROR
+  );
+});
+
+test("dateAfterToday validator accepts when value is empty string", t => {
+  t.is(validatorFns[DATE_AFTER_TODAY]("", ["MM/YY", "month", true], {}), true);
+});
+
+test("dateAfterToday validator returns error when date is before today", t => {
+  t.is(
+    runValidator(
+      {
+        type: DATE_AFTER_TODAY,
+        args: ["MM/YY", "month", false],
+        error: DATE_AFTER_TODAY_ERROR
+      },
+      dayjs()
+        .subtract(5, "month")
+        .format("MM/YY"),
+      {}
+    ),
+    DATE_AFTER_TODAY_ERROR
+  );
+});
+
+test("dateAfterToday validator passes when inclusive is true and value is same as today", t => {
+  t.is(
+    runValidator(
+      {
+        type: DATE_AFTER_TODAY,
+        args: ["MM/YY", "month", true],
+        error: DATE_AFTER_TODAY_ERROR
+      },
+      dayjs().format("MM/YY")
+    ),
+    null
+  );
+});
+
+test("dateAfterToday validator returns error when inclusive is false and value is same as today", t => {
+  t.is(
+    runValidator(
+      {
+        type: DATE_AFTER_TODAY,
+        args: ["MM/YY", "month", false],
+        error: DATE_AFTER_TODAY_ERROR
+      },
+      dayjs().format("MM/YY")
+    ),
+    DATE_AFTER_TODAY_ERROR
+  );
+});
+
 test("hasLength validator accepts when value is empty string", t => {
   t.is(validatorFns[HAS_LENGTH]("", [1, 10], {}), true);
 });
@@ -1149,7 +1254,7 @@ test("isProbablyEmail accepts when value is empty string", t => {
 const testRegexEmailString = /^\S+@\S+\.\S+$/;
 
 testProp(
-  "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test",
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test for isProbablyEmail",
   [fc.string(1, 15).filter(str => new RegExp(testRegexEmailString).test(str))],
   valueThatMatchesRegex =>
     validatorFns[IS_PROBABLY_EMAIL](
@@ -1160,7 +1265,7 @@ testProp(
 );
 
 testProp(
-  "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test",
+  "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test for isProbablyEmail",
   [fc.string(1, 15).filter(str => !new RegExp(testRegexEmailString).test(str))],
   valueThatDoesNotMatchRegex =>
     !validatorFns[IS_PROBABLY_EMAIL](
