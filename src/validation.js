@@ -1,11 +1,19 @@
 /* eslint-disable no-unused-vars */
 import { validatorToPredicate } from "./util";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 
 const createValidator = (type, error) => {
   let validator = (...args) => ({ type, args, error });
   validator.error = error;
   return validator;
 };
+
+dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 export let validatorFns = {};
 
@@ -216,6 +224,62 @@ validatorFns[HAS_LENGTH] = (value, args, form) => {
   }
   const valueLength = value.length;
   return max >= valueLength && valueLength >= min;
+};
+
+export const DATE_BEFORE_TODAY = "validator/DATE_BEFORE_TODAY";
+export const DATE_BEFORE_TODAY_ERROR = "error/DATE_BEFORE_TODAY";
+export const dateBeforeToday = createValidator(
+  DATE_BEFORE_TODAY,
+  DATE_BEFORE_TODAY_ERROR
+);
+validatorFns[DATE_BEFORE_TODAY] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  const dateFormat = args[0];
+  const unit = args[1];
+  const inclusive = args[2] || false;
+
+  if (dateFormat == undefined || unit == undefined) {
+    throw new Error(
+      "Date format and unit need to be defined for dateBeforeToday, one or both are undefined"
+    );
+  }
+  const now = dayjs();
+  const dateValue = dayjs(value, dateFormat);
+
+  if (inclusive === true) {
+    return dateValue.isSameOrBefore(now, unit);
+  }
+  return dateValue.isBefore(now, unit);
+};
+
+export const DATE_AFTER_TODAY = "validator/DATE_AFTER_TODAY";
+export const DATE_AFTER_TODAY_ERROR = "error/DATE_AFTER_TODAY";
+export const dateAfterToday = createValidator(
+  DATE_AFTER_TODAY,
+  DATE_AFTER_TODAY_ERROR
+);
+validatorFns[DATE_AFTER_TODAY] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  const dateFormat = args[0];
+  const unit = args[1];
+  const inclusive = args[2] || false;
+
+  if (dateFormat == undefined || unit == undefined) {
+    throw new Error(
+      "Date format and unit need to be defined for dateAfterToday, one or both are undefined"
+    );
+  }
+  const now = dayjs();
+  const dateValue = dayjs(value, dateFormat);
+
+  if (inclusive === true) {
+    return dateValue.isSameOrAfter(now, unit);
+  }
+  return dateValue.isAfter(now, unit);
 };
 
 export const MATCHES_REGEX = "validator/MATCHES_REGEX";
