@@ -1,6 +1,6 @@
 ![header](/images/freeform-banner-small.png)
 
-[![CircleCI](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master.svg?style=svg&circle-token=c438da276819dc386059028121b088ca581341fc)](https://circleci.com/gh/CityBaseInc/redux-freeform/tree/master)
+![Build Status](https://github.com/CityBaseInc/redux-freeform/actions/workflows/test.yml/badge.svg)
 
 [Read the Docs!](https://citybaseinc.github.io/redux-freeform)
 
@@ -11,7 +11,7 @@ it makes no decisions for how you display the form state. As such it does not ne
 React and could in theory be used with Angular or any other view library you're using with redux.
 
 Freeform supports a functional all-in approach to Redux apps. There are many benefits to keeping _all_ your state in Redux
-but it can be tedious to write out all the reducers and actions. By generating form reducers from simple configs we make 
+but it can be tedious to write out all the reducers and actions. By generating form reducers from simple configs we make
 this much more manageable.
 
 Freeform takes a form configuration object and generates a `mapStateToProps`, `mapDispatchToProps`,
