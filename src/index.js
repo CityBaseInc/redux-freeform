@@ -16,6 +16,8 @@ export {
   hasLowercaseLetter,
   hasUppercaseLetter,
   hasSpecialCharacter,
-  isProbablyEmail
+  isProbablyEmail,
+  dateBeforeToday,
+  dateAfterToday
 } from "./validation";
 export { createFormState } from "./main";
