@@ -67,7 +67,9 @@ import {
   HAS_SPECIAL_CHARACTER_ERROR,
   isProbablyEmail,
   IS_PROBABLY_EMAIL,
-  IS_PROBABLY_EMAIL_ERROR
+  IS_PROBABLY_EMAIL_ERROR,
+  IS_VALID_MONTH,
+  IS_VALID_MONTH_ERROR
 } from "../src/validation";
 
 test("required validator produces correct validator object", t => {
@@ -1029,6 +1031,90 @@ test("dateAfterToday validator returns error when inclusive is false and value i
       dayjs().format("MM/YY")
     ),
     DATE_AFTER_TODAY_ERROR
+  );
+});
+
+test("isValidMonth validator returns error when start position resovles to NaN", t => {
+  t.is(
+    runValidator(
+      {
+        type: IS_VALID_MONTH,
+        args: ["a"],
+        error: IS_VALID_MONTH_ERROR
+      },
+      "01/02/22"
+    ),
+    IS_VALID_MONTH_ERROR
+  );
+});
+
+test("isValidMonth validator fails when start position is greater than string length", t => {
+  t.is(
+    runValidator(
+      {
+        type: IS_VALID_MONTH,
+        args: ["6"],
+        error: IS_VALID_MONTH_ERROR
+      },
+      "01/22"
+    ),
+    IS_VALID_MONTH_ERROR
+  );
+});
+
+test("isValidMonth validator fails when month is less than 1", t => {
+  t.is(
+    runValidator(
+      {
+        type: IS_VALID_MONTH,
+        args: ["0"],
+        error: IS_VALID_MONTH_ERROR
+      },
+      "00/22"
+    ),
+    IS_VALID_MONTH_ERROR
+  );
+});
+
+test("isValidMonth validator fails when month is negative", t => {
+  t.is(
+    runValidator(
+      {
+        type: IS_VALID_MONTH,
+        args: ["0"],
+        error: IS_VALID_MONTH_ERROR
+      },
+      "-2104"
+    ),
+    IS_VALID_MONTH_ERROR
+  );
+});
+
+test("isValidMonth validator fails when month is greater than 12", t => {
+  t.is(
+    runValidator(
+      {
+        type: IS_VALID_MONTH,
+        args: ["0"],
+        error: IS_VALID_MONTH_ERROR
+      },
+      "9821"
+    ),
+    IS_VALID_MONTH_ERROR
+  );
+});
+
+test("isValidMonth validator passes with valid month", t => {
+  t.is(
+    runValidator(
+      {
+        type: IS_VALID_MONTH,
+        args: ["0"],
+        error: IS_VALID_MONTH_ERROR
+      },
+      "1021"
+    ),
+    null
   );
 });
 

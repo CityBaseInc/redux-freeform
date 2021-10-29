@@ -282,6 +282,33 @@ validatorFns[DATE_AFTER_TODAY] = (value, args, form) => {
   return dateValue.isAfter(now, unit);
 };
 
+export const IS_VALID_MONTH = "validator/IS_VALID_MONTH";
+export const IS_VALID_MONTH_ERROR = "error/IS_VALID_MONTH";
+export const isValidMonth = createValidator(
+  IS_VALID_MONTH,
+  IS_VALID_MONTH_ERROR
+);
+validatorFns[IS_VALID_MONTH] = (value, args, form) => {
+  if (value === "") {
+    return true;
+  }
+  // Function takes one argument representing the character position
+  // In a date string to identify where the month is
+  // Eg "10/21/2021" - start position is 0
+  // Or "18/03/1990" - start position is 3
+  // Only works with two digit months (01, 02, 03, etc)
+  const monthStartPosition = parseInt(args[0]);
+  const monthEndPosition = monthStartPosition + 2;
+  if (monthStartPosition === NaN) {
+    throw new Error("Month start position has to be a valid integer string");
+  }
+  const month = parseInt(value.slice(monthStartPosition, monthEndPosition));
+  if (month === NaN) {
+    return false;
+  }
+  return month >= 1 && month <= 12;
+};
+
 export const MATCHES_REGEX = "validator/MATCHES_REGEX";
 export const MATCHES_REGEX_ERROR = "error/MATCHES_REGEX";
 export const matchesRegex = createValidator(MATCHES_REGEX, MATCHES_REGEX_ERROR);
