@@ -18,6 +18,7 @@ export {
   hasSpecialCharacter,
   isProbablyEmail,
   dateBeforeToday,
-  dateAfterToday
+  dateAfterToday,
+  isValidMonth
 } from "./validation";
 export { createFormState } from "./main";
