@@ -99,9 +99,6 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
       `${args[0]} was passed to matchesField, but that field does not exist in the form`
     );
   }
-  if (value === "" && dependentFieldValue === "") {
-    return true;
-  }
   return value === dependentFieldValue;
 };
 
