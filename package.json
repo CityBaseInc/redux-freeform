@@ -34,9 +34,7 @@
     "nyc": "^14.1.1",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.0",
-    "rollup": "2.69.1",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-node-resolve": "^5.1.0"
+    "rollup": "2.69.1"
   },
   "resolutions": {
     "acorn": "^6.4.1",
