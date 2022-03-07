@@ -92,15 +92,14 @@ export const MATCHES_FIELD = "validator/MATCHES_FIELD";
 export const MATCHES_FIELD_ERROR = "error/MATCHES_FIELD";
 export const matchesField = createValidator(MATCHES_FIELD, MATCHES_FIELD_ERROR);
 validatorFns[MATCHES_FIELD] = (value, args, form) => {
-  if (value === "") {
-    return true;
-  }
-  if (form[args[0]] === undefined) {
+  const dependentField = form[args[0]];
+  const dependentFieldValue = dependentField?.rawValue ?? "";
+  if (dependentField === undefined) {
     throw new Error(
       `${args[0]} was passed to matchesField, but that field does not exist in the form`
     );
   }
-  return value === form[args[0]].rawValue;
+  return value === dependentFieldValue;
 };
 
 export const validateWhenErrorMessage = type =>
