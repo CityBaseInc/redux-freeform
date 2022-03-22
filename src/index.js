@@ -19,6 +19,7 @@ export {
   isProbablyEmail,
   dateBeforeToday,
   dateAfterToday,
-  isValidMonth
+  isValidMonth,
+  includedIn,
 } from "./validation";
 export { createFormState } from "./main";
