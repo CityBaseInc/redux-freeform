@@ -20,8 +20,9 @@ export let validatorFns = {};
 export const INCLUDED_IN = "validator/INCLUDED_IN";
 export const INCLUDED_IN_ERROR = "error/INCLUDED_IN";
 export const includedIn = createValidator(INCLUDED_IN, INCLUDED_IN_ERROR);
-validatorFns[INCLUDED_IN] = (value, args, form) =>
+validatorFns[INCLUDED_IN] = (value, args, form) => {
   Array.isArray(args[0]) ? args[0].includes(value) : args[0] === value;
+};
 
 export const REQUIRED = "validator/REQUIRED";
 export const REQUIRED_ERROR = "error/REQUIRED";
