@@ -460,3 +460,38 @@ const formConfig = {
 | "@testEmail.com"      | False     |
 | "testEmail"           | False     |
 | "testEmail.com"       | False     |
+
+## includedIn
+
+includedIn will compare the value of a field with a supplied array of values. If the value of the field is included in the array of values, the value is considered valid. If the supplied array is not actually an array, the validator will perform a direct equivalence comparison instead.
+
+```jsx
+import { required, validateWhen, includedIn } from "redux-freeform";
+
+const formConfig = {
+  checkNumber: {
+    validators: [
+      validateWhen(
+        required(),
+        includedIn(['money_order', 'cashiers_check']),
+        'check_type'
+      )
+    ]
+  },
+  favoriteDrink: {
+    validators: [includedIn(["coca-cola", "pepsi"])]
+  }
+};
+```
+
+Arguments:
+`includedIn(allowedValues)`
+
+- `allowedValues` the array of values that are considered valid
+
+| value (favoriteDrink) | Allowed Values         | Validates |
+| --------------------- | ---------------------- | --------- |
+| "coca-cola"           | ["coca-cola", "pepsi"] | True      |
+| "pepsi"               | ["coca-cola", "pepsi"] | True      |
+| "rc-cola              | ["coca-cola", "pepsi"] | False     |
+
