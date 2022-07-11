@@ -38,6 +38,24 @@ export const ONLY_NATURALS_ERROR = "error/ONLY_NATURALS";
 export const onlyNaturals = createValidator(ONLY_NATURALS, ONLY_NATURALS_ERROR);
 validatorFns[ONLY_NATURALS] = (value, args, form) => /^(\d+)?$/.test(value);
 
+/* 
+07/22: experimental expiration date constraint
+should allow entry of expiration date using "/" character
+to accommodate browser autofill
+
+not tested as validation function
+to validate exp date instead use combo of:
+required(), hasLength(), isValidMonth(), dateAfterToday()
+*/
+export const ONLY_EXPIRATION_DATE = "validator/ONLY_EXPIRATION_DATE";
+export const ONLY_EXPIRATION_DATE_ERROR = "error/ONLY_EXPIRATION_DATE";
+export const onlyExpirationDate = createValidator(
+  ONLY_EXPIRATION_DATE,
+  ONLY_EXPIRATION_DATE_ERROR
+);
+validatorFns[ONLY_EXPIRATION_DATE] = (value, args, form) =>
+  /^(\d?\d?\/?\d?\d?)?$/.test(value);
+
 export const NUMBER_LESS_THAN = "validator/NUMBER_LESS_THAN";
 export const NUMBER_LESS_THAN_ERROR = "error/NUMBER_LESS_THAN";
 export const numberLessThan = createValidator(

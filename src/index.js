@@ -21,5 +21,6 @@ export {
   dateAfterToday,
   isValidMonth,
   includedIn,
+  onlyExpirationDate
 } from "./validation";
 export { createFormState } from "./main";
