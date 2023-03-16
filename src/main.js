@@ -1,5 +1,10 @@
 import produce from "immer";
-import { computeErrors, computeConstraints } from "./validation";
+import {
+  computeConstraints,
+  computeDirtyEntries,
+  computeErrorEntries,
+  computeErrors
+} from "./validation";
 
 export const createInitialState = formConfig => {
   let initialForm = {};
@@ -20,6 +25,7 @@ export const createInitialState = formConfig => {
     initialForm[formKey].errors = errors;
     initialForm[formKey].hasErrors = errors.length > 0;
   }
+
   return initialForm;
 };
 
@@ -36,6 +42,18 @@ export const ADD_VALIDATOR = "field/ADD_VALIDATOR";
 export const addValidator = fieldName => validator => ({
   type: ADD_VALIDATOR,
   payload: { fieldName, validator }
+});
+
+export const REMOVE_VALIDATOR = "field/REMOVE_VALIDATOR";
+export const removeValidator = fieldName => validator => ({
+  type: REMOVE_VALIDATOR,
+  payload: { fieldName, validator }
+});
+
+export const CLEAR_FIELD_VALIDATORS = "field/CLEAR_FIELD_VALIDATORS";
+export const clearFieldValidators = fieldName => () => ({
+  type: CLEAR_FIELD_VALIDATORS,
+  payload: { fieldName }
 });
 
 export const createFormReducer = formConfig => (
@@ -56,16 +74,8 @@ export const createFormReducer = formConfig => (
           return draftState;
         }
 
-        const fields = Object.entries(draftState);
-        for (let entry of fields) {
-          let fieldName = entry[0];
-          let field = entry[1];
-          let errors = computeErrors(fieldName, draftState);
-          let dirty = fieldName === changedFieldName ? true : field.dirty;
-          draftState[fieldName].errors = errors;
-          draftState[fieldName].dirty = dirty;
-          draftState[fieldName].hasErrors = errors.length > 0;
-        }
+        computeDirtyEntries(draftState, changedFieldName);
+        computeErrorEntries(draftState);
       });
     case CLEAR:
       return createInitialState(formConfig);
@@ -75,16 +85,23 @@ export const createFormReducer = formConfig => (
       
       return produce(state, draftState => {
         draftState[fieldWithOverride].validators.push(newValidator)
-        const fields = Object.entries(draftState);
-        for (let entry of fields) {
-          let fieldName = entry[0];
-          let field = entry[1];
-          let errors = computeErrors(fieldName, draftState);
-          let dirty = field.dirty;
-          draftState[fieldName].errors = errors;
-          draftState[fieldName].dirty = dirty;
-          draftState[fieldName].hasErrors = errors.length > 0;
-        }
+        computeErrorEntries(draftState);
+      });
+    case REMOVE_VALIDATOR:
+      const fieldToOverride = action.payload.fieldName;
+      const targetValidator = action.payload.validator;
+
+      return produce(state, draftState => {
+        let fieldValidators = draftState[fieldToOverride].validators
+        draftState[fieldToOverride].validators = fieldValidators.filter(validator => validator.type !== targetValidator.type)
+        computeErrorEntries(draftState);
+      });
+    case CLEAR_FIELD_VALIDATORS:
+      const fieldToClear = action.payload.fieldName;
+
+      return produce(state, draftState => {
+        draftState[fieldToClear].validators = [];
+        computeErrorEntries(draftState);
       });
     default:
       return state;
@@ -105,7 +122,9 @@ export const createMapDispatchToProps = formConfig => {
     for (let fieldName of keys) {
       dispatchObj.fields[fieldName] = {
         set: value => dispatch(set(fieldName)(value)),
-        addValidator: validator => dispatch(addValidator(fieldName)(validator))
+        addValidator: validator => dispatch(addValidator(fieldName)(validator)),
+        removeValidator: validator => dispatch(removeValidator(fieldName)(validator)),
+        clear: () => dispatch(clearFieldValidators(fieldName)())
       };
     }
     dispatchObj.form = { clear: () => dispatch(clear()) };
