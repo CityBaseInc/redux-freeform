@@ -106,6 +106,29 @@ props<span class="token punctuation">.</span>actions<span class="token punctuati
 props<span class="token punctuation">.</span>actions<span class="token punctuation">.</span>fields<span class="token punctuation">.</span>fields<span class="token punctuation">.</span><span class="token function">addValidator</span><span class="token punctuation">(</span><span class="token function">hasLength</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 props<span class="token punctuation">.</span>actions<span class="token punctuation">.</span>form<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
+<h2><a class="anchor" aria-hidden="true" id="updating-a-form"></a><a href="#updating-a-form" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Updating a form</h2>
+<p>When using these actions for a form or field actions inside <code>useEffect</code>, you will need to include the form or field actions as a dependency to avoid useEffect causing an infinite render loop.</p>
+<h3><a class="anchor" aria-hidden="true" id="examples"></a><a href="#examples" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Examples:</h3>
+<p><strong>For field actions, include <code>actions.fields.&lt;fieldname&gt;</code></strong></p>
+<pre><code class="hljs">  useEffect(() =&gt; {
+    if(<span class="hljs-name">requiresEmail</span>) {
+      actions.fields.email.addValidator(<span class="hljs-name">required</span>())<span class="hljs-comment">;</span>
+    }
+  }, [actions.fields.email])<span class="hljs-comment">;</span>
+</code></pre>
+<pre><code class="hljs">  useEffect(() =&gt; {
+    if(<span class="hljs-name">emailIsNotRequired</span>) {
+      actions.fields.email.removeValidator(<span class="hljs-name">required</span>())<span class="hljs-comment">;</span>
+    }
+  }, [actions.fields.email])<span class="hljs-comment">;</span>
+</code></pre>
+<p><strong>For form actions, include <code>actions.form</code></strong></p>
+<pre><code class="hljs">  useEffect(() =&gt; {
+    if(<span class="hljs-name">clearOnDismount</span>) {
+      actions.form.clearValidators()<span class="hljs-comment">;</span>
+    }
+  }, [actions.form])<span class="hljs-comment">;</span>
+</code></pre>
 <h2><a class="anchor" aria-hidden="true" id="putting-it-together-with-react"></a><a href="#putting-it-together-with-react" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Putting It Together With React</h2>
 <pre><code class="hljs css language-jsx"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">{</span> useEffect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"react"</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> ReactDOM <span class="token keyword">from</span> <span class="token string">"react-dom"</span><span class="token punctuation">;</span>
@@ -139,7 +162,8 @@ props<span class="token punctuation">.</span>actions<span class="token punctuati
     <span class="token keyword">if</span><span class="token punctuation">(</span>isTrue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       actions<span class="token punctuation">.</span>fields<span class="token punctuation">.</span>field1<span class="token punctuation">.</span><span class="token function">addValidator</span><span class="token punctuation">(</span><span class="token function">hasLength</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>actions<span class="token punctuation">.</span>fields<span class="token punctuation">.</span>field1<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
   <span class="token keyword">return</span> <span class="token punctuation">(</span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
       <span class="token punctuation">{</span>fields<span class="token punctuation">.</span>field1<span class="token punctuation">.</span>hasErrors <span class="token operator">&amp;&amp;</span> fields<span class="token punctuation">.</span>field1<span class="token punctuation">.</span>errors<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>required<span class="token punctuation">.</span>error<span class="token punctuation">)</span>
@@ -173,4 +197,4 @@ props<span class="token punctuation">.</span>actions<span class="token punctuati
 <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 store<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>render<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 7/13/2022</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/redux-freeform/docs/intro"><span class="arrow-prev">← </span><span>Intro</span></a><a class="docs-next button" href="/redux-freeform/docs/create-form-state"><span class="function-name-prevnext">createFormState</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#create-a-form">Create A Form</a></li><li><a href="#putting-it-together-with-react">Putting It Together With React</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright"><a href="https://www.thecitybase.com">Made with  💖 by Citybase.</a></section></footer></div></body></html>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 3/27/2023</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/redux-freeform/docs/intro"><span class="arrow-prev">← </span><span>Intro</span></a><a class="docs-next button" href="/redux-freeform/docs/create-form-state"><span class="function-name-prevnext">createFormState</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#create-a-form">Create A Form</a></li><li><a href="#updating-a-form">Updating a form</a><ul class="toc-headings"><li><a href="#examples">Examples:</a></li></ul></li><li><a href="#putting-it-together-with-react">Putting It Together With React</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright"><a href="https://www.thecitybase.com">Made with  💖 by Citybase.</a></section></footer></div></body></html>
