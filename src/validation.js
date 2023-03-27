@@ -449,7 +449,7 @@ export const runValidator = (validator, value, form) => {
   return validatorFn(value, validator.args, form) ? null : validator.error;
 };
 
-const _computeErrors = (fieldName, form, validators) => {
+const runFormValidators = (fieldName, form, validators) => {
   return validators
     .map(v => runValidator(v, form[fieldName].rawValue, form))
     .filter(x => x !== null);
@@ -457,10 +457,30 @@ const _computeErrors = (fieldName, form, validators) => {
 
 export const computeConstraints = (fieldName, form) => {
   const constraints = form[fieldName].constraints;
-  return _computeErrors(fieldName, form, constraints);
+  return runFormValidators(fieldName, form, constraints);
 };
 
 export const computeErrors = (fieldName, form) => {
   const validators = form[fieldName].validators;
-  return _computeErrors(fieldName, form, validators);
+  return runFormValidators(fieldName, form, validators);
+};
+
+export const computeErrorEntries = (formState) => {
+  const fields = Object.entries(formState);
+  for (let entry of fields) {
+    let fieldName = entry[0];
+    let errors = computeErrors(fieldName, formState);
+    formState[fieldName].errors = errors;
+    formState[fieldName].hasErrors = errors.length > 0;
+  }
+};
+
+export const computeDirtyEntries = (formState, changedFieldName) => {
+  const fields = Object.entries(formState);
+  for (let entry of fields) {
+    let fieldName = entry[0];
+    let field = entry[1];
+    let dirty = fieldName === changedFieldName ? true : field.dirty;
+    formState[fieldName].dirty = dirty;
+  }
 };

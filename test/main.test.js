@@ -13,7 +13,9 @@ import {
   SET,
   CLEAR,
   addValidator,
-  ADD_VALIDATOR
+  ADD_VALIDATOR,
+  REMOVE_VALIDATOR,
+  CLEAR_FIELD_VALIDATORS
 } from "../src/main";
 import {
   REQUIRED,
@@ -348,7 +350,7 @@ test("reducer add validator action updates correct field", t => {
         },
         {
           type: HAS_LENGTH,
-          args: [3, 4], 
+          args: [3, 4],
           error: HAS_LENGTH_ERROR
         }
       ],
@@ -363,9 +365,150 @@ test("reducer add validator action updates correct field", t => {
       type: ADD_VALIDATOR,
       payload: { fieldName: "foo", validator: {
         type: HAS_LENGTH,
-        args: [3, 4], 
+        args: [3, 4],
         error: HAS_LENGTH_ERROR
       } }
+    }),
+    expectedState
+  );
+});
+
+test("reducer remove validator action updates correct field", t => {
+  const formReducer = createFormReducer({
+    foo: {
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        },
+        {
+          type: HAS_LENGTH,
+          args: [3, 4],
+          error: HAS_LENGTH_ERROR
+        }
+      ]
+    }
+  });
+  const initialState = initializeReducer(formReducer);
+  const expectedState = {
+    foo: {
+      rawValue: "",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        },
+      ],
+      constraints: [],
+      errors: [REQUIRED_ERROR],
+      hasErrors: true,
+      dirty: false
+    }
+  };
+  t.deepEqual(
+    formReducer(initialState, {
+      type: REMOVE_VALIDATOR,
+      payload: { fieldName: "foo", validator: {
+        type: HAS_LENGTH,
+        args: [3, 4],
+        error: HAS_LENGTH_ERROR
+      } }
+    }),
+    expectedState
+  );
+});
+
+test("reducer remove validator action performs no changes if no validator to remove is found", t => {
+  const formReducer = createFormReducer({
+    foo: {
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        }
+      ],
+      errors: [REQUIRED_ERROR],
+      hasErrors: true
+    }
+  });
+  const initialState = initializeReducer(formReducer);
+  const expectedState = {
+    foo: {
+      rawValue: "",
+      validators: [
+        {
+          type: REQUIRED,
+          args: [],
+          error: REQUIRED_ERROR
+        },
+      ],
+      constraints: [],
+      errors: [REQUIRED_ERROR],
+      hasErrors: true,
+      dirty: false
+    }
+  };
+  t.deepEqual(
+    formReducer(initialState, {
+      type: REMOVE_VALIDATOR,
+      payload: { fieldName: "foo", validator: {
+        type: HAS_LENGTH,
+        args: [3, 4],
+        error: HAS_LENGTH_ERROR
+      } }
+    }),
+    expectedState
+  );
+});
+
+test("reducer clear field validators action removes all validators from a field", t => {
+  const formReducer = createFormReducer(formConfig);
+  const initialState = initializeReducer(formReducer);
+  const expectedState = {
+    foo: {
+      rawValue: "",
+      validators: [],
+      constraints: [],
+      errors: [],
+      hasErrors: false,
+      dirty: false
+    }
+  };
+  t.deepEqual(
+    formReducer(initialState, {
+      type: CLEAR_FIELD_VALIDATORS,
+      payload: { fieldName: "foo" }
+    }),
+    expectedState
+  );
+});
+
+test("reducer clear field validators action performs no changes when there are no validators or errors to clear", t => {
+  const formReducer = createFormReducer({
+    foo: {
+      validators: [],
+      errors: [],
+      hasErrors: false
+    }
+  });
+  const initialState = initializeReducer(formReducer);
+  const expectedState = {
+    foo: {
+      rawValue: "",
+      validators: [],
+      constraints: [],
+      errors: [],
+      hasErrors: false,
+      dirty: false
+    }
+  };
+  t.deepEqual(
+    formReducer(initialState, {
+      type: CLEAR_FIELD_VALIDATORS,
+      payload: { fieldName: "foo" }
     }),
     expectedState
   );

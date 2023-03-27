@@ -30,9 +30,9 @@ const ProfilingForm = ({ actions, fields, addValidationProp }) => {
   
   useEffect(() => {
     if(addValidationProp) {
-      Object.keys(fields).map(fieldName => actions.fields[fieldName].addValidator(hasLength(3,4)))
+      Object.keys(actions.fields).map(fieldName => actions.fields[fieldName].addValidator(hasLength(3,4)))
     }
-  }, [])
+  }, [actions.fields])
 
   const fieldErrorMessages = {
     [required.error]: "required",

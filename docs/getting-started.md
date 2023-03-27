@@ -76,6 +76,35 @@ props.actions.fields.fields.addValidator(hasLength(3, 4))
 props.actions.form.clear();
 ```
 
+## Updating a form
+When using these actions for a form or field actions inside `useEffect`, you will need to include the form or field actions as a dependency to avoid useEffect causing an infinite render loop.
+
+### Examples:
+**For field actions, include `actions.fields.<fieldname>`**
+```
+  useEffect(() => {
+    if(requiresEmail) {
+      actions.fields.email.addValidator(required());
+    }
+  }, [actions.fields.email]);
+```
+```
+  useEffect(() => {
+    if(emailIsNotRequired) {
+      actions.fields.email.removeValidator(required());
+    }
+  }, [actions.fields.email]);
+```
+
+**For form actions, include `actions.form`**
+```
+  useEffect(() => {
+    if(clearOnDismount) {
+      actions.form.clearValidators();
+    }
+  }, [actions.form]);
+```
+
 ## Putting It Together With React
 
 ```jsx
@@ -111,7 +140,8 @@ const MySecondForm = ({ actions, fields, isTrue }) => {
     if(isTrue) {
       actions.fields.field1.addValidator(hasLength(3, 4))
     }
-  }, [])
+  }, [actions.fields.field1])
+
   return (
     <div>
       {fields.field1.hasErrors && fields.field1.errors.includes(required.error)
