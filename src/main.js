@@ -61,7 +61,7 @@ export const createFormReducer = formConfig => (
   action
 ) => {
   switch (action.type) {
-    case SET:
+    case SET: {
       const changedFieldName = action.payload.fieldName;
       const newRawValue = action.payload.value;
 
@@ -77,32 +77,38 @@ export const createFormReducer = formConfig => (
         computeDirtyEntries(draftState, changedFieldName);
         computeErrorEntries(draftState);
       });
+    }
     case CLEAR:
       return createInitialState(formConfig);
-    case ADD_VALIDATOR: 
+    case ADD_VALIDATOR: {
       const fieldWithOverride = action.payload.fieldName;
       const newValidator = action.payload.validator;
-      
+
       return produce(state, draftState => {
-        draftState[fieldWithOverride].validators.push(newValidator)
+        draftState[fieldWithOverride].validators.push(newValidator);
         computeErrorEntries(draftState);
       });
-    case REMOVE_VALIDATOR:
+    }
+    case REMOVE_VALIDATOR: {
       const fieldToOverride = action.payload.fieldName;
       const targetValidator = action.payload.validator;
 
       return produce(state, draftState => {
-        let fieldValidators = draftState[fieldToOverride].validators
-        draftState[fieldToOverride].validators = fieldValidators.filter(validator => validator.type !== targetValidator.type)
+        let fieldValidators = draftState[fieldToOverride].validators;
+        draftState[fieldToOverride].validators = fieldValidators.filter(
+          validator => validator.type !== targetValidator.type
+        );
         computeErrorEntries(draftState);
       });
-    case CLEAR_FIELD_VALIDATORS:
+    }
+    case CLEAR_FIELD_VALIDATORS: {
       const fieldToClear = action.payload.fieldName;
 
       return produce(state, draftState => {
         draftState[fieldToClear].validators = [];
         computeErrorEntries(draftState);
       });
+    }
     default:
       return state;
   }
@@ -123,7 +129,8 @@ export const createMapDispatchToProps = formConfig => {
       dispatchObj.fields[fieldName] = {
         set: value => dispatch(set(fieldName)(value)),
         addValidator: validator => dispatch(addValidator(fieldName)(validator)),
-        removeValidator: validator => dispatch(removeValidator(fieldName)(validator)),
+        removeValidator: validator =>
+          dispatch(removeValidator(fieldName)(validator)),
         clear: () => dispatch(clearFieldValidators(fieldName)())
       };
     }

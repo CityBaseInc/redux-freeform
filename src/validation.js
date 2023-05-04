@@ -69,8 +69,7 @@ validatorFns[NUMBER_LESS_THAN] = (value, args, form) => {
   return Number(value) < args[0];
 };
 
-export const NUMBER_LESS_THAN_OR_EQUAL_TO =
-  "validator/NUMBER_LESS_THAN_OR_EQUAL_TO";
+export const NUMBER_LESS_THAN_OR_EQUAL_TO = "validator/NUMBER_LESS_THAN_OR_EQUAL_TO";
 export const NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR =
   "error/NUMBER_LESS_THAN_OR_EQUAL_TO";
 export const numberLessThanOrEqualTo = createValidator(
@@ -136,11 +135,7 @@ export const validateWhenErrorMessage = type =>
 
 export const VALIDATE_WHEN = "validator/VALIDATE_WHEN";
 export const VALIDATE_WHEN_ERROR = "error/VALIDATE_WHEN";
-const validateWhen = (
-  dependentValidator,
-  primaryValidator,
-  optionalFieldName
-) => ({
+const validateWhen = (dependentValidator, primaryValidator, optionalFieldName) => ({
   type: VALIDATE_WHEN,
   args: [dependentValidator, primaryValidator, optionalFieldName],
   error: dependentValidator.error
@@ -177,11 +172,7 @@ validatorFns[VALIDATE_WHEN] = (value, args, form) => {
   );
 
   return primaryPredicatePassed
-    ? validatorFns[dependentValidator.type](
-        value,
-        dependentValidator.args,
-        form
-      )
+    ? validatorFns[dependentValidator.type](value, dependentValidator.args, form)
     : true;
 };
 
@@ -241,9 +232,7 @@ validatorFns[HAS_LENGTH] = (value, args, form) => {
     );
   }
   if (max < min) {
-    throw new Error(
-      "hasLength validator was passed a min greater than the max"
-    );
+    throw new Error("hasLength validator was passed a min greater than the max");
   }
   const valueLength = value.length;
   return max >= valueLength && valueLength >= min;
@@ -307,10 +296,7 @@ validatorFns[DATE_AFTER_TODAY] = (value, args, form) => {
 
 export const IS_VALID_MONTH = "validator/IS_VALID_MONTH";
 export const IS_VALID_MONTH_ERROR = "error/IS_VALID_MONTH";
-export const isValidMonth = createValidator(
-  IS_VALID_MONTH,
-  IS_VALID_MONTH_ERROR
-);
+export const isValidMonth = createValidator(IS_VALID_MONTH, IS_VALID_MONTH_ERROR);
 validatorFns[IS_VALID_MONTH] = (value, args, form) => {
   if (value === "") {
     return true;
@@ -322,11 +308,11 @@ validatorFns[IS_VALID_MONTH] = (value, args, form) => {
   // Only works with two digit months (01, 02, 03, etc)
   const monthStartPosition = parseInt(args[0]);
   const monthEndPosition = monthStartPosition + 2;
-  if (monthStartPosition === NaN) {
+  if (isNaN(monthStartPosition)) {
     throw new Error("Month start position has to be a valid integer string");
   }
   const month = parseInt(value.slice(monthStartPosition, monthEndPosition));
-  if (month === NaN) {
+  if (isNaN(month)) {
     return false;
   }
   return month >= 1 && month <= 12;
@@ -465,7 +451,7 @@ export const computeErrors = (fieldName, form) => {
   return runFormValidators(fieldName, form, validators);
 };
 
-export const computeErrorEntries = (formState) => {
+export const computeErrorEntries = formState => {
   const fields = Object.entries(formState);
   for (let entry of fields) {
     let fieldName = entry[0];

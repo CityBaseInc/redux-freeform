@@ -44,9 +44,9 @@ const formConfig = {
 
 const validatorFixture = {
   type: HAS_LENGTH,
-  args: [3, 4], 
+  args: [3, 4],
   error: HAS_LENGTH_ERROR
-}
+};
 
 test("createFormState produces an object with valid state keys", t => {
   t.deepEqual(
@@ -62,8 +62,8 @@ testProp(
     const action = set(fieldName)(fieldValue);
     t.true(
       action.type === SET &&
-      action.payload.value === fieldValue &&
-      action.payload.fieldName === fieldName
+        action.payload.value === fieldValue &&
+        action.payload.fieldName === fieldName
     );
   }
 );
@@ -234,9 +234,18 @@ test("createMapDispatchToProps returns valid action creators", t => {
   t.deepEqual(dispatchObj.actions.fields.bax.set("bar2"), set("bax")("bar2"));
   t.deepEqual(dispatchObj.actions.fields.baz.set("bar3"), set("baz")("bar3"));
   t.deepEqual(dispatchObj.actions.form.clear(), clear());
-  t.deepEqual(dispatchObj.actions.fields.foo.addValidator(validatorFixture), addValidator("foo")(validatorFixture));
-  t.deepEqual(dispatchObj.actions.fields.bax.addValidator(validatorFixture), addValidator("bax")(validatorFixture));
-  t.deepEqual(dispatchObj.actions.fields.baz.addValidator(validatorFixture), addValidator("baz")(validatorFixture));
+  t.deepEqual(
+    dispatchObj.actions.fields.foo.addValidator(validatorFixture),
+    addValidator("foo")(validatorFixture)
+  );
+  t.deepEqual(
+    dispatchObj.actions.fields.bax.addValidator(validatorFixture),
+    addValidator("bax")(validatorFixture)
+  );
+  t.deepEqual(
+    dispatchObj.actions.fields.baz.addValidator(validatorFixture),
+    addValidator("baz")(validatorFixture)
+  );
 });
 
 test("createMapDispatchToProps returns a memoized fn", t => {
@@ -363,11 +372,14 @@ test("reducer add validator action updates correct field", t => {
   t.deepEqual(
     formReducer(initialState, {
       type: ADD_VALIDATOR,
-      payload: { fieldName: "foo", validator: {
-        type: HAS_LENGTH,
-        args: [3, 4],
-        error: HAS_LENGTH_ERROR
-      } }
+      payload: {
+        fieldName: "foo",
+        validator: {
+          type: HAS_LENGTH,
+          args: [3, 4],
+          error: HAS_LENGTH_ERROR
+        }
+      }
     }),
     expectedState
   );
@@ -399,7 +411,7 @@ test("reducer remove validator action updates correct field", t => {
           type: REQUIRED,
           args: [],
           error: REQUIRED_ERROR
-        },
+        }
       ],
       constraints: [],
       errors: [REQUIRED_ERROR],
@@ -410,11 +422,14 @@ test("reducer remove validator action updates correct field", t => {
   t.deepEqual(
     formReducer(initialState, {
       type: REMOVE_VALIDATOR,
-      payload: { fieldName: "foo", validator: {
-        type: HAS_LENGTH,
-        args: [3, 4],
-        error: HAS_LENGTH_ERROR
-      } }
+      payload: {
+        fieldName: "foo",
+        validator: {
+          type: HAS_LENGTH,
+          args: [3, 4],
+          error: HAS_LENGTH_ERROR
+        }
+      }
     }),
     expectedState
   );
@@ -443,7 +458,7 @@ test("reducer remove validator action performs no changes if no validator to rem
           type: REQUIRED,
           args: [],
           error: REQUIRED_ERROR
-        },
+        }
       ],
       constraints: [],
       errors: [REQUIRED_ERROR],
@@ -454,11 +469,14 @@ test("reducer remove validator action performs no changes if no validator to rem
   t.deepEqual(
     formReducer(initialState, {
       type: REMOVE_VALIDATOR,
-      payload: { fieldName: "foo", validator: {
-        type: HAS_LENGTH,
-        args: [3, 4],
-        error: HAS_LENGTH_ERROR
-      } }
+      payload: {
+        fieldName: "foo",
+        validator: {
+          type: HAS_LENGTH,
+          args: [3, 4],
+          error: HAS_LENGTH_ERROR
+        }
+      }
     }),
     expectedState
   );
