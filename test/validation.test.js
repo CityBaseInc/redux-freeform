@@ -557,7 +557,9 @@ test("validateSum throws error when validator doesn't exist", t => {
 testProp(
   "required validator accepts any string",
   [fc.string(1, 100)],
-  stringA => !!validatorFns[REQUIRED](stringA, [], {})
+  (t, stringA) => {
+    t.true(!!validatorFns[REQUIRED](stringA, [], {}))
+  }
 );
 
 test("required validator rejects empty string", t => {
@@ -567,20 +569,25 @@ test("required validator rejects empty string", t => {
 testProp(
   "onlyIntegers validator accepts any integer string",
   [fc.integer()],
-  intA => !!validatorFns[ONLY_INTEGERS](String(intA), [], {})
+  (t, intA) => {
+    t.true(!!validatorFns[ONLY_INTEGERS](String(intA), [], {}))
+  }
 );
 
 testProp(
   "onlyIntegers rejects alphabetic string",
   [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")],
-  stringA => !validatorFns[ONLY_INTEGERS](stringA, [], {})
+  (t, stringA) => {
+    t.true(!validatorFns[ONLY_INTEGERS](stringA, [], {}))
+  }
 );
 
 testProp(
   "onlyIntegers rejects float string",
   [fc.float(), fc.integer(1, 10)],
-  (floatA, fixedLength) =>
-    !validatorFns[ONLY_INTEGERS](floatA.toFixed(fixedLength), [], {})
+  (t, floatA, fixedLength) => {
+    t.true(!validatorFns[ONLY_INTEGERS](floatA.toFixed(fixedLength), [], {}));
+  }
 );
 
 test("onlyIntegers accepts empty string", t => {
@@ -590,26 +597,33 @@ test("onlyIntegers accepts empty string", t => {
 testProp(
   "onlyNaturals validator accepts any natural string",
   [fc.nat()],
-  natA => !!validatorFns[ONLY_NATURALS](String(natA), [], {})
+  (t, natA) => {
+    t.true(!!validatorFns[ONLY_NATURALS](String(natA), [], {}));
+  }
 );
 
 testProp(
   "onlyNaturals rejects alphabetic string",
   [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")],
-  stringA => !validatorFns[ONLY_NATURALS](stringA, [], {})
+  (t, stringA) => {
+    t.true(!validatorFns[ONLY_NATURALS](stringA, [], {}));
+  }
 );
 
 testProp(
   "onlyNaturals rejects float string",
   [fc.float(), fc.integer(1, 10)],
-  (floatA, fixedLength) =>
-    !validatorFns[ONLY_NATURALS](floatA.toFixed(fixedLength), [], {})
+  (t, floatA, fixedLength) => {
+    t.true(!validatorFns[ONLY_NATURALS](floatA.toFixed(fixedLength), [], {}));
+  }
 );
 
 testProp(
   "onlyNaturals rejects negative integers string",
   [fc.integer(-1)],
-  negativeInt => !validatorFns[ONLY_NATURALS](negativeInt, [], {})
+  (t, negativeInt) => {
+    t.true(!validatorFns[ONLY_NATURALS](negativeInt, [], {}));
+  }
 );
 
 test("onlyNaturals accepts empty string", t => {
@@ -632,21 +646,25 @@ test("numberLessThan accepts empty string", t => {
 testProp(
   "numberLessThan accepts value less than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !!validatorFns[NUMBER_LESS_THAN](String(smallerNumber), [biggerNumber], {})
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(!!validatorFns[NUMBER_LESS_THAN](String(smallerNumber), [biggerNumber], {}));
+  }
 );
 
 testProp(
   "numberLessThan rejects value greater than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !validatorFns[NUMBER_LESS_THAN](String(biggerNumber), [smallerNumber], {})
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(!validatorFns[NUMBER_LESS_THAN](String(biggerNumber), [smallerNumber], {}));
+  }
 );
 
 testProp(
   "numberLessThan rejects value equal to argument",
   [fc.float()],
-  numberA => !validatorFns[NUMBER_LESS_THAN](String(numberA), [numberA], {})
+  (t, numberA) => {
+    t.true(!validatorFns[NUMBER_LESS_THAN](String(numberA), [numberA], {}));
+  }
 );
 
 test("numberLessThanOrEqualTo accepts empty string", t => {
@@ -656,30 +674,35 @@ test("numberLessThanOrEqualTo accepts empty string", t => {
 testProp(
   "numberLessThanOrEqualTo accepts value less than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
-      String(smallerNumber),
-      [biggerNumber],
-      {}
-    )
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(
+      !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
+        String(smallerNumber),
+        [biggerNumber],
+        {}
+      ));
+  }
 );
 
 testProp(
   "numberLessThanOrEqualTo rejects value greater than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
-      String(biggerNumber),
-      [smallerNumber],
-      {}
-    )
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(
+      !validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](
+        String(biggerNumber),
+        [smallerNumber],
+        {}
+      ));
+  }
 );
 
 testProp(
   "numberLessThanOrEqualTo accepts value equal to argument",
   [fc.float()],
-  numberA =>
-    !!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](String(numberA), [numberA], {})
+  (t, numberA) => {
+    t.true(!!validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO](String(numberA), [numberA], {}));
+  }
 );
 
 test("numberGreaterThan accepts empty string", t => {
@@ -689,29 +712,35 @@ test("numberGreaterThan accepts empty string", t => {
 testProp(
   "numberGreaterThan accepts value greater than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !!validatorFns[NUMBER_GREATER_THAN](
-      String(biggerNumber),
-      [smallerNumber],
-      {}
-    )
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(
+      !!validatorFns[NUMBER_GREATER_THAN](
+        String(biggerNumber),
+        [smallerNumber],
+        {}
+      ));
+  }
 );
 
 testProp(
   "numberGreaterThan rejects value less than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !validatorFns[NUMBER_GREATER_THAN](
-      String(smallerNumber),
-      [biggerNumber],
-      {}
-    )
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(
+      !validatorFns[NUMBER_GREATER_THAN](
+        String(smallerNumber),
+        [biggerNumber],
+        {}
+      ));
+  }
 );
 
 testProp(
   "numberGreaterThan accepts value equal to argument",
   [fc.float()],
-  numberA => !validatorFns[NUMBER_GREATER_THAN](String(numberA), [numberA], {})
+  (t, numberA) => {
+    t.true(!validatorFns[NUMBER_GREATER_THAN](String(numberA), [numberA], {}));
+  }
 );
 
 test("numberGreaterThanOrEqualTo accepts empty string", t => {
@@ -721,45 +750,53 @@ test("numberGreaterThanOrEqualTo accepts empty string", t => {
 testProp(
   "numberGreaterThanOrEqualTo accepts value greater than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !!validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
-      String(biggerNumber),
-      [smallerNumber],
-      {}
-    )
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(
+      !!validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
+        String(biggerNumber),
+        [smallerNumber],
+        {}
+      ));
+  }
 );
 
 testProp(
   "numberGreaterThanOrEqualTo rejects value less than argument",
   [smallerBiggerTuple],
-  ([smallerNumber, biggerNumber]) =>
-    !validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
-      String(smallerNumber),
-      [biggerNumber],
-      {}
-    )
+  (t, [smallerNumber, biggerNumber]) => {
+    t.true(
+      !validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
+        String(smallerNumber),
+        [biggerNumber],
+        {}
+      ));
+  }
 );
 
 testProp(
   "numberGreaterThanOrEqualTo accepts value equal to argument",
   [fc.float()],
-  numberA =>
-    !!validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
-      String(numberA),
-      [numberA],
-      {}
-    )
+  (t, numberA) => {
+    t.true(
+      !!validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO](
+        String(numberA),
+        [numberA],
+        {}
+      ));
+  }
 );
 
 testProp(
   "matchesField accepts value equal to argument field rawValue",
   [fieldNameGen(), fc.string()],
-  (fieldName, fieldValue) =>
-    !!validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
-      [fieldName]: {
-        rawValue: fieldValue
-      }
-    })
+  (t, fieldName, fieldValue) => {
+    t.true(
+      !!validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
+        [fieldName]: {
+          rawValue: fieldValue
+        }
+      }));
+  }
 );
 
 testProp(
@@ -769,27 +806,31 @@ testProp(
     fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str)),
     fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str))
   ],
-  (fieldName, fieldValue, fieldValueModifier) =>
-    !validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
-      [fieldName]: {
-        rawValue: `${fieldValue}${fieldValueModifier}`
-      }
-    })
+  (t, fieldName, fieldValue, fieldValueModifier) => {
+    t.true(
+      !validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
+        [fieldName]: {
+          rawValue: `${fieldValue}${fieldValueModifier}`
+        }
+      }));
+  }
 );
 
 const testRegexStr = "^[^s@]+@[^s@]+.[^s@]+$";
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test",
   [fc.string(1, 15).filter(str => new RegExp(testRegexStr).test(str))],
-  valueThatMatchesRegex =>
-    validatorFns[MATCHES_REGEX](valueThatMatchesRegex, [testRegexStr], {})
+  (t, valueThatMatchesRegex) => {
+    t.true(validatorFns[MATCHES_REGEX](valueThatMatchesRegex, [testRegexStr], {}));
+  }
 );
 
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test",
   [fc.string(1, 15).filter(str => !new RegExp(testRegexStr).test(str))],
-  valueThatDoesNotMatchRegex =>
-    !validatorFns[MATCHES_REGEX](valueThatDoesNotMatchRegex, [testRegexStr], {})
+  (t, valueThatDoesNotMatchRegex) => {
+    t.true(!validatorFns[MATCHES_REGEX](valueThatDoesNotMatchRegex, [testRegexStr], {}));
+  }
 );
 
 test("matchesRegex accepts when value is empty string", t => {
@@ -829,11 +870,11 @@ testProp(
     fc.integer(0, 9),
     fc.integer(0, 9)
   ],
-  (...first8Digits) => {
+  (t, ...first8Digits) => {
     const validRoutingNumber = `${first8Digits.join("")}${calcCheckSum(
       ...first8Digits
     )}`;
-    return validatorFns[IS_ROUTING_NUMBER](validRoutingNumber, [], {});
+    t.true(validatorFns[IS_ROUTING_NUMBER](validRoutingNumber, [], {}));
   }
 );
 
@@ -849,9 +890,9 @@ testProp(
     fc.integer(0, 9),
     fc.integer(0, 9)
   ],
-  (...first8Digits) => {
+  (t, ...first8Digits) => {
     const invalidRoutingNumber = first8Digits.join("");
-    return !validatorFns[IS_ROUTING_NUMBER](invalidRoutingNumber, [], {});
+    t.true(!validatorFns[IS_ROUTING_NUMBER](invalidRoutingNumber, [], {}));
   }
 );
 
@@ -1193,7 +1234,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) => !validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(!validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 testProp(
@@ -1204,7 +1247,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) => validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 test("hasLowercaseLetter validator produces correct validator object", t => {
@@ -1228,8 +1273,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) =>
-    !validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(!validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 testProp(
@@ -1241,8 +1287,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) =>
-    validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 test("hasUppercaseLetter validator produces correct validator object", t => {
@@ -1266,8 +1313,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) =>
-    !validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(!validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 testProp(
@@ -1279,8 +1327,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) =>
-    validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 test("hasSpecialCharacter validator produces correct validator object", t => {
@@ -1304,8 +1353,9 @@ testProp(
     fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
     fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
   ],
-  (...stringA) =>
-    !validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(!validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 testProp(
@@ -1320,8 +1370,9 @@ testProp(
       .stringOf(fc.char().filter(c => /[!@#$%^&*.?]/.test(c)))
       .filter(s => s !== "")
   ],
-  (...stringA) =>
-    validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {})
+  (t, ...stringA) => {
+    t.true(validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {}));
+  }
 );
 
 test("isProbablyEmail validator produces correct validator object", t => {
@@ -1342,21 +1393,25 @@ const testRegexEmailString = /^\S+@\S+\.\S+$/;
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test for isProbablyEmail",
   [fc.string(1, 15).filter(str => new RegExp(testRegexEmailString).test(str))],
-  valueThatMatchesRegex =>
-    validatorFns[IS_PROBABLY_EMAIL](
-      valueThatMatchesRegex,
-      [testRegexEmailString],
-      {}
-    )
+  (t, valueThatMatchesRegex) => {
+    t.true(
+      validatorFns[IS_PROBABLY_EMAIL](
+        valueThatMatchesRegex,
+        [testRegexEmailString],
+        {}
+      ));
+  }
 );
 
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test for isProbablyEmail",
   [fc.string(1, 15).filter(str => !new RegExp(testRegexEmailString).test(str))],
-  valueThatDoesNotMatchRegex =>
-    !validatorFns[IS_PROBABLY_EMAIL](
-      valueThatDoesNotMatchRegex,
-      [testRegexEmailString],
-      {}
-    )
+  (t, valueThatDoesNotMatchRegex) => {
+    t.true(
+      !validatorFns[IS_PROBABLY_EMAIL](
+        valueThatDoesNotMatchRegex,
+        [testRegexEmailString],
+        {}
+      ));
+  }
 );

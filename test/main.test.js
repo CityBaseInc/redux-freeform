@@ -58,9 +58,9 @@ test("createFormState produces an object with valid state keys", t => {
 testProp(
   "set creates returns an action creator that returns a valid action",
   [fieldNameGen(), fc.string()],
-  (fieldName, fieldValue) => {
+  (t, fieldName, fieldValue) => {
     const action = set(fieldName)(fieldValue);
-    return (
+    t.true(
       action.type === SET &&
       action.payload.value === fieldValue &&
       action.payload.fieldName === fieldName
