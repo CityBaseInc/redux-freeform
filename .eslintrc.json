@@ -1,11 +1,15 @@
 {
-  "extends": ["plugin:prettier/recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
+  ],
   "plugins": ["prettier"],
   "parser": "@babel/eslint-parser",
   "rules": {
     "prettier/prettier": "error",
     "no-unused-vars": 2,
-    "react/prop-types": 0
+    "react/prop-types": "off"
   },
   "env": {
     "browser": true
@@ -13,5 +17,10 @@
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "18.2.0"
+    }
   }
 }

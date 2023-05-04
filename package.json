@@ -12,6 +12,8 @@
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "test": "nyc ava",
+    "format": "prettier --write {src,test,examples,website}/**/*.js && eslint --fix",
+    "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx",
     "coverage": "echo 'to be implemented'"
   },
   "devDependencies": {
