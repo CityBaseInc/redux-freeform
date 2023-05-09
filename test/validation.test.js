@@ -1077,8 +1077,8 @@ test("dateAfterToday validator returns error when inclusive is false and value i
   );
 });
 
-test("isValidMonth validator returns error when start position resovles to NaN", t => {
-  t.is(
+test("isValidMonth validator throws error when start position resovles to NaN", t => {
+  const validatorError = t.throws(() =>
     runValidator(
       {
         type: IS_VALID_MONTH,
@@ -1086,8 +1086,11 @@ test("isValidMonth validator returns error when start position resovles to NaN",
         error: IS_VALID_MONTH_ERROR
       },
       "01/02/22"
-    ),
-    IS_VALID_MONTH_ERROR
+    )
+  );
+  t.is(
+    validatorError.message,
+    "Month start position has to be a valid integer string"
   );
 });
 
