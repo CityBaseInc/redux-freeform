@@ -3,11 +3,7 @@ import ReactDOM from "react-dom";
 import { createStore } from "redux";
 
 import ProfilingForm from "./ProfilingForm";
-import {
-  mapStateToProps,
-  reducer,
-  mapDispatchToProps
-} from "./ProfilingForm.state";
+import { mapStateToProps, reducer, mapDispatchToProps } from "./ProfilingForm.state";
 
 const timedReducer = (...args) => {
   console.time("Reducer");

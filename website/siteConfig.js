@@ -29,7 +29,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { href: "https://github.com/CityBaseInc/redux-freeform", label: "GitHub" }
+    { href: "https://github.com/CityBaseInc/redux-freeform", label: "GitHub" },
   ],
 
   // If you have users set above, you add it here:
@@ -43,13 +43,13 @@ const siteConfig = {
   /* Colors for website */
   colors: {
     primaryColor: "#27a9e1",
-    secondaryColor: "#3b414d"
+    secondaryColor: "#3b414d",
   },
 
   fonts: {
     headerFont: ["Montserrat", "sans-serif"],
     subheadFont: ["Source Sans Pro", "sans-serif"],
-    bodyFont: ["Source Sans Pro", "sans-serif"]
+    bodyFont: ["Source Sans Pro", "sans-serif"],
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
@@ -70,7 +70,7 @@ const siteConfig = {
   twitterImage: "img/undraw_tweetstorm.svg",
 
   stylesheets: [
-    "https://fonts.googleapis.com/css?family=Montserrat|Source+Sans+Pro&display=swap"
+    "https://fonts.googleapis.com/css?family=Montserrat|Source+Sans+Pro&display=swap",
   ],
 
   // For sites with a sizable amount of content, set collapsible to true.
@@ -81,7 +81,7 @@ const siteConfig = {
   // enableUpdateBy: true,
 
   // Show documentation's last update time.
-  enableUpdateTime: true
+  enableUpdateTime: true,
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...

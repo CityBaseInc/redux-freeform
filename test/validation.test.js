@@ -69,100 +69,100 @@ import {
   IS_PROBABLY_EMAIL,
   IS_PROBABLY_EMAIL_ERROR,
   IS_VALID_MONTH,
-  IS_VALID_MONTH_ERROR
+  IS_VALID_MONTH_ERROR,
 } from "../src/validation";
 
-test("required validator produces correct validator object", t => {
+test("required validator produces correct validator object", (t) => {
   t.is(required.error, REQUIRED_ERROR);
   t.deepEqual(required(), {
     type: REQUIRED,
     args: [],
-    error: REQUIRED_ERROR
+    error: REQUIRED_ERROR,
   });
 });
 
-test("onlyIntegers validator produces correct validator object", t => {
+test("onlyIntegers validator produces correct validator object", (t) => {
   t.is(onlyIntegers.error, ONLY_INTEGERS_ERROR);
   t.deepEqual(onlyIntegers(), {
     type: ONLY_INTEGERS,
     args: [],
-    error: ONLY_INTEGERS_ERROR
+    error: ONLY_INTEGERS_ERROR,
   });
 });
 
-test("onlyNaturals validator produces correct validator object", t => {
+test("onlyNaturals validator produces correct validator object", (t) => {
   t.is(onlyNaturals.error, ONLY_NATURALS_ERROR);
   t.deepEqual(onlyNaturals(), {
     type: ONLY_NATURALS,
     args: [],
-    error: ONLY_NATURALS_ERROR
+    error: ONLY_NATURALS_ERROR,
   });
 });
 
-test("numberLessThan validator produces correct validator object", t => {
+test("numberLessThan validator produces correct validator object", (t) => {
   t.is(numberLessThan.error, NUMBER_LESS_THAN_ERROR);
   t.deepEqual(numberLessThan(3), {
     type: NUMBER_LESS_THAN,
     args: [3],
-    error: NUMBER_LESS_THAN_ERROR
+    error: NUMBER_LESS_THAN_ERROR,
   });
 });
 
-test("numberLessThanOrEqualTo validator produces correct validator object", t => {
+test("numberLessThanOrEqualTo validator produces correct validator object", (t) => {
   t.is(numberLessThanOrEqualTo.error, NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR);
   t.deepEqual(numberLessThanOrEqualTo(3), {
     type: NUMBER_LESS_THAN_OR_EQUAL_TO,
     args: [3],
-    error: NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR
+    error: NUMBER_LESS_THAN_OR_EQUAL_TO_ERROR,
   });
 });
 
-test("matchesField validator produces correct validator object", t => {
+test("matchesField validator produces correct validator object", (t) => {
   t.is(matchesField.error, MATCHES_FIELD_ERROR);
   t.deepEqual(matchesField("foo"), {
     type: MATCHES_FIELD,
     args: ["foo"],
-    error: MATCHES_FIELD_ERROR
+    error: MATCHES_FIELD_ERROR,
   });
 });
 
-test("matchesRegex validator produces correct validator object", t => {
+test("matchesRegex validator produces correct validator object", (t) => {
   t.is(matchesRegex.error, MATCHES_REGEX_ERROR);
   t.deepEqual(matchesRegex("^hey.*joe$"), {
     type: MATCHES_REGEX,
     args: ["^hey.*joe$"],
-    error: MATCHES_REGEX_ERROR
+    error: MATCHES_REGEX_ERROR,
   });
 });
 
-test("isRoutingNumber validator produces correct validator object", t => {
+test("isRoutingNumber validator produces correct validator object", (t) => {
   t.is(isRoutingNumber.error, IS_ROUTING_NUMBER_ERROR);
   t.deepEqual(isRoutingNumber(), {
     type: IS_ROUTING_NUMBER,
     args: [],
-    error: IS_ROUTING_NUMBER_ERROR
+    error: IS_ROUTING_NUMBER_ERROR,
   });
 });
 
-test("numberGreaterThan validator produces correct validator object", t => {
+test("numberGreaterThan validator produces correct validator object", (t) => {
   t.is(numberGreaterThan.error, NUMBER_GREATER_THAN_ERROR);
   t.deepEqual(numberGreaterThan("0"), {
     type: NUMBER_GREATER_THAN,
     args: ["0"],
-    error: NUMBER_GREATER_THAN_ERROR
+    error: NUMBER_GREATER_THAN_ERROR,
   });
 });
 
-test("numberGreaterThanOrEqualTo validator produces correct validator object", t => {
+test("numberGreaterThanOrEqualTo validator produces correct validator object", (t) => {
   t.is(numberGreaterThanOrEqualTo.error, NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR);
   t.deepEqual(numberGreaterThanOrEqualTo("0"), {
     type: NUMBER_GREATER_THAN_OR_EQUAL_TO,
     args: ["0"],
-    error: NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR
+    error: NUMBER_GREATER_THAN_OR_EQUAL_TO_ERROR,
   });
 });
 
-test("validateWhen validator produces correct validator object", t => {
+test("validateWhen validator produces correct validator object", (t) => {
   t.is(validateWhen.error, VALIDATE_WHEN_ERROR);
   t.deepEqual(validateWhen(required(), required(), "foo"), {
     type: VALIDATE_WHEN,
@@ -170,26 +170,26 @@ test("validateWhen validator produces correct validator object", t => {
       {
         type: REQUIRED,
         args: [],
-        error: REQUIRED_ERROR
+        error: REQUIRED_ERROR,
       },
       {
         type: REQUIRED,
         args: [],
-        error: REQUIRED_ERROR
+        error: REQUIRED_ERROR,
       },
-      "foo"
+      "foo",
     ],
     // this is not a mistake, error key in validateWhen
     // object is the error key of the dependent validator
-    error: REQUIRED_ERROR
+    error: REQUIRED_ERROR,
   });
 });
 
-test("validateWhen validator accepts when precondition is met and dependentValidator validates", t => {
+test("validateWhen validator accepts when precondition is met and dependentValidator validates", (t) => {
   const form = {
     a: {
-      rawValue: "21"
-    }
+      rawValue: "21",
+    },
   };
   t.is(
     validatorFns[VALIDATE_WHEN](
@@ -198,14 +198,14 @@ test("validateWhen validator accepts when precondition is met and dependentValid
         {
           type: REQUIRED,
           args: [],
-          error: REQUIRED_ERROR
+          error: REQUIRED_ERROR,
         },
         {
           type: NUMBER_GREATER_THAN,
           args: ["20"],
-          error: NUMBER_GREATER_THAN_ERROR
+          error: NUMBER_GREATER_THAN_ERROR,
         },
-        "a"
+        "a",
       ],
       form
     ),
@@ -213,11 +213,11 @@ test("validateWhen validator accepts when precondition is met and dependentValid
   );
 });
 
-test("validateWhen validator rejects when precondition is met and dependentValidator doesn't validate", t => {
+test("validateWhen validator rejects when precondition is met and dependentValidator doesn't validate", (t) => {
   const form = {
     a: {
-      rawValue: "21"
-    }
+      rawValue: "21",
+    },
   };
   t.is(
     validatorFns[VALIDATE_WHEN](
@@ -226,14 +226,14 @@ test("validateWhen validator rejects when precondition is met and dependentValid
         {
           type: REQUIRED,
           args: [],
-          error: REQUIRED_ERROR
+          error: REQUIRED_ERROR,
         },
         {
           type: NUMBER_GREATER_THAN,
           args: ["20"],
-          error: NUMBER_GREATER_THAN_ERROR
+          error: NUMBER_GREATER_THAN_ERROR,
         },
-        "a"
+        "a",
       ],
       form
     ),
@@ -241,7 +241,7 @@ test("validateWhen validator rejects when precondition is met and dependentValid
   );
 });
 
-test("validateWhen validator accepts when precondition is met and dependentValidator validates without other field dep", t => {
+test("validateWhen validator accepts when precondition is met and dependentValidator validates without other field dep", (t) => {
   t.is(
     validatorFns[VALIDATE_WHEN](
       "6",
@@ -249,13 +249,13 @@ test("validateWhen validator accepts when precondition is met and dependentValid
         {
           type: NUMBER_GREATER_THAN,
           args: ["5"],
-          error: NUMBER_GREATER_THAN_ERROR
+          error: NUMBER_GREATER_THAN_ERROR,
         },
         {
           type: NUMBER_LESS_THAN,
           args: ["7"],
-          error: NUMBER_GREATER_THAN_ERROR
-        }
+          error: NUMBER_GREATER_THAN_ERROR,
+        },
       ],
       {}
     ),
@@ -263,7 +263,7 @@ test("validateWhen validator accepts when precondition is met and dependentValid
   );
 });
 
-test("validateWhen validator rejects when precondition is met and dependentValidator validates without other field dep", t => {
+test("validateWhen validator rejects when precondition is met and dependentValidator validates without other field dep", (t) => {
   t.is(
     validatorFns[VALIDATE_WHEN](
       "4",
@@ -271,13 +271,13 @@ test("validateWhen validator rejects when precondition is met and dependentValid
         {
           type: NUMBER_GREATER_THAN,
           args: ["5"],
-          error: NUMBER_GREATER_THAN_ERROR
+          error: NUMBER_GREATER_THAN_ERROR,
         },
         {
           type: NUMBER_LESS_THAN,
           args: ["7"],
-          error: NUMBER_GREATER_THAN_ERROR
-        }
+          error: NUMBER_GREATER_THAN_ERROR,
+        },
       ],
       {}
     ),
@@ -285,11 +285,11 @@ test("validateWhen validator rejects when precondition is met and dependentValid
   );
 });
 
-test("validateWhen validator accepts when precondition is not met", t => {
+test("validateWhen validator accepts when precondition is not met", (t) => {
   const form = {
     a: {
-      rawValue: "20"
-    }
+      rawValue: "20",
+    },
   };
   t.is(
     validatorFns[VALIDATE_WHEN](
@@ -298,14 +298,14 @@ test("validateWhen validator accepts when precondition is not met", t => {
         {
           type: REQUIRED,
           args: [],
-          error: REQUIRED_ERROR
+          error: REQUIRED_ERROR,
         },
         {
           type: NUMBER_GREATER_THAN,
           args: ["20"],
-          error: NUMBER_GREATER_THAN_ERROR
+          error: NUMBER_GREATER_THAN_ERROR,
         },
-        "a"
+        "a",
       ],
       form
     ),
@@ -313,11 +313,11 @@ test("validateWhen validator accepts when precondition is not met", t => {
   );
 });
 
-test("validateWhen validator accepts when precondition is not met and dependentValidator validates without other field dep", t => {
+test("validateWhen validator accepts when precondition is not met and dependentValidator validates without other field dep", (t) => {
   const form = {
     a: {
-      rawValue: "21"
-    }
+      rawValue: "21",
+    },
   };
   t.is(
     validatorFns[VALIDATE_WHEN](
@@ -326,13 +326,13 @@ test("validateWhen validator accepts when precondition is not met and dependentV
         {
           type: NUMBER_LESS_THAN,
           args: ["20"],
-          error: NUMBER_LESS_THAN_ERROR
+          error: NUMBER_LESS_THAN_ERROR,
         },
         {
           type: NUMBER_GREATER_THAN,
           args: ["20"],
-          error: NUMBER_GREATER_THAN_ERROR
-        }
+          error: NUMBER_GREATER_THAN_ERROR,
+        },
       ],
       form
     ),
@@ -340,7 +340,7 @@ test("validateWhen validator accepts when precondition is not met and dependentV
   );
 });
 
-test("validateWhen error message formats properly", t => {
+test("validateWhen error message formats properly", (t) => {
   const expected = `foo was passed to validateWhen, but that validator type does not exist.
   Please check that you are only calling validator creator functions exported from
   redux-freeform in your form config and that you didn't forget to
@@ -350,7 +350,7 @@ test("validateWhen error message formats properly", t => {
   t.is(validateWhenErrorMessage("foo"), expected);
 });
 
-test("validateWhen throws error when dependent field does not exist", t => {
+test("validateWhen throws error when dependent field does not exist", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       {
@@ -359,16 +359,16 @@ test("validateWhen throws error when dependent field does not exist", t => {
           {
             type: REQUIRED,
             args: [],
-            error: REQUIRED_ERROR
+            error: REQUIRED_ERROR,
           },
           {
             type: REQUIRED,
             args: [],
-            error: REQUIRED_ERROR
+            error: REQUIRED_ERROR,
           },
-          "foo"
+          "foo",
         ],
-        error: REQUIRED_ERROR
+        error: REQUIRED_ERROR,
       },
       "bar",
       {}
@@ -380,7 +380,7 @@ test("validateWhen throws error when dependent field does not exist", t => {
   t.deepEqual(validatorError, expected);
 });
 
-test("validateWhen throws error when dependent validator doesn't exist", t => {
+test("validateWhen throws error when dependent validator doesn't exist", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       {
@@ -389,22 +389,22 @@ test("validateWhen throws error when dependent validator doesn't exist", t => {
           {
             type: REQUIRED,
             args: [],
-            error: REQUIRED_ERROR
+            error: REQUIRED_ERROR,
           },
           {
             type: "NOT REAL VALIDATOR",
             args: [],
-            error: REQUIRED_ERROR
+            error: REQUIRED_ERROR,
           },
-          "foo"
+          "foo",
         ],
-        error: REQUIRED_ERROR
+        error: REQUIRED_ERROR,
       },
       "bar",
       {
         foo: {
-          rawValue: "bar"
-        }
+          rawValue: "bar",
+        },
       }
     )
   );
@@ -419,7 +419,7 @@ test("validateWhen throws error when dependent validator doesn't exist", t => {
   t.deepEqual(validatorError, expected);
 });
 
-test("validateSum validator produces", t => {
+test("validateSum validator produces", (t) => {
   t.is(validateSum.error, VALIDATE_SUM_ERROR);
   t.deepEqual(validateSum(numberGreaterThan(5), ["foo"]), {
     type: VALIDATE_SUM,
@@ -427,22 +427,22 @@ test("validateSum validator produces", t => {
       {
         args: [5],
         error: NUMBER_GREATER_THAN_ERROR,
-        type: NUMBER_GREATER_THAN
+        type: NUMBER_GREATER_THAN,
       },
-      ["foo"]
+      ["foo"],
     ],
-    error: NUMBER_GREATER_THAN_ERROR
+    error: NUMBER_GREATER_THAN_ERROR,
   });
 });
 
-test("validateSum validates when validator validates against sum of identified fields", t => {
+test("validateSum validates when validator validates against sum of identified fields", (t) => {
   const form = {
     a: {
-      rawValue: "2"
+      rawValue: "2",
     },
     b: {
-      rawValue: "3"
-    }
+      rawValue: "3",
+    },
   };
   t.is(
     validatorFns[VALIDATE_SUM](
@@ -451,9 +451,9 @@ test("validateSum validates when validator validates against sum of identified f
         {
           args: [9],
           error: NUMBER_GREATER_THAN_ERROR,
-          type: NUMBER_GREATER_THAN
+          type: NUMBER_GREATER_THAN,
         },
-        ["a", "b"]
+        ["a", "b"],
       ],
       form
     ),
@@ -461,14 +461,14 @@ test("validateSum validates when validator validates against sum of identified f
   );
 });
 
-test("validateSum doesn't validate when validator doesn't validate against sum of identified fields", t => {
+test("validateSum doesn't validate when validator doesn't validate against sum of identified fields", (t) => {
   const form = {
     a: {
-      rawValue: "2"
+      rawValue: "2",
     },
     b: {
-      rawValue: "3"
-    }
+      rawValue: "3",
+    },
   };
   t.is(
     validatorFns[VALIDATE_SUM](
@@ -477,9 +477,9 @@ test("validateSum doesn't validate when validator doesn't validate against sum o
         {
           args: [10],
           error: NUMBER_GREATER_THAN_ERROR,
-          type: NUMBER_GREATER_THAN
+          type: NUMBER_GREATER_THAN,
         },
-        ["a", "b"]
+        ["a", "b"],
       ],
       form
     ),
@@ -487,7 +487,7 @@ test("validateSum doesn't validate when validator doesn't validate against sum o
   );
 });
 
-test("validateSum error message formats properly", t => {
+test("validateSum error message formats properly", (t) => {
   const expected = `foo was passed to validateSum, but that validator type does not exist.
   Please check that you are only calling validator creator functions exported from
   redux-freeform in your form config and that you didn't forget to
@@ -496,7 +496,7 @@ test("validateSum error message formats properly", t => {
   t.is(validateSumErrorMessage("foo"), expected);
 });
 
-test("validateSum throws error when dependent field does not exist", t => {
+test("validateSum throws error when dependent field does not exist", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       {
@@ -505,11 +505,11 @@ test("validateSum throws error when dependent field does not exist", t => {
           {
             args: [5],
             error: NUMBER_GREATER_THAN_ERROR,
-            type: NUMBER_GREATER_THAN
+            type: NUMBER_GREATER_THAN,
           },
-          ["foo"]
+          ["foo"],
         ],
-        error: NUMBER_GREATER_THAN_ERROR
+        error: NUMBER_GREATER_THAN_ERROR,
       },
       "5",
       {}
@@ -521,7 +521,7 @@ test("validateSum throws error when dependent field does not exist", t => {
   t.deepEqual(validatorError, expected);
 });
 
-test("validateSum throws error when validator doesn't exist", t => {
+test("validateSum throws error when validator doesn't exist", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       {
@@ -530,17 +530,17 @@ test("validateSum throws error when validator doesn't exist", t => {
           {
             args: [5],
             error: NUMBER_GREATER_THAN_ERROR,
-            type: "NOT REAL VALIDATOR"
+            type: "NOT REAL VALIDATOR",
           },
-          ["foo"]
+          ["foo"],
         ],
-        error: NUMBER_GREATER_THAN_ERROR
+        error: NUMBER_GREATER_THAN_ERROR,
       },
       "bar",
       {
         foo: {
-          rawValue: "5"
-        }
+          rawValue: "5",
+        },
       }
     )
   );
@@ -562,7 +562,7 @@ testProp(
   }
 );
 
-test("required validator rejects empty string", t => {
+test("required validator rejects empty string", (t) => {
   t.false(validatorFns[REQUIRED]("", [], {}));
 });
 
@@ -576,7 +576,7 @@ testProp(
 
 testProp(
   "onlyIntegers rejects alphabetic string",
-  [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")],
+  [fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== "")],
   (t, stringA) => {
     t.true(!validatorFns[ONLY_INTEGERS](stringA, [], {}));
   }
@@ -590,7 +590,7 @@ testProp(
   }
 );
 
-test("onlyIntegers accepts empty string", t => {
+test("onlyIntegers accepts empty string", (t) => {
   t.true(validatorFns[ONLY_INTEGERS]("", [], {}));
 });
 
@@ -604,7 +604,7 @@ testProp(
 
 testProp(
   "onlyNaturals rejects alphabetic string",
-  [fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")],
+  [fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== "")],
   (t, stringA) => {
     t.true(!validatorFns[ONLY_NATURALS](stringA, [], {}));
   }
@@ -626,18 +626,20 @@ testProp(
   }
 );
 
-test("onlyNaturals accepts empty string", t => {
+test("onlyNaturals accepts empty string", (t) => {
   t.true(validatorFns[ONLY_NATURALS]("", [], {}));
 });
 
-const smallerBiggerTuple = fc.float().chain(smallerNumber =>
+const smallerBiggerTuple = fc.float().chain((smallerNumber) =>
   fc.tuple(
     fc.constant(smallerNumber),
-    fc.float(smallerNumber, Number.MAX_SAFE_INTEGER).filter(n => n !== smallerNumber)
+    fc
+      .float(smallerNumber, Number.MAX_SAFE_INTEGER)
+      .filter((n) => n !== smallerNumber)
   )
 );
 
-test("numberLessThan accepts empty string", t => {
+test("numberLessThan accepts empty string", (t) => {
   t.true(validatorFns[NUMBER_LESS_THAN]("", {}));
 });
 
@@ -669,7 +671,7 @@ testProp(
   }
 );
 
-test("numberLessThanOrEqualTo accepts empty string", t => {
+test("numberLessThanOrEqualTo accepts empty string", (t) => {
   t.true(validatorFns[NUMBER_LESS_THAN_OR_EQUAL_TO]("", {}));
 });
 
@@ -711,7 +713,7 @@ testProp(
   }
 );
 
-test("numberGreaterThan accepts empty string", t => {
+test("numberGreaterThan accepts empty string", (t) => {
   t.true(validatorFns[NUMBER_GREATER_THAN]("", {}));
 });
 
@@ -743,7 +745,7 @@ testProp(
   }
 );
 
-test("numberGreaterThanOrEqualTo accepts empty string", t => {
+test("numberGreaterThanOrEqualTo accepts empty string", (t) => {
   t.true(validatorFns[NUMBER_GREATER_THAN_OR_EQUAL_TO]("", {}));
 });
 
@@ -792,8 +794,8 @@ testProp(
     t.true(
       !!validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
         [fieldName]: {
-          rawValue: fieldValue
-        }
+          rawValue: fieldValue,
+        },
       })
     );
   }
@@ -802,16 +804,16 @@ testProp(
 testProp(
   "matchesField rejects value not equal to argument field rawValue",
   [
-    fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str)),
-    fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str)),
-    fc.string(1, 15).filter(str => /^[A-Za-z]$/.test(str))
+    fc.string(1, 15).filter((str) => /^[A-Za-z]$/.test(str)),
+    fc.string(1, 15).filter((str) => /^[A-Za-z]$/.test(str)),
+    fc.string(1, 15).filter((str) => /^[A-Za-z]$/.test(str)),
   ],
   (t, fieldName, fieldValue, fieldValueModifier) => {
     t.true(
       !validatorFns[MATCHES_FIELD](fieldValue, [fieldName], {
         [fieldName]: {
-          rawValue: `${fieldValue}${fieldValueModifier}`
-        }
+          rawValue: `${fieldValue}${fieldValueModifier}`,
+        },
       })
     );
   }
@@ -820,7 +822,7 @@ testProp(
 const testRegexStr = "^[^s@]+@[^s@]+.[^s@]+$";
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test",
-  [fc.string(1, 15).filter(str => new RegExp(testRegexStr).test(str))],
+  [fc.string(1, 15).filter((str) => new RegExp(testRegexStr).test(str))],
   (t, valueThatMatchesRegex) => {
     t.true(validatorFns[MATCHES_REGEX](valueThatMatchesRegex, [testRegexStr], {}));
   }
@@ -828,7 +830,7 @@ testProp(
 
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test",
-  [fc.string(1, 15).filter(str => !new RegExp(testRegexStr).test(str))],
+  [fc.string(1, 15).filter((str) => !new RegExp(testRegexStr).test(str))],
   (t, valueThatDoesNotMatchRegex) => {
     t.true(
       !validatorFns[MATCHES_REGEX](valueThatDoesNotMatchRegex, [testRegexStr], {})
@@ -836,11 +838,11 @@ testProp(
   }
 );
 
-test("matchesRegex accepts when value is empty string", t => {
+test("matchesRegex accepts when value is empty string", (t) => {
   t.is(validatorFns[MATCHES_REGEX]("", ["doesntmatter"], {}), true);
 });
 
-test("matchesField throws an error when form does not include field", t => {
+test("matchesField throws an error when form does not include field", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       { type: MATCHES_FIELD, args: ["foo"], error: MATCHES_FIELD_ERROR },
@@ -870,7 +872,7 @@ testProp(
     fc.integer(0, 9),
     fc.integer(0, 9),
     fc.integer(0, 9),
-    fc.integer(0, 9)
+    fc.integer(0, 9),
   ],
   (t, ...first8Digits) => {
     const validRoutingNumber = `${first8Digits.join("")}${calcCheckSum(
@@ -890,7 +892,7 @@ testProp(
     fc.integer(0, 9),
     fc.integer(0, 9),
     fc.integer(0, 9),
-    fc.integer(0, 9)
+    fc.integer(0, 9),
   ],
   (t, ...first8Digits) => {
     const invalidRoutingNumber = first8Digits.join("");
@@ -898,43 +900,43 @@ testProp(
   }
 );
 
-test("isRoutingNumber validated on empty string", t => {
+test("isRoutingNumber validated on empty string", (t) => {
   t.is(validatorFns[IS_ROUTING_NUMBER]("", [], {}), true);
 });
 
-test("runValidator returns null when validator accepts", t => {
+test("runValidator returns null when validator accepts", (t) => {
   t.is(runValidator({ type: REQUIRED, args: [] }, "foo", {}), null);
 });
 
-test("runValidator returns validator error when validator rejects", t => {
+test("runValidator returns validator error when validator rejects", (t) => {
   t.is(
     runValidator({ type: REQUIRED, args: [], error: REQUIRED_ERROR }, "", {}),
     REQUIRED_ERROR
   );
 });
 
-test("runValidator throws error when validatorFn does not exist", t => {
+test("runValidator throws error when validatorFn does not exist", (t) => {
   const validatorError = t.throws(() =>
     runValidator({ type: "foo", args: [], error: "bar" }, "", {})
   );
   t.is(validatorError.message, runValidatorErrorMessage("foo"));
 });
 
-test("computeErrors returns an empty array when validators accept", t => {
+test("computeErrors returns an empty array when validators accept", (t) => {
   const acceptingForm = {
     foo: {
       rawValue: "12",
       validators: [
         { type: REQUIRED, args: [], error: REQUIRED_ERROR },
         { type: ONLY_INTEGERS, args: [], error: ONLY_INTEGERS_ERROR },
-        { type: NUMBER_LESS_THAN, args: [13], error: NUMBER_LESS_THAN_ERROR }
-      ]
-    }
+        { type: NUMBER_LESS_THAN, args: [13], error: NUMBER_LESS_THAN_ERROR },
+      ],
+    },
   };
   t.deepEqual(computeErrors("foo", acceptingForm), []);
 });
 
-test("computeErrors returns an array of errors for each rejecting validator", t => {
+test("computeErrors returns an array of errors for each rejecting validator", (t) => {
   const rejectingForm = {
     foo: {
       rawValue: "11",
@@ -942,31 +944,31 @@ test("computeErrors returns an array of errors for each rejecting validator", t 
         { type: REQUIRED, args: [], error: REQUIRED_ERROR },
         { type: MATCHES_FIELD, args: ["bar"], error: MATCHES_FIELD_ERROR },
         { type: ONLY_INTEGERS, args: [], error: ONLY_INTEGERS_ERROR },
-        { type: NUMBER_LESS_THAN, args: [10], error: NUMBER_LESS_THAN_ERROR }
-      ]
+        { type: NUMBER_LESS_THAN, args: [10], error: NUMBER_LESS_THAN_ERROR },
+      ],
     },
     bar: {
       rawValue: "12",
-      validators: []
-    }
+      validators: [],
+    },
   };
   t.deepEqual(computeErrors("foo", rejectingForm), [
     MATCHES_FIELD_ERROR,
-    NUMBER_LESS_THAN_ERROR
+    NUMBER_LESS_THAN_ERROR,
   ]);
 });
 
-test("hasLength validator creates valid validator object", t => {
+test("hasLength validator creates valid validator object", (t) => {
   t.is(hasLength.error, HAS_LENGTH_ERROR);
   t.deepEqual(hasLength(1, 10), {
     type: HAS_LENGTH,
     args: [1, 10],
-    error: HAS_LENGTH_ERROR
+    error: HAS_LENGTH_ERROR,
   });
 });
 
 //TODO: Make prop test
-test("hasLength validator returns null when validator accepts", t => {
+test("hasLength validator returns null when validator accepts", (t) => {
   t.is(
     runValidator(
       { type: HAS_LENGTH, args: [1, 10], error: HAS_LENGTH_ERROR },
@@ -977,34 +979,32 @@ test("hasLength validator returns null when validator accepts", t => {
   );
 });
 
-test("dateBeforeToday validator accepts when value is empty string", t => {
+test("dateBeforeToday validator accepts when value is empty string", (t) => {
   t.is(validatorFns[DATE_BEFORE_TODAY]("", ["MM/YY", "month", true], {}), true);
 });
 
-test("dateBeforeToday validator returns error when date is after today", t => {
+test("dateBeforeToday validator returns error when date is after today", (t) => {
   t.is(
     runValidator(
       {
         type: DATE_BEFORE_TODAY,
         args: ["MM/YY", "month", false],
-        error: DATE_BEFORE_TODAY_ERROR
+        error: DATE_BEFORE_TODAY_ERROR,
       },
-      dayjs()
-        .add(5, "month")
-        .format("MM/YY"),
+      dayjs().add(5, "month").format("MM/YY"),
       {}
     ),
     DATE_BEFORE_TODAY_ERROR
   );
 });
 
-test("dateBeforeToday validator passes when inclusive is true and value is same as today", t => {
+test("dateBeforeToday validator passes when inclusive is true and value is same as today", (t) => {
   t.is(
     runValidator(
       {
         type: DATE_BEFORE_TODAY,
         args: ["MM/YY", "month", true],
-        error: DATE_BEFORE_TODAY_ERROR
+        error: DATE_BEFORE_TODAY_ERROR,
       },
       dayjs().format("MM/YY"),
       {}
@@ -1013,13 +1013,13 @@ test("dateBeforeToday validator passes when inclusive is true and value is same 
   );
 });
 
-test("dateBeforeToday validator returns error when inclusive is false and value is same as today", t => {
+test("dateBeforeToday validator returns error when inclusive is false and value is same as today", (t) => {
   t.is(
     runValidator(
       {
         type: DATE_BEFORE_TODAY,
         args: ["MM/YY", "month", false],
-        error: DATE_BEFORE_TODAY_ERROR
+        error: DATE_BEFORE_TODAY_ERROR,
       },
       dayjs().format("MM/YY"),
       {}
@@ -1028,34 +1028,32 @@ test("dateBeforeToday validator returns error when inclusive is false and value 
   );
 });
 
-test("dateAfterToday validator accepts when value is empty string", t => {
+test("dateAfterToday validator accepts when value is empty string", (t) => {
   t.is(validatorFns[DATE_AFTER_TODAY]("", ["MM/YY", "month", true], {}), true);
 });
 
-test("dateAfterToday validator returns error when date is before today", t => {
+test("dateAfterToday validator returns error when date is before today", (t) => {
   t.is(
     runValidator(
       {
         type: DATE_AFTER_TODAY,
         args: ["MM/YY", "month", false],
-        error: DATE_AFTER_TODAY_ERROR
+        error: DATE_AFTER_TODAY_ERROR,
       },
-      dayjs()
-        .subtract(5, "month")
-        .format("MM/YY"),
+      dayjs().subtract(5, "month").format("MM/YY"),
       {}
     ),
     DATE_AFTER_TODAY_ERROR
   );
 });
 
-test("dateAfterToday validator passes when inclusive is true and value is same as today", t => {
+test("dateAfterToday validator passes when inclusive is true and value is same as today", (t) => {
   t.is(
     runValidator(
       {
         type: DATE_AFTER_TODAY,
         args: ["MM/YY", "month", true],
-        error: DATE_AFTER_TODAY_ERROR
+        error: DATE_AFTER_TODAY_ERROR,
       },
       dayjs().format("MM/YY")
     ),
@@ -1063,13 +1061,13 @@ test("dateAfterToday validator passes when inclusive is true and value is same a
   );
 });
 
-test("dateAfterToday validator returns error when inclusive is false and value is same as today", t => {
+test("dateAfterToday validator returns error when inclusive is false and value is same as today", (t) => {
   t.is(
     runValidator(
       {
         type: DATE_AFTER_TODAY,
         args: ["MM/YY", "month", false],
-        error: DATE_AFTER_TODAY_ERROR
+        error: DATE_AFTER_TODAY_ERROR,
       },
       dayjs().format("MM/YY")
     ),
@@ -1077,13 +1075,13 @@ test("dateAfterToday validator returns error when inclusive is false and value i
   );
 });
 
-test("isValidMonth validator throws error when start position resovles to NaN", t => {
+test("isValidMonth validator throws error when start position resovles to NaN", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       {
         type: IS_VALID_MONTH,
         args: ["a"],
-        error: IS_VALID_MONTH_ERROR
+        error: IS_VALID_MONTH_ERROR,
       },
       "01/02/22"
     )
@@ -1094,13 +1092,13 @@ test("isValidMonth validator throws error when start position resovles to NaN", 
   );
 });
 
-test("isValidMonth validator fails when start position is greater than string length", t => {
+test("isValidMonth validator fails when start position is greater than string length", (t) => {
   t.is(
     runValidator(
       {
         type: IS_VALID_MONTH,
         args: ["6"],
-        error: IS_VALID_MONTH_ERROR
+        error: IS_VALID_MONTH_ERROR,
       },
       "01/22"
     ),
@@ -1108,13 +1106,13 @@ test("isValidMonth validator fails when start position is greater than string le
   );
 });
 
-test("isValidMonth validator fails when month is less than 1", t => {
+test("isValidMonth validator fails when month is less than 1", (t) => {
   t.is(
     runValidator(
       {
         type: IS_VALID_MONTH,
         args: ["0"],
-        error: IS_VALID_MONTH_ERROR
+        error: IS_VALID_MONTH_ERROR,
       },
       "00/22"
     ),
@@ -1122,13 +1120,13 @@ test("isValidMonth validator fails when month is less than 1", t => {
   );
 });
 
-test("isValidMonth validator fails when month is negative", t => {
+test("isValidMonth validator fails when month is negative", (t) => {
   t.is(
     runValidator(
       {
         type: IS_VALID_MONTH,
         args: ["0"],
-        error: IS_VALID_MONTH_ERROR
+        error: IS_VALID_MONTH_ERROR,
       },
       "-2104"
     ),
@@ -1136,13 +1134,13 @@ test("isValidMonth validator fails when month is negative", t => {
   );
 });
 
-test("isValidMonth validator fails when month is greater than 12", t => {
+test("isValidMonth validator fails when month is greater than 12", (t) => {
   t.is(
     runValidator(
       {
         type: IS_VALID_MONTH,
         args: ["0"],
-        error: IS_VALID_MONTH_ERROR
+        error: IS_VALID_MONTH_ERROR,
       },
       "9821"
     ),
@@ -1150,13 +1148,13 @@ test("isValidMonth validator fails when month is greater than 12", t => {
   );
 });
 
-test("isValidMonth validator passes with valid month", t => {
+test("isValidMonth validator passes with valid month", (t) => {
   t.is(
     runValidator(
       {
         type: IS_VALID_MONTH,
         args: ["0"],
-        error: IS_VALID_MONTH_ERROR
+        error: IS_VALID_MONTH_ERROR,
       },
       "1021"
     ),
@@ -1164,12 +1162,12 @@ test("isValidMonth validator passes with valid month", t => {
   );
 });
 
-test("hasLength validator accepts when value is empty string", t => {
+test("hasLength validator accepts when value is empty string", (t) => {
   t.is(validatorFns[HAS_LENGTH]("", [1, 10], {}), true);
 });
 
 //TODO: Make prop test
-test("hasLength validator returns error when validator rejects", t => {
+test("hasLength validator returns error when validator rejects", (t) => {
   t.is(
     runValidator(
       { type: HAS_LENGTH, args: [1, 3], error: HAS_LENGTH_ERROR },
@@ -1180,7 +1178,7 @@ test("hasLength validator returns error when validator rejects", t => {
   );
 });
 
-test("hasLength throws error when max or min are not passed", t => {
+test("hasLength throws error when max or min are not passed", (t) => {
   const validatorError = t.throws(() =>
     runValidator({ type: HAS_LENGTH, args: [1], error: HAS_LENGTH_ERROR }, "9", {})
   );
@@ -1197,7 +1195,7 @@ test("hasLength throws error when max or min are not passed", t => {
   );
 });
 
-test("hasLength throws error when max is less than min", t => {
+test("hasLength throws error when max is less than min", (t) => {
   const validatorError = t.throws(() =>
     runValidator(
       { type: HAS_LENGTH, args: [10, 1], error: HAS_LENGTH_ERROR },
@@ -1211,25 +1209,25 @@ test("hasLength throws error when max is less than min", t => {
   );
 });
 
-test("hasNumber validator produces correct validator object", t => {
+test("hasNumber validator produces correct validator object", (t) => {
   t.is(hasNumber.error, HAS_NUMBER_ERROR);
   t.deepEqual(hasNumber(), {
     type: HAS_NUMBER,
     args: [],
-    error: HAS_NUMBER_ERROR
+    error: HAS_NUMBER_ERROR,
   });
 });
 
-test("hasNumber accepts when value is empty string", t => {
+test("hasNumber accepts when value is empty string", (t) => {
   t.is(validatorFns[HAS_NUMBER]("", ["doesntmatter"], {}), true);
 });
 
 testProp(
   "hasNumber rejects string with no numbers",
   [
-    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(!validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {}));
@@ -1239,36 +1237,36 @@ testProp(
 testProp(
   "hasNumber accepts string with number",
   [
-    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(validatorFns[HAS_NUMBER](`${stringA.join("")}`, [], {}));
   }
 );
 
-test("hasLowercaseLetter validator produces correct validator object", t => {
+test("hasLowercaseLetter validator produces correct validator object", (t) => {
   t.is(hasLowercaseLetter.error, HAS_LOWERCASE_LETTER_ERROR);
   t.deepEqual(hasLowercaseLetter(), {
     type: HAS_LOWERCASE_LETTER,
     args: [],
-    error: HAS_LOWERCASE_LETTER_ERROR
+    error: HAS_LOWERCASE_LETTER_ERROR,
   });
 });
 
-test("hasLowercaseLetter accepts when value is empty string", t => {
+test("hasLowercaseLetter accepts when value is empty string", (t) => {
   t.is(validatorFns[HAS_LOWERCASE_LETTER]("", ["doesntmatter"], {}), true);
 });
 
 testProp(
   "hasLowercaseLetter rejects string with with no lowercase letter",
   [
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(!validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {}));
@@ -1278,37 +1276,37 @@ testProp(
 testProp(
   "hasLowercaseLetter accepts string with with a lowercase letter",
   [
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join("")}`, [], {}));
   }
 );
 
-test("hasUppercaseLetter validator produces correct validator object", t => {
+test("hasUppercaseLetter validator produces correct validator object", (t) => {
   t.is(hasUppercaseLetter.error, HAS_UPPERCASE_LETTER_ERROR);
   t.deepEqual(hasUppercaseLetter(), {
     type: HAS_UPPERCASE_LETTER,
     args: [],
-    error: HAS_UPPERCASE_LETTER_ERROR
+    error: HAS_UPPERCASE_LETTER_ERROR,
   });
 });
 
-test("hasUppercaseLetter accepts when value is empty string", t => {
+test("hasUppercaseLetter accepts when value is empty string", (t) => {
   t.is(validatorFns[HAS_UPPERCASE_LETTER]("", ["doesntmatter"], {}), true);
 });
 
 testProp(
   "hasUpperLetter rejects string with with no uppercase letter",
   [
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(!validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {}));
@@ -1318,37 +1316,37 @@ testProp(
 testProp(
   "hasUppercaseLetter accepts string with with a uppercase letter",
   [
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(validatorFns[HAS_UPPERCASE_LETTER](`${stringA.join("")}`, [], {}));
   }
 );
 
-test("hasSpecialCharacter validator produces correct validator object", t => {
+test("hasSpecialCharacter validator produces correct validator object", (t) => {
   t.is(hasSpecialCharacter.error, HAS_SPECIAL_CHARACTER_ERROR);
   t.deepEqual(hasSpecialCharacter(), {
     type: HAS_SPECIAL_CHARACTER,
     args: [],
-    error: HAS_SPECIAL_CHARACTER_ERROR
+    error: HAS_SPECIAL_CHARACTER_ERROR,
   });
 });
 
-test("hasSpecialCharacter accepts when value is empty string", t => {
+test("hasSpecialCharacter accepts when value is empty string", (t) => {
   t.is(validatorFns[HAS_SPECIAL_CHARACTER]("", ["doesntmatter"], {}), true);
 });
 
 testProp(
   "hasSpecialCharacter rejects string with with no special character",
   [
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(!validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {}));
@@ -1358,28 +1356,30 @@ testProp(
 testProp(
   "hasSpecialCharacter accepts string with with a special character",
   [
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[a-z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[0-9]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[A-Z]/.test(c))).filter(s => s !== ""),
-    fc.stringOf(fc.char().filter(c => /[!@#$%^&*.?]/.test(c))).filter(s => s !== "")
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[a-z]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[0-9]/.test(c))).filter((s) => s !== ""),
+    fc.stringOf(fc.char().filter((c) => /[A-Z]/.test(c))).filter((s) => s !== ""),
+    fc
+      .stringOf(fc.char().filter((c) => /[!@#$%^&*.?]/.test(c)))
+      .filter((s) => s !== ""),
   ],
   (t, ...stringA) => {
     t.true(validatorFns[HAS_SPECIAL_CHARACTER](`${stringA.join("")}`, [], {}));
   }
 );
 
-test("isProbablyEmail validator produces correct validator object", t => {
+test("isProbablyEmail validator produces correct validator object", (t) => {
   t.is(isProbablyEmail.error, IS_PROBABLY_EMAIL_ERROR);
   t.deepEqual(isProbablyEmail(), {
     type: IS_PROBABLY_EMAIL,
     args: [],
-    error: IS_PROBABLY_EMAIL_ERROR
+    error: IS_PROBABLY_EMAIL_ERROR,
   });
 });
 
-test("isProbablyEmail accepts when value is empty string", t => {
+test("isProbablyEmail accepts when value is empty string", (t) => {
   t.is(validatorFns[IS_PROBABLY_EMAIL]("", ["doesntmatter"], {}), true);
 });
 
@@ -1387,7 +1387,7 @@ const testRegexEmailString = /^\S+@\S+\.\S+$/;
 
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when passing regex test for isProbablyEmail",
-  [fc.string(1, 15).filter(str => new RegExp(testRegexEmailString).test(str))],
+  [fc.string(1, 15).filter((str) => new RegExp(testRegexEmailString).test(str))],
   (t, valueThatMatchesRegex) => {
     t.true(
       validatorFns[IS_PROBABLY_EMAIL](
@@ -1401,7 +1401,7 @@ testProp(
 
 testProp(
   "regex string passed to matchesRegex matches test result of vanilla JS regex when failing regex test for isProbablyEmail",
-  [fc.string(1, 15).filter(str => !new RegExp(testRegexEmailString).test(str))],
+  [fc.string(1, 15).filter((str) => !new RegExp(testRegexEmailString).test(str))],
   (t, valueThatDoesNotMatchRegex) => {
     t.true(
       !validatorFns[IS_PROBABLY_EMAIL](

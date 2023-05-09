@@ -125,7 +125,7 @@ validatorFns[MATCHES_FIELD] = (value, args, form) => {
   return value === dependentFieldValue;
 };
 
-export const validateWhenErrorMessage = type =>
+export const validateWhenErrorMessage = (type) =>
   `${type} was passed to validateWhen, but that validator type does not exist.
   Please check that you are only calling validator creator functions exported from
   redux-freeform in your form config and that you didn't forget to
@@ -138,7 +138,7 @@ export const VALIDATE_WHEN_ERROR = "error/VALIDATE_WHEN";
 const validateWhen = (dependentValidator, primaryValidator, optionalFieldName) => ({
   type: VALIDATE_WHEN,
   args: [dependentValidator, primaryValidator, optionalFieldName],
-  error: dependentValidator.error
+  error: dependentValidator.error,
 });
 validateWhen.error = VALIDATE_WHEN_ERROR;
 export { validateWhen };
@@ -176,7 +176,7 @@ validatorFns[VALIDATE_WHEN] = (value, args, form) => {
     : true;
 };
 
-export const validateSumErrorMessage = type =>
+export const validateSumErrorMessage = (type) =>
   `${type} was passed to validateSum, but that validator type does not exist.
   Please check that you are only calling validator creator functions exported from
   redux-freeform in your form config and that you didn't forget to
@@ -187,7 +187,7 @@ export const VALIDATE_SUM_ERROR = "error/VALIDATE_SUM";
 const validateSum = (validator, fieldNamesArray) => ({
   type: VALIDATE_SUM,
   args: [validator, fieldNamesArray],
-  error: validator.error
+  error: validator.error,
 });
 validateSum.error = VALIDATE_SUM_ERROR;
 export { validateSum };
@@ -344,7 +344,7 @@ validatorFns[IS_ROUTING_NUMBER] = (value, args, form) => {
   }
   const sum = value
     .split("")
-    .map(ch => parseInt(ch))
+    .map((ch) => parseInt(ch))
     .reduce((acc, cur, idx) => {
       switch (idx % 3) {
         case 0:
@@ -420,7 +420,7 @@ validatorFns[IS_PROBABLY_EMAIL] = (value, args, form) => {
   return new RegExp(/^\S+@\S+\.\S+$/).test(value);
 };
 
-export const runValidatorErrorMessage = type =>
+export const runValidatorErrorMessage = (type) =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator creator functions exported from 
   redux-freeform in your form config and that you didn't forget to 
@@ -437,8 +437,8 @@ export const runValidator = (validator, value, form) => {
 
 const runFormValidators = (fieldName, form, validators) => {
   return validators
-    .map(v => runValidator(v, form[fieldName].rawValue, form))
-    .filter(x => x !== null);
+    .map((v) => runValidator(v, form[fieldName].rawValue, form))
+    .filter((x) => x !== null);
 };
 
 export const computeConstraints = (fieldName, form) => {
@@ -451,7 +451,7 @@ export const computeErrors = (fieldName, form) => {
   return runFormValidators(fieldName, form, validators);
 };
 
-export const computeErrorEntries = formState => {
+export const computeErrorEntries = (formState) => {
   const fields = Object.entries(formState);
   for (let entry of fields) {
     let fieldName = entry[0];

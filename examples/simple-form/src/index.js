@@ -3,11 +3,7 @@ import ReactDOM from "react-dom";
 import { createStore } from "redux";
 
 import SimpleForm from "./SimpleForm";
-import {
-  mapStateToProps,
-  reducer,
-  mapDispatchToProps
-} from "./SimpleForm.state";
+import { mapStateToProps, reducer, mapDispatchToProps } from "./SimpleForm.state";
 
 const store = createStore(
   reducer,

@@ -5,19 +5,17 @@ const InputField = ({
   labelTextWhenNoError,
   field,
   fieldActions,
-  errorMessages
+  errorMessages,
 }) => (
   <div>
     <div>
       <label>
-        {field.hasErrors
-          ? errorMessages[field.errors[0]]
-          : labelTextWhenNoError}
+        {field.hasErrors ? errorMessages[field.errors[0]] : labelTextWhenNoError}
       </label>
     </div>
     <input
       value={field.rawValue}
-      onChange={e => fieldActions.set(e.target.value)}
+      onChange={(e) => fieldActions.set(e.target.value)}
     />
     {!field.dirty && " ✴️"}
     {field.dirty && field.hasErrors && " ❌"}
@@ -27,20 +25,21 @@ const InputField = ({
 );
 
 const ProfilingForm = ({ actions, fields, addValidationProp }) => {
-  
   useEffect(() => {
-    if(addValidationProp) {
-      Object.keys(actions.fields).map(fieldName => actions.fields[fieldName].addValidator(hasLength(3,4)))
+    if (addValidationProp) {
+      Object.keys(actions.fields).map((fieldName) =>
+        actions.fields[fieldName].addValidator(hasLength(3, 4))
+      );
     }
-  }, [actions.fields])
+  }, [actions.fields]);
 
   const fieldErrorMessages = {
     [required.error]: "required",
     [matchesField.error]: "must match",
-    [hasLength.error]: "must have correct length"
+    [hasLength.error]: "must have correct length",
   };
 
-  const fieldComponents = Object.keys(fields).map(fieldName => (
+  const fieldComponents = Object.keys(fields).map((fieldName) => (
     <InputField
       key={fieldName}
       labelTextWhenNoError={fieldName}
