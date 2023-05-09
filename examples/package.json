@@ -2,26 +2,25 @@
   "name": "simple-form",
   "version": "1.0.0",
   "description": "Example of building a form using redux-freeform",
-  "main": "index.js",
   "author": "Citybase Inc",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html",
-    "start-prod": "parcel build index.html && serve ./dist/"
+    "start": "parcel index.html --no-cache ",
+    "build": "parcel build --no-scope-hoist --no-cache index.html --dist-dir dist/"
   },
   "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "redux": "^4.0.1",
-    "redux-devtools-extension": "^2.13.8",
-    "redux-freeform": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "redux": "^4.2.1",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-freeform": "^5.7.0",
     "validation": "^0.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
     "babel": "^6.23.0",
-    "parcel-bundler": "^1.12.3"
+    "parcel": "^2.8.3"
   },
   "resolutions": {
     "acorn": "^6.4.1",
