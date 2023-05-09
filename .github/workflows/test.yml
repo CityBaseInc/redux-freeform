@@ -15,4 +15,9 @@ jobs:
       - name: yarn coverage
         run: |
           yarn coverage
-
+      - name: yarn format-check
+        run: |
+          yarn format-check
+      - name: yarn lint
+        run: |
+          yarn lint
