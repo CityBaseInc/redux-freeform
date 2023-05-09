@@ -1,4 +1,6 @@
 node_modules/*
-website/*
 dist/*
-examples/*
+
+examples/
+  dist/*
+  node_modules/*
