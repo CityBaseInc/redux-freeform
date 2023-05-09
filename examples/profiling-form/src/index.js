@@ -15,6 +15,7 @@ const timedReducer = (...args) => {
 const store = createStore(timedReducer);
 const rootEl = document.getElementById("profiling-form");
 const render = () =>
+  // eslint-disable-next-line react/no-render-return-value
   ReactDOM.render(
     <ProfilingForm
       {...mapStateToProps(store.getState())}

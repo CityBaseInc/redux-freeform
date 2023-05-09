@@ -9,16 +9,16 @@ export default [
     output: {
       name: "redux-freeform",
       file: pkg.browser,
-      format: "umd"
+      format: "umd",
     },
-    plugins: [nodeResolve(), commonjs()]
+    plugins: [nodeResolve(), commonjs()],
   },
   {
     input: "src/index.js",
     output: [
       { file: pkg.main, format: "cjs" },
-      { file: pkg.module, format: "es" }
+      { file: pkg.module, format: "es" },
     ],
-    plugins: [nodeResolve(), commonjs()]
-  }
+    plugins: [nodeResolve(), commonjs()],
+  },
 ];
