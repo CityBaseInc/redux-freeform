@@ -1,6 +1,1 @@
-node_modules/*
-dist/*
-
-examples/
-  dist/*
-  node_modules/*
+**/dist/*

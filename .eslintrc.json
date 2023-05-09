@@ -4,7 +4,7 @@
     "plugin:prettier/recommended",
     "plugin:react/recommended"
   ],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "react"],
   "parser": "@babel/eslint-parser",
   "rules": {
     "prettier/prettier": "error",
@@ -12,11 +12,16 @@
     "react/prop-types": "off"
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
+    "sourceType": "module",
+    "babelOptions": {
+       "presets": ["@babel/preset-react"]
+    },
+    "requireConfigFile": false
   },
   "settings": {
     "react": {
