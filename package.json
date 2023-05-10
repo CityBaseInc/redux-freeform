@@ -1,6 +1,6 @@
 {
   "name": "redux-freeform",
-  "version": "5.8.0-beta.0",
+  "version": "5.8.0-beta.1",
   "description": "A small Redux form library that supports purely functional apps, without magic",
   "main": "dist/redux-freeform.cjs.js",
   "module": "dist/redux-freeform.esm.js",
@@ -18,8 +18,8 @@
     "coverage": "echo 'to be implemented'"
   },
   "dependencies": {
-    "acorn": "^6.4.1",
-    "dayjs": "^1.10.7",
+    "acorn": "^8.8.2",
+    "dayjs": "^1.11.7",
     "immer": "^9.0.21"
   },
   "devDependencies": {
