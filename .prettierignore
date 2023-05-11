@@ -1,0 +1,16 @@
+# Ignore artifacts:
+coverage
+dist
+
+# Ignore config files:
+.*
+babel.config.json
+
+# Ignore supporting files:
+.github
+chart
+docs
+nginx
+
+# Ignore external dependencies:
+node_modules

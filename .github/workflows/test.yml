@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: yarn install
         run: |
           yarn install
@@ -15,4 +15,9 @@ jobs:
       - name: yarn coverage
         run: |
           yarn coverage
-
+      - name: yarn format-check
+        run: |
+          yarn format-check
+      - name: yarn lint
+        run: |
+          yarn lint

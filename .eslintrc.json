@@ -1,17 +1,31 @@
 {
-  "extends": ["plugin:prettier/recommended", "plugin:react/recommended"],
-  "plugins": ["prettier"],
-  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": ["prettier", "react"],
+  "parser": "@babel/eslint-parser",
   "rules": {
     "prettier/prettier": "error",
     "no-unused-vars": 2,
-    "react/prop-types": 0
+    "react/prop-types": "off"
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
+    "sourceType": "module",
+    "babelOptions": {
+       "presets": ["@babel/preset-react"]
+    },
+    "requireConfigFile": false
+  },
+  "settings": {
+    "react": {
+      "version": "18.2.0"
+    }
   }
 }

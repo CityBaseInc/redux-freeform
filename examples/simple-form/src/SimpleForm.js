@@ -4,68 +4,66 @@ import {
   onlyIntegers,
   numberLessThan,
   hasLength,
-  matchesRegex
-} from "redux-freeform";
-import React from "react";
+  matchesRegex,
+} from 'redux-freeform';
+import React from 'react';
 
 const nameFieldErrorMessages = {
-  [required.error]: "name is required"
+  [required.error]: 'name is required',
 };
 const confirmNameFieldErrorMessages = {
-  [required.error]: "confirm name is required",
-  [matchesField.error]: "confirm name must match name"
+  [required.error]: 'confirm name is required',
+  [matchesField.error]: 'confirm name must match name',
 };
 const ageFieldErrorMessages = {
-  [required.error]: "age is required",
-  [onlyIntegers.error]: "age must be a whole number",
-  [numberLessThan.error]: "age must be less than 99"
+  [required.error]: 'age is required',
+  [onlyIntegers.error]: 'age must be a whole number',
+  [numberLessThan.error]: 'age must be less than 99',
 };
 const maritalStatusErrorMessages = {
-  [required.error]: "marital status is required when over 18"
+  [required.error]: 'marital status is required when over 18',
 };
 const fourDigitCodeErrorMessages = {
-  [required.error]: "four digit code is required",
-  [hasLength.error]: "four digit code must be 4 numbers"
+  [required.error]: 'four digit code is required',
+  [hasLength.error]: 'four digit code must be 4 numbers',
 };
 const matchesRegexError = {
-  [required.error]: "email is required",
-  [matchesRegex.error]: "email is invalid"
+  [required.error]: 'email is required',
+  [matchesRegex.error]: 'email is invalid',
 };
 const animalError = {
-  [required.error]: "animal type is required"
+  [required.error]: 'animal type is required',
 };
-const animalNoiseError = a => ({
+const animalNoiseError = (a) => ({
   [matchesRegex.error]: `that's not what a ${a} sounds like`,
-  [required.error]: `animal noise is required`
+  [required.error]: `animal noise is required`,
 });
 const numberOfDogsError = {
-  [numberLessThan.error]: "Number of cats and dogs cannot exceed 5."
+  [numberLessThan.error]: 'Number of cats and dogs cannot exceed 5.',
 };
 const numberOfCatsError = {
-  [numberLessThan.error]: "Number of cats and dogs cannot exceed 5."
+  [numberLessThan.error]: 'Number of cats and dogs cannot exceed 5.',
 };
 
 const InputField = ({
   labelTextWhenNoError,
   field,
   fieldActions,
-  errorMessages
+  errorMessages,
 }) => (
   <div>
     <div>
       <label>
-        {field.hasErrors
-          ? errorMessages[field.errors[0]]
-          : labelTextWhenNoError}
+        {field.hasErrors ? errorMessages[field.errors[0]] : labelTextWhenNoError}
       </label>
     </div>
     <input
       value={field.rawValue}
-      onChange={e => fieldActions.set(e.target.value)}
+      onChange={(e) => fieldActions.set(e.target.value)}
     />
-    {!field.dirty && " ✴️"}
-    {field.dirty && field.hasErrors && " ❌"}
-    {field.dirty && !field.hasErrors && " ✅"}
+    {!field.dirty && ' ✴️'}
+    {field.dirty && field.hasErrors && ' ❌'}
+    {field.dirty && !field.hasErrors && ' ✅'}
     <p />
   </div>
 );
@@ -75,29 +73,27 @@ const InputDropDown = ({
   field,
   fieldActions,
   errorMessages,
-  choices
+  choices,
 }) => (
   <div>
     <div>
       <label>
-        {field.hasErrors
-          ? errorMessages[field.errors[0]]
-          : labelTextWhenNoError}
+        {field.hasErrors ? errorMessages[field.errors[0]] : labelTextWhenNoError}
       </label>
     </div>
     <select
       value={field.rawValue}
-      onChange={e => fieldActions.set(e.target.value)}
+      onChange={(e) => fieldActions.set(e.target.value)}
     >
-      {choices.map(c => (
+      {choices.map((c) => (
         <option key={c} value={c}>
           {c}
         </option>
       ))}
     </select>
-    {!field.dirty && " ✴️"}
-    {field.dirty && field.hasErrors && " ❌"}
-    {field.dirty && !field.hasErrors && " ✅"}
+    {!field.dirty && ' ✴️'}
+    {field.dirty && field.hasErrors && ' ❌'}
+    {field.dirty && !field.hasErrors && ' ✅'}
     <p />
   </div>
 );
@@ -145,7 +141,7 @@ const SimpleForm = ({ actions, fields }) => (
       fieldActions={actions.fields.animal}
       labelTextWhenNoError="animal"
       errorMessages={animalError}
-      choices={["dog", "cat", "cow"]}
+      choices={['dog', 'cat', 'cow']}
     />
     <InputField
       field={fields.animalNoise}
