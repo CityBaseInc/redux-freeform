@@ -1,10 +1,10 @@
-import produce from "immer";
+import produce from 'immer';
 import {
   computeConstraints,
   computeDirtyEntries,
   computeErrorEntries,
   computeErrors,
-} from "./validation";
+} from './validation';
 
 export const createInitialState = (formConfig) => {
   let initialForm = {};
@@ -12,7 +12,7 @@ export const createInitialState = (formConfig) => {
   for (let formKey of formConfigKeys) {
     initialForm[formKey] = {
       dirty: false,
-      rawValue: formConfig[formKey].defaultValue || "",
+      rawValue: formConfig[formKey].defaultValue || '',
       validators: formConfig[formKey].validators || [],
       constraints: formConfig[formKey].constraints || [],
     };
@@ -29,28 +29,28 @@ export const createInitialState = (formConfig) => {
   return initialForm;
 };
 
-export const SET = "field/SET";
+export const SET = 'field/SET';
 export const set = (fieldName) => (value) => ({
   type: SET,
   payload: { fieldName, value },
 });
 
-export const CLEAR = "form/CLEAR";
+export const CLEAR = 'form/CLEAR';
 export const clear = () => ({ type: CLEAR });
 
-export const ADD_VALIDATOR = "field/ADD_VALIDATOR";
+export const ADD_VALIDATOR = 'field/ADD_VALIDATOR';
 export const addValidator = (fieldName) => (validator) => ({
   type: ADD_VALIDATOR,
   payload: { fieldName, validator },
 });
 
-export const REMOVE_VALIDATOR = "field/REMOVE_VALIDATOR";
+export const REMOVE_VALIDATOR = 'field/REMOVE_VALIDATOR';
 export const removeValidator = (fieldName) => (validator) => ({
   type: REMOVE_VALIDATOR,
   payload: { fieldName, validator },
 });
 
-export const CLEAR_FIELD_VALIDATORS = "field/CLEAR_FIELD_VALIDATORS";
+export const CLEAR_FIELD_VALIDATORS = 'field/CLEAR_FIELD_VALIDATORS';
 export const clearFieldValidators = (fieldName) => () => ({
   type: CLEAR_FIELD_VALIDATORS,
   payload: { fieldName },

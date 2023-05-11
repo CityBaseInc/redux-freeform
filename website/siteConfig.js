@@ -12,65 +12,65 @@
 const users = [];
 
 const siteConfig = {
-  title: "Redux Freeform", // Title for your website.
-  tagline: "A form state management library",
-  url: "https://citybaseinc.github.io", // Your website URL
-  baseUrl: "/redux-freeform/", // Base URL for your project */
+  title: 'Redux Freeform', // Title for your website.
+  tagline: 'A form state management library',
+  url: 'https://citybaseinc.github.io', // Your website URL
+  baseUrl: '/redux-freeform/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: "redux-freeform",
-  organizationName: "CityBaseInc",
+  projectName: 'redux-freeform',
+  organizationName: 'CityBaseInc',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { href: "https://github.com/CityBaseInc/redux-freeform", label: "GitHub" },
+    { href: 'https://github.com/CityBaseInc/redux-freeform', label: 'GitHub' },
   ],
 
   // If you have users set above, you add it here:
   users,
 
   /* path to images for header/footer */
-  headerIcon: "img/redux-freeform_logo.svg",
-  footerIcon: "img/redux-freeform_logo.svg",
-  favicon: "img/favicon.ico",
+  headerIcon: 'img/redux-freeform_logo.svg',
+  footerIcon: 'img/redux-freeform_logo.svg',
+  favicon: 'img/favicon.ico',
 
   /* Colors for website */
   colors: {
-    primaryColor: "#27a9e1",
-    secondaryColor: "#3b414d",
+    primaryColor: '#27a9e1',
+    secondaryColor: '#3b414d',
   },
 
   fonts: {
-    headerFont: ["Montserrat", "sans-serif"],
-    subheadFont: ["Source Sans Pro", "sans-serif"],
-    bodyFont: ["Source Sans Pro", "sans-serif"],
+    headerFont: ['Montserrat', 'sans-serif'],
+    subheadFont: ['Source Sans Pro', 'sans-serif'],
+    bodyFont: ['Source Sans Pro', 'sans-serif'],
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
   copyright: `Copyright © ${new Date().getFullYear()} CityBaseInc`,
 
-  usePrism: ["jsx", "javascript"],
+  usePrism: ['jsx', 'javascript'],
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ["https://buttons.github.io/buttons.js"],
+  scripts: ['https://buttons.github.io/buttons.js'],
 
   // On page navigation for the current documentation page.
-  onPageNav: "separate",
+  onPageNav: 'separate',
   // No .html extensions for paths.
   cleanUrl: true,
 
   // Open Graph and Twitter card images.
-  ogImage: "img/undraw_online.svg",
-  twitterImage: "img/undraw_tweetstorm.svg",
+  ogImage: 'img/undraw_online.svg',
+  twitterImage: 'img/undraw_tweetstorm.svg',
 
   stylesheets: [
-    "https://fonts.googleapis.com/css?family=Montserrat|Source+Sans+Pro&display=swap",
+    'https://fonts.googleapis.com/css?family=Montserrat|Source+Sans+Pro&display=swap',
   ],
 
   // For sites with a sizable amount of content, set collapsible to true.

@@ -1,7 +1,7 @@
-import { createFormState, matchesField, required } from "redux-freeform";
+import { createFormState, matchesField, required } from 'redux-freeform';
 
 let formConfig = {};
-formConfig["field-0"] = {
+formConfig['field-0'] = {
   validators: [required()],
 };
 for (let i = 1; i < 1000; i++) {

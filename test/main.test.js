@@ -1,7 +1,7 @@
-import test from "ava";
-import { testProp, fc } from "ava-fast-check";
+import test from 'ava';
+import { testProp, fc } from 'ava-fast-check';
 
-import { fieldNameGen, initializeReducer } from "./util";
+import { fieldNameGen, initializeReducer } from './util';
 
 import {
   createInitialState,
@@ -16,7 +16,7 @@ import {
   ADD_VALIDATOR,
   REMOVE_VALIDATOR,
   CLEAR_FIELD_VALIDATORS,
-} from "../src/main";
+} from '../src/main';
 import {
   REQUIRED,
   REQUIRED_ERROR,
@@ -26,7 +26,7 @@ import {
   ONLY_INTEGERS_ERROR,
   HAS_LENGTH,
   HAS_LENGTH_ERROR,
-} from "../src/validation";
+} from '../src/validation';
 
 const exampleRequiredField = {
   validators: [
@@ -48,15 +48,15 @@ const validatorFixture = {
   error: HAS_LENGTH_ERROR,
 };
 
-test("createFormState produces an object with valid state keys", (t) => {
+test('createFormState produces an object with valid state keys', (t) => {
   t.deepEqual(
     Object.keys(createFormState(formConfig)).sort(),
-    ["reducer", "mapDispatchToProps", "mapStateToProps"].sort()
+    ['reducer', 'mapDispatchToProps', 'mapStateToProps'].sort()
   );
 });
 
 testProp(
-  "set creates returns an action creator that returns a valid action",
+  'set creates returns an action creator that returns a valid action',
   [fieldNameGen(), fc.string()],
   (t, fieldName, fieldValue) => {
     const action = set(fieldName)(fieldValue);
@@ -68,10 +68,10 @@ testProp(
   }
 );
 
-test("createInitialState takes a formConfig and returns a valid formState", (t) => {
+test('createInitialState takes a formConfig and returns a valid formState', (t) => {
   const expectedFormState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -88,11 +88,11 @@ test("createInitialState takes a formConfig and returns a valid formState", (t) 
   t.deepEqual(createInitialState(formConfig), expectedFormState);
 });
 
-test("createFormReducer returns a valid form reducer", (t) => {
+test('createFormReducer returns a valid form reducer', (t) => {
   const formReducer = createFormReducer(formConfig);
   const expectedInitialState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -109,12 +109,12 @@ test("createFormReducer returns a valid form reducer", (t) => {
   t.deepEqual(initializeReducer(formReducer), expectedInitialState);
 });
 
-test("reducer set action updates correct field", (t) => {
+test('reducer set action updates correct field', (t) => {
   const formReducer = createFormReducer(formConfig);
   const initialState = initializeReducer(formReducer);
   const expectedState = {
     foo: {
-      rawValue: "bar",
+      rawValue: 'bar',
       validators: [
         {
           type: REQUIRED,
@@ -131,20 +131,20 @@ test("reducer set action updates correct field", (t) => {
   t.deepEqual(
     formReducer(initialState, {
       type: SET,
-      payload: { fieldName: "foo", value: "bar" },
+      payload: { fieldName: 'foo', value: 'bar' },
     }),
     expectedState
   );
 });
 
-test("reducer set action re-validates dependent field", (t) => {
+test('reducer set action re-validates dependent field', (t) => {
   const extendedFormConfig = {
     ...formConfig,
     matchesFoo: {
       validators: [
         {
           type: MATCHES_FIELD,
-          args: ["foo"],
+          args: ['foo'],
           error: MATCHES_FIELD_ERROR,
         },
       ],
@@ -154,7 +154,7 @@ test("reducer set action re-validates dependent field", (t) => {
   const initialState = initializeReducer(formReducer);
   const expectedInitialState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -168,11 +168,11 @@ test("reducer set action re-validates dependent field", (t) => {
       dirty: false,
     },
     matchesFoo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: MATCHES_FIELD,
-          args: ["foo"],
+          args: ['foo'],
           error: MATCHES_FIELD_ERROR,
         },
       ],
@@ -183,10 +183,10 @@ test("reducer set action re-validates dependent field", (t) => {
     },
   };
   t.deepEqual(expectedInitialState, initialState);
-  initialState.matchesFoo.rawValue = "baz";
+  initialState.matchesFoo.rawValue = 'baz';
   const expectedState = {
     foo: {
-      rawValue: "bar",
+      rawValue: 'bar',
       validators: [
         {
           type: REQUIRED,
@@ -200,11 +200,11 @@ test("reducer set action re-validates dependent field", (t) => {
       dirty: true,
     },
     matchesFoo: {
-      rawValue: "baz",
+      rawValue: 'baz',
       validators: [
         {
           type: MATCHES_FIELD,
-          args: ["foo"],
+          args: ['foo'],
           error: MATCHES_FIELD_ERROR,
         },
       ],
@@ -218,37 +218,37 @@ test("reducer set action re-validates dependent field", (t) => {
     expectedState,
     formReducer(initialState, {
       type: SET,
-      payload: { fieldName: "foo", value: "bar" },
+      payload: { fieldName: 'foo', value: 'bar' },
     })
   );
 });
 
-test("createMapDispatchToProps returns valid action creators", (t) => {
+test('createMapDispatchToProps returns valid action creators', (t) => {
   const extendedFormConfig = {
     ...formConfig,
     bax: exampleRequiredField,
     baz: exampleRequiredField,
   };
   const dispatchObj = createMapDispatchToProps(extendedFormConfig)((x) => x);
-  t.deepEqual(dispatchObj.actions.fields.foo.set("bar1"), set("foo")("bar1"));
-  t.deepEqual(dispatchObj.actions.fields.bax.set("bar2"), set("bax")("bar2"));
-  t.deepEqual(dispatchObj.actions.fields.baz.set("bar3"), set("baz")("bar3"));
+  t.deepEqual(dispatchObj.actions.fields.foo.set('bar1'), set('foo')('bar1'));
+  t.deepEqual(dispatchObj.actions.fields.bax.set('bar2'), set('bax')('bar2'));
+  t.deepEqual(dispatchObj.actions.fields.baz.set('bar3'), set('baz')('bar3'));
   t.deepEqual(dispatchObj.actions.form.clear(), clear());
   t.deepEqual(
     dispatchObj.actions.fields.foo.addValidator(validatorFixture),
-    addValidator("foo")(validatorFixture)
+    addValidator('foo')(validatorFixture)
   );
   t.deepEqual(
     dispatchObj.actions.fields.bax.addValidator(validatorFixture),
-    addValidator("bax")(validatorFixture)
+    addValidator('bax')(validatorFixture)
   );
   t.deepEqual(
     dispatchObj.actions.fields.baz.addValidator(validatorFixture),
-    addValidator("baz")(validatorFixture)
+    addValidator('baz')(validatorFixture)
   );
 });
 
-test("createMapDispatchToProps returns a memoized fn", (t) => {
+test('createMapDispatchToProps returns a memoized fn', (t) => {
   const fnA = (x) => x;
   const fnB = (x) => x;
   const mapDispatchToProps = createMapDispatchToProps(formConfig);
@@ -257,7 +257,7 @@ test("createMapDispatchToProps returns a memoized fn", (t) => {
   t.not(mapDispatchToProps(fnA), mapDispatchToProps(fnB));
 });
 
-test("unable to make change that violates constraints", (t) => {
+test('unable to make change that violates constraints', (t) => {
   const _formConfig = {
     foo: {
       constraints: [
@@ -271,10 +271,10 @@ test("unable to make change that violates constraints", (t) => {
   };
   const formReducer = createFormReducer(_formConfig);
   const initialState = initializeReducer(formReducer);
-  t.deepEqual(initialState, formReducer(initialState, set("foo")("a")));
+  t.deepEqual(initialState, formReducer(initialState, set('foo')('a')));
 });
 
-test("able to make change that does not violate constraints", (t) => {
+test('able to make change that does not violate constraints', (t) => {
   const _formConfig = {
     foo: {
       constraints: [
@@ -291,7 +291,7 @@ test("able to make change that does not violate constraints", (t) => {
   const expectedState = {
     foo: {
       errors: [],
-      rawValue: "1",
+      rawValue: '1',
       constraints: [
         {
           type: ONLY_INTEGERS,
@@ -304,13 +304,13 @@ test("able to make change that does not violate constraints", (t) => {
       dirty: true,
     },
   };
-  t.deepEqual(expectedState, formReducer(initialState, set("foo")("1")));
+  t.deepEqual(expectedState, formReducer(initialState, set('foo')('1')));
 });
 
-test("reducer clear action updates form to have a cleared state", (t) => {
+test('reducer clear action updates form to have a cleared state', (t) => {
   const formState = {
     foo: {
-      rawValue: "bar",
+      rawValue: 'bar',
       validators: [
         {
           type: REQUIRED,
@@ -328,7 +328,7 @@ test("reducer clear action updates form to have a cleared state", (t) => {
   const initialState = initializeReducer(formReducer);
   const clearedFormState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -345,12 +345,12 @@ test("reducer clear action updates form to have a cleared state", (t) => {
   t.deepEqual(formReducer(initialState, { type: CLEAR }), clearedFormState);
 });
 
-test("reducer add validator action updates correct field", (t) => {
+test('reducer add validator action updates correct field', (t) => {
   const formReducer = createFormReducer(formConfig);
   const initialState = initializeReducer(formReducer);
   const expectedState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -373,7 +373,7 @@ test("reducer add validator action updates correct field", (t) => {
     formReducer(initialState, {
       type: ADD_VALIDATOR,
       payload: {
-        fieldName: "foo",
+        fieldName: 'foo',
         validator: {
           type: HAS_LENGTH,
           args: [3, 4],
@@ -385,7 +385,7 @@ test("reducer add validator action updates correct field", (t) => {
   );
 });
 
-test("reducer remove validator action updates correct field", (t) => {
+test('reducer remove validator action updates correct field', (t) => {
   const formReducer = createFormReducer({
     foo: {
       validators: [
@@ -405,7 +405,7 @@ test("reducer remove validator action updates correct field", (t) => {
   const initialState = initializeReducer(formReducer);
   const expectedState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -423,7 +423,7 @@ test("reducer remove validator action updates correct field", (t) => {
     formReducer(initialState, {
       type: REMOVE_VALIDATOR,
       payload: {
-        fieldName: "foo",
+        fieldName: 'foo',
         validator: {
           type: HAS_LENGTH,
           args: [3, 4],
@@ -435,7 +435,7 @@ test("reducer remove validator action updates correct field", (t) => {
   );
 });
 
-test("reducer remove validator action performs no changes if no validator to remove is found", (t) => {
+test('reducer remove validator action performs no changes if no validator to remove is found', (t) => {
   const formReducer = createFormReducer({
     foo: {
       validators: [
@@ -452,7 +452,7 @@ test("reducer remove validator action performs no changes if no validator to rem
   const initialState = initializeReducer(formReducer);
   const expectedState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [
         {
           type: REQUIRED,
@@ -470,7 +470,7 @@ test("reducer remove validator action performs no changes if no validator to rem
     formReducer(initialState, {
       type: REMOVE_VALIDATOR,
       payload: {
-        fieldName: "foo",
+        fieldName: 'foo',
         validator: {
           type: HAS_LENGTH,
           args: [3, 4],
@@ -482,12 +482,12 @@ test("reducer remove validator action performs no changes if no validator to rem
   );
 });
 
-test("reducer clear field validators action removes all validators from a field", (t) => {
+test('reducer clear field validators action removes all validators from a field', (t) => {
   const formReducer = createFormReducer(formConfig);
   const initialState = initializeReducer(formReducer);
   const expectedState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [],
       constraints: [],
       errors: [],
@@ -498,13 +498,13 @@ test("reducer clear field validators action removes all validators from a field"
   t.deepEqual(
     formReducer(initialState, {
       type: CLEAR_FIELD_VALIDATORS,
-      payload: { fieldName: "foo" },
+      payload: { fieldName: 'foo' },
     }),
     expectedState
   );
 });
 
-test("reducer clear field validators action performs no changes when there are no validators or errors to clear", (t) => {
+test('reducer clear field validators action performs no changes when there are no validators or errors to clear', (t) => {
   const formReducer = createFormReducer({
     foo: {
       validators: [],
@@ -515,7 +515,7 @@ test("reducer clear field validators action performs no changes when there are n
   const initialState = initializeReducer(formReducer);
   const expectedState = {
     foo: {
-      rawValue: "",
+      rawValue: '',
       validators: [],
       constraints: [],
       errors: [],
@@ -526,7 +526,7 @@ test("reducer clear field validators action performs no changes when there are n
   t.deepEqual(
     formReducer(initialState, {
       type: CLEAR_FIELD_VALIDATORS,
-      payload: { fieldName: "foo" },
+      payload: { fieldName: 'foo' },
     }),
     expectedState
   );
