@@ -56,3 +56,10 @@ const { reducer, mapStateToProps, mapDispatchToProps } = createFormState(
   formConfig
 );
 ```
+
+## Testing
+
+Ava is the test runner for Redux Freeform. 
+
+- To run tests locally: `yarn run test`
+- To check test coverage locally: `yarn run coverage`
