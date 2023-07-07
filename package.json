@@ -1,6 +1,6 @@
 {
   "name": "redux-freeform",
-  "version": "5.8.0",
+  "version": "5.8.1",
   "description": "A small Redux form library that supports purely functional apps, without magic",
   "main": "dist/redux-freeform.cjs.js",
   "module": "dist/redux-freeform.esm.js",
@@ -15,7 +15,7 @@
     "format": "prettier --write \"{src,examples,website,test}/**/*.js\" && eslint ./ --ext .js,.jsx,.ts,.tsx --fix",
     "format-check": "prettier --check \"{src,examples,website,test}/**/*.js\"",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx",
-    "coverage": "echo 'to be implemented'"
+    "coverage": "nyc --reporter=lcov --reporter=text ava && nyc check-coverage --per-file=true"
   },
   "dependencies": {
     "acorn": "^8.8.2",
