@@ -70,6 +70,9 @@ import {
   IS_PROBABLY_EMAIL_ERROR,
   IS_VALID_MONTH,
   IS_VALID_MONTH_ERROR,
+  validName,
+  VALID_NAME,
+  VALID_NAME_ERROR,
 } from '../src/validation';
 
 test('required validator produces correct validator object', (t) => {
@@ -1286,6 +1289,55 @@ testProp(
     t.true(validatorFns[HAS_LOWERCASE_LETTER](`${stringA.join('')}`, [], {}));
   }
 );
+
+/**
+ * Tests for validName
+ */
+test('validName validator produces correct validator object', (t) => {
+  const invalidNameString = ` `;
+  t.is(validName.error, VALID_NAME_ERROR);
+  t.deepEqual(validName(invalidNameString), {
+    type: VALID_NAME,
+    args: [invalidNameString],
+    error: VALID_NAME_ERROR,
+  });
+});
+
+test('validName validator accepts when value is valid name', (t) => {
+  const validNameStrings = [
+    'John Smith',
+    'Nancy Moore-Klêne',
+    'Jien Xi',
+    'Brandon D. Jones',
+    'Ashley Q. W. McLeary',
+    'Mr. Jack Kirby',
+    'Dr. A. Petter Walter',
+    'Dw’t Hólmes III',
+    'Ms. Jenny',
+    'Emieral De Lassorel',
+    'Jón Einarsson',
+    'Rev. Yu McCallester',
+  ];
+  validNameStrings.map((validNameString) =>
+    t.is(validatorFns[VALID_NAME](validNameString, ['doesntmatter'], {}), true)
+  );
+});
+
+test('validName validator accepts a space between multiple names', (t) => {
+  t.is(validatorFns[VALID_NAME](`Mary Beth`, ['doesntmatter'], {}), true);
+});
+
+test('validName validator accepts an apostrophe', (t) => {
+  t.is(validatorFns[VALID_NAME](`O'Connor`, ['doesntmatter'], {}), true);
+});
+
+test('validName validator rejects an empty space', (t) => {
+  t.is(validatorFns[VALID_NAME](` `), false);
+});
+
+test('validName validator rejects an empty field', (t) => {
+  t.is(validatorFns[VALID_NAME](``), false);
+});
 
 test('hasUppercaseLetter validator produces correct validator object', (t) => {
   t.is(hasUppercaseLetter.error, HAS_UPPERCASE_LETTER_ERROR);

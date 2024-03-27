@@ -420,6 +420,14 @@ validatorFns[IS_PROBABLY_EMAIL] = (value, args, form) => {
   return new RegExp(/^\S+@\S+\.\S+$/).test(value);
 };
 
+export const VALID_NAME = 'validator/VALID_NAME';
+export const VALID_NAME_ERROR = 'validator/VALID_NAME_ERROR';
+export const validName = createValidator(VALID_NAME, VALID_NAME_ERROR);
+validatorFns[VALID_NAME] = (value, args, form) =>
+  value === ''
+    ? false
+    : new RegExp(/[A-zÀ-ÿ\-,'\S]+(\s?[A-zÀ-ÿ\-,'\S])*/).test(value);
+
 export const runValidatorErrorMessage = (type) =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator creator functions exported from 
