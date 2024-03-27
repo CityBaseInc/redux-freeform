@@ -1304,7 +1304,8 @@ test('validName validator produces correct validator object', (t) => {
 });
 
 test('validName validator accepts when value is valid name', (t) => {
-  t.is(validatorFns[VALID_NAME](`James`, ['doesntmatter'], {}), true);
+  const validNameString = `Dr. Édwarø ~OConñor`;
+  t.is(validatorFns[VALID_NAME](validNameString, ['doesntmatter'], {}), true);
 });
 
 test('validName validator accepts a space between multiple names', (t) => {
