@@ -1304,8 +1304,23 @@ test('validName validator produces correct validator object', (t) => {
 });
 
 test('validName validator accepts when value is valid name', (t) => {
-  const validNameString = `Dr. Édwarø ~OConñor`;
-  t.is(validatorFns[VALID_NAME](validNameString, ['doesntmatter'], {}), true);
+  const validNameStrings = [
+    'John Smith',
+    'Nancy Moore-Klêne',
+    'Jien Xi',
+    'Brandon D. Jones',
+    'Ashley Q. W. McLeary',
+    'Mr. Jack Kirby',
+    'Dr. A. Petter Walter',
+    'Dw’t Hólmes III',
+    'Ms. Jenny',
+    'Emieral De Lassorel',
+    'Jón Einarsson',
+    'Rev. Yu McCallester',
+  ];
+  validNameStrings.map((validNameString) =>
+    t.is(validatorFns[VALID_NAME](validNameString, ['doesntmatter'], {}), true)
+  );
 });
 
 test('validName validator accepts a space between multiple names', (t) => {
