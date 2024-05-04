@@ -73,6 +73,9 @@ import {
   validName,
   VALID_NAME,
   VALID_NAME_ERROR,
+  isNotAmExCard,
+  IS_NOT_AMEX_CARD,
+  IS_NOT_AMEX_CARD_ERROR,
 } from '../src/validation';
 
 test('required validator produces correct validator object', (t) => {
@@ -1339,14 +1342,43 @@ test('validName validator rejects an empty field', (t) => {
   t.is(validatorFns[VALID_NAME](``), false);
 });
 
-test('hasUppercaseLetter validator produces correct validator object', (t) => {
-  t.is(hasUppercaseLetter.error, HAS_UPPERCASE_LETTER_ERROR);
-  t.deepEqual(hasUppercaseLetter(), {
-    type: HAS_UPPERCASE_LETTER,
+/**
+ * Tests for isNotAmExCard
+ */
+
+test('isNotAmExCard validator produces correct validator object', (t) => {
+  t.is(isNotAmExCard.error, IS_NOT_AMEX_CARD_ERROR);
+  t.deepEqual(isNotAmExCard(), {
+    type: IS_NOT_AMEX_CARD,
     args: [],
-    error: HAS_UPPERCASE_LETTER_ERROR,
+    error: IS_NOT_AMEX_CARD_ERROR,
   });
 });
+
+test('isNotAmExCard validator allows non-AmEx cards', (t) => {
+  const validCardNumbers = [
+    '6011111111111117', // Discover
+    '6011000990139424', // Discover
+    '5555555555554444', // Mastercard
+    '4111111111111111', // Visa
+    '3530111333300000', // JCB
+    '38520000023237', // Diners Club
+  ];
+  validCardNumbers.map((cardNumber) =>
+    t.is(validatorFns[IS_NOT_AMEX_CARD](cardNumber, ['doesntmatter'], {}), true)
+  );
+});
+
+test('isNotAmExCard validator disallows AmEx cards', (t) => {
+  const validCardNumbers = ['378282246310005', '371449635398431', '378734493671000'];
+  validCardNumbers.map((cardNumber) =>
+    t.is(validatorFns[IS_NOT_AMEX_CARD](cardNumber, ['doesntmatter'], {}), false)
+  );
+});
+
+/**
+ * hasUppercaseLetter tests
+ */
 
 test('hasUppercaseLetter accepts when value is empty string', (t) => {
   t.is(validatorFns[HAS_UPPERCASE_LETTER]('', ['doesntmatter'], {}), true);

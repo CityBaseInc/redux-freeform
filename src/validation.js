@@ -428,6 +428,21 @@ validatorFns[VALID_NAME] = (value, args, form) =>
     ? false
     : new RegExp(/[A-zÀ-ÿ\-,'\S]+(\s?[A-zÀ-ÿ\-,'\S])*/).test(value);
 
+export const IS_NOT_AMEX_CARD = 'validator/IS_NOT_AMEX_CARD';
+export const IS_NOT_AMEX_CARD_ERROR = 'validator/IS_NOT_AMEX_CARD_ERROR';
+export const isNotAmExCard = createValidator(
+  IS_NOT_AMEX_CARD,
+  IS_NOT_AMEX_CARD_ERROR
+);
+/* This regular expression looks for values not starting with 34 or 37, and
+ * reflects that the shortest credit card number we will see is 8 digits,
+ * while the longest we'd see is 19 digits according to ansi.org. We want to
+ * allow any number with a length in that range that is not an AmEx Card.
+ * Source: https://www.ansi.org/standards-news/all-news/2016/07/announcing-major-changes-to-the-issuer-identification-number-iin-standard-28
+ */
+validatorFns[IS_NOT_AMEX_CARD] = (value, args, form) =>
+  new RegExp(/^([^3]\d{7,18}|3[^47]\d{6,17})$/).test(value);
+
 export const runValidatorErrorMessage = (type) =>
   `${type} was passed to runValidator, but that validator type does not exist. 
   Please check that you are only calling validator creator functions exported from 

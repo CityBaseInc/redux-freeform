@@ -23,5 +23,6 @@ export {
   includedIn,
   onlyExpirationDate,
   validName,
+  isNotAmExCard,
 } from './validation';
 export { createFormState } from './main';
