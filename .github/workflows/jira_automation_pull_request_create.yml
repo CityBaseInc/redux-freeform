@@ -1,0 +1,90 @@
+name: Handle pull request creation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+  JIRA_BASE_URL: https://citybase.atlassian.net
+  JIRA_REVIEW_BOARD_URL: ${{ secrets.JIRA_REVIEW_BOARD_URL }}
+  JIRA_USER_EMAIL: cbjenkins@thecitybase.com
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  REPO: ${{ github.event.repository.full_name }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  SLACK_PR_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID_PR_REVIEW }}
+
+jobs:
+  transition-status:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+      - name: Divine issue key location
+        id: issue-key-location
+        run: |
+          PR_TITLE="${{github.event.pull_request.title}}"
+          PR_BRANCH="${{github.event.pull_request.head.ref}}"
+
+          ISSUE_KEY_LOCATION=$([[ $PR_TITLE =~ "^[^- ]+[-][0-9]+" ]] && echo $PR_TITLE || echo $PR_BRANCH)
+
+          echo "::set-output name=issue-key-location::$ISSUE_KEY_LOCATION"
+
+      - name: Jira authentication
+        uses: atlassian/gajira-login@master
+
+      - name: Parse Jira issue key
+        id: parse-issue-key
+        uses: atlassian/gajira-find-issue-key@master
+        with:
+          string: ${{ steps.issue-key-location.outputs.issue-key-location }}
+
+      - name: Fetch Jira issue
+        id: query-jira
+        if: ${{ contains(steps.parse-issue-key.outputs.issue, '-') }}
+        run: |
+          JIRA_ISSUE_KEY="${{ steps.parse-issue-key.outputs.issue }}"
+          echo "Fetching issue $JIRA_ISSUE_KEY"
+
+          JIRA_ISSUE=$(curl -s --request GET "$JIRA_BASE_URL/rest/api/2/search?jql=issuekey=$JIRA_ISSUE_KEY" \
+            --user $JIRA_USER_EMAIL:$JIRA_API_TOKEN \
+            --header 'Accept: application/json')
+
+          JIRA_ASSIGNEE=$(echo $JIRA_ISSUE | jq -r '.issues[] | .fields.assignee.displayName')
+          JIRA_QA_UAT=$(echo $JIRA_ISSUE | jq -r '.issues[] | .fields.customfield_12285[] | .value' | tr '\n' ' ' | sed 's/ $//;s/ /,/g')
+          JIRA_STATUS=$(echo $JIRA_ISSUE | jq -r '.issues[] | .fields.status.name')
+
+          echo "::set-output name=assignee::$JIRA_ASSIGNEE"
+          echo "::set-output name=qa-uat::$JIRA_QA_UAT"
+          echo "::set-output name=status::$JIRA_STATUS"
+
+      - name: Transition to Ready
+        uses: atlassian/gajira-transition@master
+        if: ${{ steps.query-jira.outputs.status == 'In Progress' }}
+        with:
+          issue: ${{ steps.parse-issue-key.outputs.issue }}
+          transition: Waiting for Review Primary
+
+      - name: Build requested reviewer attention line
+        id: reviewer-attn
+        if: ${{ steps.query-jira.outputs.status == 'In Progress' }}
+        run: |
+          PR_VIEW=$( gh pr view $PR_NUMBER --repo $REPO --json latestReviews,reviewRequests)
+
+          CHANGES_REQUESTED_LOGINS=$(echo $PR_VIEW | jq -r '.latestReviews[] |  select (.state == "CHANGES_REQUESTED") | .author.login' | tr '\n' ' ' | sed 's/ $//')
+          REVIEWS_REQUESTED_LOGINS=$(echo $PR_VIEW | jq -r '.reviewRequests[] | .login' | tr '\n' ' ' | sed 's/ $//')
+
+          REQUESTED_REVIEWER_LOGINS=$(
+            [[ -z $CHANGES_REQUESTED_LOGINS ]] && echo "$REVIEWS_REQUESTED_LOGINS" || echo "$CHANGES_REQUESTED_LOGINS"
+          )
+
+          ATTN_MSG=$([[ -z $REQUESTED_REVIEWER_LOGINS ]] && echo "" || echo "Requested: :star2: $REQUESTED_REVIEWER_LOGINS :star2:")
+
+          echo "::set-output name=message::$ATTN_MSG"
+
+      - name: Request reviewers via Slack
+        uses: slackapi/slack-github-action@v1.18.0
+        if: ${{ steps.query-jira.outputs.status == 'In Progress' }}
+        with:
+          channel-id: ${{ env.SLACK_PR_CHANNEL_ID }}
+          slack-message: "Primary review request :mag:\n${{ steps.reviewer-attn.outputs.message }}\nRepo: ${{ github.event.pull_request.base.repo.full_name }}\nBranch: ${{ github.event.pull_request.head.ref }}\nAssignee: ${{ steps.query-jira.outputs.assignee }} / ${{ github.event.pull_request.user.login  }}\n${{ github.event.pull_request.title }}\n${{ env.JIRA_REVIEW_BOARD_URL }}"
