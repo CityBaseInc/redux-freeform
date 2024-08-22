@@ -18,7 +18,7 @@
     "coverage": "nyc --reporter=lcov --reporter=text ava && nyc check-coverage --per-file=true"
   },
   "dependencies": {
-    "acorn": "^8.8.2",
+    "acorn": "^8.12.1",
     "dayjs": "^1.11.7",
     "immer": "^9.0.21"
   },
