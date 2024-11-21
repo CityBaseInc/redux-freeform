@@ -13,6 +13,9 @@ import {
   onlyNaturals,
   ONLY_NATURALS,
   ONLY_NATURALS_ERROR,
+  noMoreThanSixNumbers,
+  NO_MORE_THAN_SIX_NUMBERS,
+  NO_MORE_THAN_SIX_NUMBERS_ERROR,
   numberLessThan,
   NUMBER_LESS_THAN,
   NUMBER_LESS_THAN_ERROR,
@@ -99,6 +102,15 @@ test('onlyNaturals validator produces correct validator object', (t) => {
     type: ONLY_NATURALS,
     args: [],
     error: ONLY_NATURALS_ERROR,
+  });
+});
+
+test('noMoreThanSixNumbers validator produces correct validator object', (t) => {
+  t.is(noMoreThanSixNumbers.error, NO_MORE_THAN_SIX_NUMBERS_ERROR);
+  t.deepEqual(noMoreThanSixNumbers(), {
+    type: NO_MORE_THAN_SIX_NUMBERS,
+    args: [],
+    error: NO_MORE_THAN_SIX_NUMBERS_ERROR,
   });
 });
 
@@ -641,6 +653,36 @@ const smallerBiggerTuple = fc.float().chain((smallerNumber) =>
       .filter((n) => n !== smallerNumber)
   )
 );
+
+test('noMoreThanSixNumbers accepts empty string', (t) => {
+  t.true(validatorFns[NO_MORE_THAN_SIX_NUMBERS]('', {}));
+});
+
+test('noMoreThanSixNumbers accepts string with no numbers', (t) => {
+  t.true(validatorFns[NO_MORE_THAN_SIX_NUMBERS]('Mary Stevens', {}));
+});
+
+test('noMoreThanSixNumbers accepts string with less than six numbers', (t) => {
+  t.true(validatorFns[NO_MORE_THAN_SIX_NUMBERS]('3M Company', {}));
+});
+
+test('noMoreThanSixNumbers accepts string with exactly six numbers', (t) => {
+  t.true(
+    validatorFns[NO_MORE_THAN_SIX_NUMBERS]('State Street Partnership 803716', {})
+  );
+});
+
+test('noMoreThanSixNumbers rejects string with more than six consecutive numbers', (t) => {
+  t.true(
+    !validatorFns[NO_MORE_THAN_SIX_NUMBERS]('John Robertson 4813752033810349', {})
+  );
+});
+
+test('noMoreThanSixNumbers rejects string with more than six numbers separated by spaces', (t) => {
+  t.true(
+    !validatorFns[NO_MORE_THAN_SIX_NUMBERS]('John Robertson 481375 203381 0349', {})
+  );
+});
 
 test('numberLessThan accepts empty string', (t) => {
   t.true(validatorFns[NUMBER_LESS_THAN]('', {}));

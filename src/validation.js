@@ -56,6 +56,25 @@ export const onlyExpirationDate = createValidator(
 validatorFns[ONLY_EXPIRATION_DATE] = (value, args, form) =>
   /^(\d?\d?\/?\d?\d?)?$/.test(value);
 
+/*
+11/24 - Users have been adding full CC numbers to the name field
+This validator will check if the value has more than 6 numeric characters
+We have to allow for some numeric characters to account for business
+names that include numbers like "3M Company" or "Smith Street Trust 40389"
+*/
+export const NO_MORE_THAN_SIX_NUMBERS = 'validator/NO_MORE_THAN_SIX_NUMBERS';
+export const NO_MORE_THAN_SIX_NUMBERS_ERROR = 'error/NO_MORE_THAN_SIX_NUMBERS';
+export const noMoreThanSixNumbers = createValidator(
+  NO_MORE_THAN_SIX_NUMBERS,
+  NO_MORE_THAN_SIX_NUMBERS_ERROR
+);
+validatorFns[NO_MORE_THAN_SIX_NUMBERS] = (value) => {
+  if (value === '') {
+    return true;
+  }
+  return !/(\d.*){7,}/.test(value);
+};
+
 export const NUMBER_LESS_THAN = 'validator/NUMBER_LESS_THAN';
 export const NUMBER_LESS_THAN_ERROR = 'error/NUMBER_LESS_THAN';
 export const numberLessThan = createValidator(
