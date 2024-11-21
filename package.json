@@ -11,11 +11,11 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "test": "jest --coverage",
+    "test": "jest",
     "format": "prettier --write \"{src,examples,website,test}/**/*.js\" && eslint ./ --ext .js,.jsx,.ts,.tsx --fix",
     "format-check": "prettier --check \"{src,examples,website,test}/**/*.js\"",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx",
-    "coverage": "nyc --reporter=lcov --reporter=text ava && nyc check-coverage --per-file=true"
+    "coverage": "jest --coverage --coverageReporters=lcov,text --coveragePerFile=true"
   },
   "dependencies": {
     "acorn": "^8.8.2",
