@@ -15,7 +15,7 @@
     "format": "prettier --write \"{src,examples,website,test}/**/*.js\" && eslint ./ --ext .js,.jsx,.ts,.tsx --fix",
     "format-check": "prettier --check \"{src,examples,website,test}/**/*.js\"",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx",
-    "coverage": "jest --coverage --coverageReporters=lcov,text --coveragePerFile=true"
+    "coverage": "jest --coverage --coverageReporters=lcov --coverageReporters=text --coveragePerFile=true"
   },
   "dependencies": {
     "acorn": "^8.8.2",
