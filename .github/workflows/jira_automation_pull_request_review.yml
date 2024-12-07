@@ -1,0 +1,192 @@
+name: Handle pull request reviews
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+  JIRA_BASE_URL: https://citybase.atlassian.net
+  JIRA_REVIEW_BOARD_URL: ${{ secrets.JIRA_REVIEW_BOARD_URL }}
+  JIRA_USER_EMAIL: cbjenkins@thecitybase.com
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  REPO: ${{ github.event.repository.full_name }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  SLACK_PR_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID_PR_REVIEW }}
+
+jobs:
+  query-state:
+    runs-on: ubuntu-latest
+    outputs:
+      approved: ${{ steps.process-reviews.outputs.approved }}
+      assignee: ${{ steps.query-jira.outputs.assignee }}
+      changes-requested-logins: ${{ steps.process-reviews.outputs.changes-requested-logins }}
+      issue-key: ${{ steps.set-issue-key.outputs.issue-key }}
+      reviews-requested-logins: ${{ steps.process-reviews.outputs.reviews-requested-logins }}
+      status-pre-review: ${{ steps.query-jira.outputs.status-pre-review }}
+      status-post-review: ${{ steps.query-jira.outputs.status-post-review }}
+    steps:
+      - name: Divine issue key location
+        id: issue-key-location
+        run: |
+          PR_TITLE="${{github.event.pull_request.title}}"
+          PR_BRANCH="${{github.event.pull_request.head.ref}}"
+
+          ISSUE_KEY_LOCATION=$([[ $PR_TITLE =~ "^[^- ]+[-][0-9]+" ]] && echo $PR_TITLE || echo $PR_BRANCH)
+
+          echo "::set-output name=issue-key-location::$ISSUE_KEY_LOCATION"
+
+      - name: Process reviews
+        id: process-reviews
+        run: |
+          APPROVED=0
+
+          GITHUB_PR=$(gh pr view $PR_NUMBER --json reviews,latestReviews,reviewRequests --repo $REPO)
+
+          AUTHORS=$(echo $GITHUB_PR | jq -r '.reviews[] | .author.login' | sort | uniq)
+          CHANGES_REQUESTED_LOGINS=$(echo $GITHUB_PR | jq -r '.latestReviews[] |  select (.state == "CHANGES_REQUESTED") | .author.login')
+          REVIEWS_REQUESTED_LOGINS=$(echo $GITHUB_PR | jq -r '.reviewRequests[] | .login')
+
+          IFS=$'\n'
+          for a in $AUTHORS
+          do
+            INCR=$(
+              echo $GITHUB_PR \
+                | jq -r ".reviews[] | select(.author.login==\"$a\") | .state" \
+                | tail -1 \
+                | grep -i 'APPROVED' \
+                | wc -l \
+                | tr -dc '0-9'
+            )
+            APPROVED=$(($APPROVED + $INCR))
+          done
+
+          echo "APPROVED: $APPROVED"
+
+          echo "::set-output name=approved::$APPROVED"
+          echo "::set-output name=changes-requested-logins::$CHANGES_REQUESTED_LOGINS"
+          echo "::set-output name=reviews-requested-logins::$REVIEWS_REQUESTED_LOGINS"
+
+      - name: Jira authentication
+        uses: atlassian/gajira-login@master
+
+      - name: Parse issue key
+        id: parse-issue-key
+        uses: atlassian/gajira-find-issue-key@master
+        with:
+          string: ${{ steps.issue-key-location.outputs.issue-key-location }}
+
+      - name: Set issue key
+        id: set-issue-key
+        run: echo "::set-output name=issue-key::${{ steps.parse-issue-key.outputs.issue }}"
+
+      - name: Fetch Jira issue
+        id: query-jira
+        if: ${{ contains(steps.set-issue-key.outputs.issue-key, '-') }}
+        run: |
+          JIRA_ISSUE_KEY="${{ steps.set-issue-key.outputs.issue-key }}"
+          PR_REVIEWS_APPROVED=${{steps.process-reviews.outputs.approved}}
+
+          JIRA_ISSUE=$(curl -s --request GET "$JIRA_BASE_URL/rest/api/2/search?jql=issuekey=$JIRA_ISSUE_KEY" \
+            --user $JIRA_USER_EMAIL:$JIRA_API_TOKEN \
+            --header 'Accept: application/json')
+
+          JIRA_ASSIGNEE=$(echo $JIRA_ISSUE | jq -r '.issues[] | .fields.assignee.displayName')
+          JIRA_QA_UAT=$(echo $JIRA_ISSUE | jq -r '.issues[] | .fields.customfield_12285[] | .value' | tr '\n' ' ' | sed 's/ $//;s/ /,/g')
+          JIRA_STATUS=$(echo $JIRA_ISSUE | jq -r '.issues[] | .fields.status.name')
+
+          if [[ "$PR_REVIEWS_APPROVED" == "1" ]]
+          then
+            STATUS_POST_REVIEW="Queue Review Secondary"
+          elif [[ $JIRA_QA_UAT =~ "QA" ]]
+          then
+            STATUS_POST_REVIEW="Queue QA"
+          elif [[ $JIRA_QA_UAT =~ "UAT" ]]
+          then
+            STATUS_POST_REVIEW="Queue UAT"
+          else
+           STATUS_POST_REVIEW="Ready to Merge"
+          fi
+
+          if [[ $JIRA_STATUS =~ "Waiting for Review Primary" ]]
+          then
+            STATUS_PRE_REVIEW="In Review Primary"
+          elif [[ $JIRA_STATUS =~ "Waiting for Review Secondary" ]]
+          then
+            STATUS_PRE_REVIEW="In Review Secondary"
+          else
+           STATUS_PRE_REVIEW=""
+          fi
+
+          echo "$PR_REVIEWS_APPROVED: $PR_REVIEWS_APPROVED"
+          echo "JIRA_QA_UAT: $JIRA_QA_UAT"
+
+          echo "::set-output name=assignee::$JIRA_ASSIGNEE"
+          echo "::set-output name=status-pre-review::$STATUS_PRE_REVIEW"
+          echo "::set-output name=status-post-review::$STATUS_POST_REVIEW"
+          echo "::set-output name=status::$JIRA_STATUS"
+
+  handle-changes-requested:
+    runs-on: ubuntu-latest
+    needs: query-state
+    if: github.event.review.state == 'changes_requested'
+    steps:
+      - name: Jira authentication
+        uses: atlassian/gajira-login@master
+
+      - name: Reset to Ready for Dev
+        if: ${{ contains(needs.query-state.outputs.issue-key, '-') }}
+        uses: atlassian/gajira-transition@master
+        with:
+          issue: ${{ needs.query-state.outputs.issue-key }}
+          transition: Request Changes
+
+  handle-approved:
+    runs-on: ubuntu-latest
+    needs: query-state
+    if: github.event.review.state == 'approved'
+    steps:
+      - name: Jira authentication
+        uses: atlassian/gajira-login@master
+
+      - name: Build requested reviewer attention line
+        id: reviewer-attn
+        if: ${{ needs.query-state.outputs.approved == '1' }}
+        run: |
+          CHANGES_REQUESTED_LOGINS=${{ needs.query-state.outputs.changes-requested-logins }}
+          REVIEWS_REQUESTED_LOGINS=${{ needs.query-state.outputs.reviews-requested-logins }}
+
+          REQUESTED_REVIEWER_LOGINS=$(
+            [[ -z $CHANGES_REQUESTED_LOGINS ]] && echo "$REVIEWS_REQUESTED_LOGINS" || echo "$CHANGES_REQUESTED_LOGINS" \
+              | tr '\n' ' ' \
+              | sed 's/ $//;s/ / | /g'
+          )
+
+          ATTN_MSG=$([[ -z $REQUESTED_REVIEWER_LOGINS ]] && echo "" || echo "Requested: :star2: $REQUESTED_REVIEWER_LOGINS :star2:")
+          REQUEST_MSG="${{ needs.query-state.outputs.approved == '1' && 'Secondary review request :mag: :mag:' || 'Primary review request :mag:'  }}"
+
+          echo "::set-output name=attn-message::$ATTN_MSG"
+          echo "::set-output name=request-message::$REQUEST_MSG"
+
+      - name: Transition pre reviews
+        uses: atlassian/gajira-transition@master
+        # if user didn't properly advance Jira status, fix here since time in status is already lost
+        if: ${{ contains(needs.query-state.outputs.issue-key, '-') && needs.query-state.outputs.status-pre-review }}
+        with:
+          issue: ${{ needs.query-state.outputs.issue-key }}
+          transition: ${{ needs.query-state.outputs.status-pre-review }}
+
+      - name: Transition post review
+        uses: atlassian/gajira-transition@master
+        if: ${{ contains(needs.query-state.outputs.issue-key, '-') }}
+        with:
+          issue: ${{ needs.query-state.outputs.issue-key }}
+          transition: ${{ needs.query-state.outputs.status-post-review }}
+
+      - name: Request reviewers via Slack
+        uses: slackapi/slack-github-action@v1.18.0
+        if: ${{ needs.query-state.outputs.approved == '1' }}
+        with:
+          channel-id: ${{ env.SLACK_PR_CHANNEL_ID }}
+          slack-message: "${{ steps.reviewer-attn.outputs.request-message }}\n${{ steps.reviewer-attn.outputs.attn-message }}\nRepo: ${{ github.event.pull_request.base.repo.full_name }}\nBranch: ${{ github.event.pull_request.head.ref }}\nAssignee: ${{ needs.query-state.outputs.assignee }} / ${{ github.event.pull_request.user.login  }}\n${{ github.event.pull_request.title }}\n${{ env.JIRA_REVIEW_BOARD_URL }}"
