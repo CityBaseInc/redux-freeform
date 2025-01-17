@@ -1,6 +1,6 @@
 import { test, fc } from '@fast-check/jest';
 import dayjs from 'dayjs';
-import { expect } from '@jest/globals';
+import { expect, describe } from '@jest/globals';
 
 import { fieldNameGen } from '../test/util';
 import {
@@ -39,6 +39,9 @@ import {
   MATCHES_REGEX,
   MATCHES_REGEX_ERROR,
   matchesRegex,
+  includesPotentialCardNumber,
+  INCLUDES_POTENTIAL_CARD_NUMBER,
+  INCLUDES_POTENTIAL_CARD_NUMBER_ERROR,
   isRoutingNumber,
   IS_ROUTING_NUMBER,
   IS_ROUTING_NUMBER_ERROR,
@@ -111,6 +114,17 @@ test('noMoreThanSixNumbers validator produces correct validator object', () => {
     type: NO_MORE_THAN_SIX_NUMBERS,
     args: [],
     error: NO_MORE_THAN_SIX_NUMBERS_ERROR,
+  });
+});
+
+test('includesPotentialCardNumber validator produces correct validator object', () => {
+  expect(includesPotentialCardNumber.error).toBe(
+    INCLUDES_POTENTIAL_CARD_NUMBER_ERROR
+  );
+  expect(includesPotentialCardNumber()).toEqual({
+    type: INCLUDES_POTENTIAL_CARD_NUMBER,
+    args: [],
+    error: INCLUDES_POTENTIAL_CARD_NUMBER_ERROR,
   });
 });
 
@@ -680,6 +694,89 @@ test('noMoreThanSixNumbers rejects string with more than six numbers separated b
   expect(
     !validatorFns[NO_MORE_THAN_SIX_NUMBERS]('John Robertson 481375 203381 0349', {})
   ).toBe(true);
+});
+
+describe('includesPotentialCardNumber', () => {
+  test('validates a correct Luhn number', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532015112830366', {})
+    ).toBe(true);
+  });
+
+  test('validates a correct Luhn number with spaces', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532 0151 1283 0366', {})
+    ).toBe(true);
+  });
+
+  test('validates a correct Luhn number with hyphens', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532-0151-1283-0366', {})
+    ).toBe(true);
+  });
+
+  test('validates a correct Luhn number with leading zeros', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('00004532015112830366', {})
+    ).toBe(true);
+  });
+
+  test('validates a correct Luhn number with leading and trailing spaces', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER](' 4532015112830366 ', {})
+    ).toBe(true);
+  });
+
+  test('validates a correct Luhn number with mixed spaces and hyphens', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532-0151 1283-0366', {})
+    ).toBe(true);
+  });
+
+  test('validates a name + a correct Luhn number', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER](
+        'Adam 4111 1111 1111 1111 Smith',
+        {}
+      )
+    ).toBe(true);
+  });
+
+  test('invalidates an incorrect Luhn number', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532015112830367', {})
+    ).toBe(false);
+  });
+
+  test('invalidates an empty string', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('', {})).toBe(false);
+  });
+
+  test('invalidates a string with non-digit characters', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532a15112830366', {})
+    ).toBe(false);
+  });
+
+  test('invalidates a string with only non-digit characters', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('abcd', {})).toBe(false);
+  });
+
+  test('invalidates a string with mixed valid and invalid characters', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532a0151b283c0366', {})
+    ).toBe(false);
+  });
+
+  test('invalidates a string with only spaces', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('     ', {})).toBe(false);
+  });
+
+  test('invalidates a string with special characters (excluding hyphens)', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532@0151#1283$0366', {})
+    ).toBe(false);
+  });
 });
 
 test('numberLessThan accepts empty string', () => {

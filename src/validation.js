@@ -61,6 +61,8 @@ validatorFns[ONLY_EXPIRATION_DATE] = (value, args, form) =>
 This validator will check if the value has more than 6 numeric characters
 We have to allow for some numeric characters to account for business
 names that include numbers like "3M Company" or "Smith Street Trust 40389"
+
+1/25 - This has been superseded by the includesPotentialCardNumber validator
 */
 export const NO_MORE_THAN_SIX_NUMBERS = 'validator/NO_MORE_THAN_SIX_NUMBERS';
 export const NO_MORE_THAN_SIX_NUMBERS_ERROR = 'error/NO_MORE_THAN_SIX_NUMBERS';
@@ -73,6 +75,81 @@ validatorFns[NO_MORE_THAN_SIX_NUMBERS] = (value) => {
     return true;
   }
   return !/(\d.*){7,}/.test(value);
+};
+
+/*
+ * 1/25 - Prevent users from entering full credit card numbers in the "name" field.
+ *
+ * This validator is designed to reduce the accidental inclusion of credit card numbers
+ * in fields where they don't belong (e.g., the name field). It identifies a potential
+ * credit card number based on the following criteria:
+ *
+ * - It consists of 8 to 20 digits.
+ * - Digits may be separated by optional spaces or hyphens.
+ * - It must pass the Luhn algorithm check.
+ *
+ * Note:
+ *   A string passing the Luhn algorithm is necessary but not sufficient to conclusively
+ *   determine that the string is a valid credit card number.
+ *
+ * For more details on the Luhn algorithm, refer to:
+ * https://stripe.com/en-ca/resources/more/how-to-use-the-luhn-algorithm-a-guide-in-applications-for-businesses#luhn-algorithm-formula
+ */
+
+function luhnValid(string) {
+  if (!string) {
+    return false;
+  }
+
+  // Extract all digit characters from the string.
+  const digits = string.match(/\d/g);
+  if (!digits) {
+    return false;
+  }
+
+  let totalSum = 0;
+  let shouldDouble = false;
+
+  // Process digits from right to left
+  for (let i = digits.length - 1; i >= 0; i--) {
+    // Convert the current character to a number.
+    let digit = parseInt(digits[i], 10);
+
+    // Double the digit and adjust if it exceeds 9.
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) {
+        // If the result of any doubling operation is greater than nine,
+        // then add the digits of the result together to obtain a single-digit number.
+        // This is equivalent to adding the digits together (e.g. 16: 1 + 6 = 7 = 16 - 9).
+        digit -= 9;
+      }
+    }
+
+    // Add the processed digit to the total sum.
+    totalSum += digit;
+    // After doubling the value of the second-to-last digit, continue doing the same for every other digit.
+    shouldDouble = !shouldDouble;
+  }
+
+  // The number is valid if totalSum is divisible by 10.
+  return totalSum % 10 === 0;
+}
+
+export const INCLUDES_POTENTIAL_CARD_NUMBER =
+  'validator/INCLUDES_POTENTIAL_CARD_NUMBER';
+export const INCLUDES_POTENTIAL_CARD_NUMBER_ERROR =
+  'error/INCLUDES_POTENTIAL_CARD_NUMBER';
+export const includesPotentialCardNumber = createValidator(
+  INCLUDES_POTENTIAL_CARD_NUMBER,
+  INCLUDES_POTENTIAL_CARD_NUMBER_ERROR
+);
+validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER] = (value) => {
+  // This is the same regex currently used in Ghenghis
+  // A potential credit card number is a sequence of 8 to 20 digits, with optional spaces or hyphens between them
+  const regexString = '(?:\\d[ -]*){8,20}';
+  const regex = new RegExp(regexString);
+  return regex.test(value) && luhnValid(value);
 };
 
 export const NUMBER_LESS_THAN = 'validator/NUMBER_LESS_THAN';

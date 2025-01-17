@@ -21,6 +21,7 @@ export {
   dateAfterToday,
   isValidMonth,
   includedIn,
+  includesPotentialCardNumber,
   onlyExpirationDate,
   validName,
 } from './validation';
