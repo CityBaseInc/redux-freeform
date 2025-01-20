@@ -149,7 +149,7 @@ validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER] = (value) => {
   // A potential credit card number is a sequence of 8 to 20 digits, with optional spaces or hyphens between them
   const regexString = '(?:\\d[ -]*){8,20}';
   const regex = new RegExp(regexString);
-  return regex.test(value) && luhnValid(value);
+  return !(luhnValid(value) && regex.test(value));
 };
 
 export const NUMBER_LESS_THAN = 'validator/NUMBER_LESS_THAN';
