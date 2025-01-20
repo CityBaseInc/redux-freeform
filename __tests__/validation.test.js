@@ -697,84 +697,82 @@ test('noMoreThanSixNumbers rejects string with more than six numbers separated b
 });
 
 describe('includesPotentialCardNumber', () => {
-  test('validates a correct Luhn number', () => {
+  test('accepts a Name under 8 characters', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('Bob Fox', {})).toBe(true);
+  });
+
+  test('accepts a Name with spaces', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('Ron Swanson', {})).toBe(
+      true
+    );
+  });
+
+  test('accepts an incorrect Luhn number', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532015112830367', {})
+    ).toBe(true);
+  });
+
+  test('accepts an empty string', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('', {})).toBe(true);
+  });
+
+  test('accepts a string with only non-digit characters', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('abcd', {})).toBe(true);
+  });
+
+  test('accepts an incorrect Luhn number with non-digit characters', () => {
+    expect(
+      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532a0151b283c0366', {})
+    ).toBe(true);
+  });
+
+  test('accepts a string with only spaces', () => {
+    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('     ', {})).toBe(true);
+  });
+
+  test('rejects a correct Luhn number', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532015112830366', {})
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test('validates a correct Luhn number with spaces', () => {
+  test('rejects a correct Luhn number with spaces', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532 0151 1283 0366', {})
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test('validates a correct Luhn number with hyphens', () => {
+  test('rejects a correct Luhn number with hyphens', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532-0151-1283-0366', {})
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test('validates a correct Luhn number with leading zeros', () => {
+  test('rejects a correct Luhn number with leading zeros', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('00004532015112830366', {})
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test('validates a correct Luhn number with leading and trailing spaces', () => {
+  test('rejects a correct Luhn number with leading and trailing spaces', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER](' 4532015112830366 ', {})
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test('validates a correct Luhn number with mixed spaces and hyphens', () => {
+  test('rejects a correct Luhn number with mixed spaces and hyphens', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532-0151 1283-0366', {})
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test('validates a name + a correct Luhn number', () => {
+  test('rejects a name + a correct Luhn number', () => {
     expect(
       validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER](
         'Adam 4111 1111 1111 1111 Smith',
         {}
       )
-    ).toBe(true);
-  });
-
-  test('invalidates an incorrect Luhn number', () => {
-    expect(
-      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532015112830367', {})
-    ).toBe(false);
-  });
-
-  test('invalidates an empty string', () => {
-    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('', {})).toBe(false);
-  });
-
-  test('invalidates a string with non-digit characters', () => {
-    expect(
-      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532a15112830366', {})
-    ).toBe(false);
-  });
-
-  test('invalidates a string with only non-digit characters', () => {
-    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('abcd', {})).toBe(false);
-  });
-
-  test('invalidates a string with mixed valid and invalid characters', () => {
-    expect(
-      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532a0151b283c0366', {})
-    ).toBe(false);
-  });
-
-  test('invalidates a string with only spaces', () => {
-    expect(validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('     ', {})).toBe(false);
-  });
-
-  test('invalidates a string with special characters (excluding hyphens)', () => {
-    expect(
-      validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER]('4532@0151#1283$0366', {})
     ).toBe(false);
   });
 });
