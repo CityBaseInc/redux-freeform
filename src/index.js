@@ -23,6 +23,7 @@ export {
   isValidMonth,
   includedIn,
   includesPotentialCardNumber,
+  isValidCardNumber,
   onlyExpirationDate,
   validName,
 } from './validation';

@@ -152,6 +152,19 @@ validatorFns[INCLUDES_POTENTIAL_CARD_NUMBER] = (value) => {
   return !(luhnValid(value) && regex.test(value));
 };
 
+export const IS_VALID_CARD_NUMBER = 'validator/IS_VALID_CARD_NUMBER';
+export const IS_VALID_CARD_NUMBER_ERROR = 'error/IS_VALID_CARD_NUMBER';
+export const isValidCardNumber = createValidator(
+  IS_VALID_CARD_NUMBER,
+  IS_VALID_CARD_NUMBER_ERROR
+);
+validatorFns[IS_VALID_CARD_NUMBER] = (value) => {
+  if (value === '') {
+    return true;
+  }
+  return luhnValid(value);
+};
+
 export const NUMBER_LESS_THAN = 'validator/NUMBER_LESS_THAN';
 export const NUMBER_LESS_THAN_ERROR = 'error/NUMBER_LESS_THAN';
 export const numberLessThan = createValidator(

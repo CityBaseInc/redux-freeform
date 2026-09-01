@@ -42,6 +42,9 @@ import {
   includesPotentialCardNumber,
   INCLUDES_POTENTIAL_CARD_NUMBER,
   INCLUDES_POTENTIAL_CARD_NUMBER_ERROR,
+  isValidCardNumber,
+  IS_VALID_CARD_NUMBER,
+  IS_VALID_CARD_NUMBER_ERROR,
   isRoutingNumber,
   IS_ROUTING_NUMBER,
   IS_ROUTING_NUMBER_ERROR,
@@ -128,6 +131,15 @@ test('includesPotentialCardNumber validator produces correct validator object', 
     type: INCLUDES_POTENTIAL_CARD_NUMBER,
     args: [],
     error: INCLUDES_POTENTIAL_CARD_NUMBER_ERROR,
+  });
+});
+
+test('isValidCardNumber validator produces correct validator object', () => {
+  expect(isValidCardNumber.error).toBe(IS_VALID_CARD_NUMBER_ERROR);
+  expect(isValidCardNumber()).toEqual({
+    type: IS_VALID_CARD_NUMBER,
+    args: [],
+    error: IS_VALID_CARD_NUMBER_ERROR,
   });
 });
 
@@ -788,6 +800,44 @@ describe('includesPotentialCardNumber', () => {
         {}
       )
     ).toBe(false);
+  });
+});
+
+describe('isValidCardNumber', () => {
+  test('accepts an empty string', () => {
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('', {})).toBe(true);
+  });
+
+  test('accepts a correct Luhn number', () => {
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532015112830366', {})).toBe(
+      true
+    );
+  });
+
+  test('accepts a correct Luhn number with spaces', () => {
+    expect(
+      validatorFns[IS_VALID_CARD_NUMBER]('4532 0151 1283 0366', {})
+    ).toBe(true);
+  });
+
+  test('accepts a correct Luhn number with hyphens', () => {
+    expect(
+      validatorFns[IS_VALID_CARD_NUMBER]('4532-0151-1283-0366', {})
+    ).toBe(true);
+  });
+
+  test('rejects an incorrect Luhn number', () => {
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532015112830367', {})).toBe(
+      false
+    );
+  });
+
+  test('rejects a string with only non-digit characters', () => {
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('abcd', {})).toBe(false);
+  });
+
+  test('rejects a string with only spaces', () => {
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('     ', {})).toBe(false);
   });
 });
 
