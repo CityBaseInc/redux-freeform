@@ -809,27 +809,19 @@ describe('isValidCardNumber', () => {
   });
 
   test('accepts a correct Luhn number', () => {
-    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532015112830366', {})).toBe(
-      true
-    );
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532015112830366', {})).toBe(true);
   });
 
   test('accepts a correct Luhn number with spaces', () => {
-    expect(
-      validatorFns[IS_VALID_CARD_NUMBER]('4532 0151 1283 0366', {})
-    ).toBe(true);
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532 0151 1283 0366', {})).toBe(true);
   });
 
   test('accepts a correct Luhn number with hyphens', () => {
-    expect(
-      validatorFns[IS_VALID_CARD_NUMBER]('4532-0151-1283-0366', {})
-    ).toBe(true);
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532-0151-1283-0366', {})).toBe(true);
   });
 
   test('rejects an incorrect Luhn number', () => {
-    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532015112830367', {})).toBe(
-      false
-    );
+    expect(validatorFns[IS_VALID_CARD_NUMBER]('4532015112830367', {})).toBe(false);
   });
 
   test('rejects a string with only non-digit characters', () => {
