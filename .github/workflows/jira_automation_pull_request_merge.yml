@@ -1,0 +1,57 @@
+name: Handle pull request merge
+
+on:
+  pull_request_target:
+      types:
+        - closed
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+  JIRA_BASE_URL: https://citybase.atlassian.net
+  JIRA_USER_EMAIL: cbjenkins@thecitybase.com
+
+jobs:
+  transition-status:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged }}
+    steps:
+      - name: Divine issue key location
+        id: issue-key-location
+        run: |
+          PR_TITLE="${{github.event.pull_request.title}}"
+          PR_BRANCH="${{github.event.pull_request.head.ref}}"
+
+          ISSUE_KEY_LOCATION=$([[ $PR_TITLE =~ "^[^- ]+[-][0-9]+" ]] && echo $PR_TITLE || echo $PR_BRANCH)
+
+          echo "::set-output name=issue-key-location::$ISSUE_KEY_LOCATION"
+
+      - name: Jira authentication
+        uses: atlassian/gajira-login@master
+
+      - name: Parse issue key
+        id: parse-issue-key
+        uses: atlassian/gajira-find-issue-key@master
+        with:
+          string: ${{ steps.issue-key-location.outputs.issue-key-location }}
+
+      - name: Get status
+        if: ${{ contains(steps.parse-issue-key.outputs.issue, '-') }}
+        id: query-jira
+        run: |
+          JIRA_ISSUE_KEY="${{ steps.parse-issue-key.outputs.issue }}"
+
+          JIRA_STATUS=$(curl -s --request GET "$JIRA_BASE_URL/rest/api/2/search?jql=issuekey=$JIRA_ISSUE_KEY" \
+            --user $JIRA_USER_EMAIL:$JIRA_API_TOKEN \
+            --header 'Accept: application/json' \
+            | jq -r '.issues[] | .fields.status.name'
+          )
+
+          echo "::set-output name=status::$JIRA_STATUS"
+
+      - name: Transition to Merged
+        uses: atlassian/gajira-transition@master
+        if: ${{ steps.query-jira.outputs.status == 'Ready to Merge' }}
+        with:
+          issue: ${{ steps.parse-issue-key.outputs.issue }}
+          transition: Merged
